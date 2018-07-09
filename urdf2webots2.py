@@ -2,21 +2,21 @@
 
 import getopt
 import os
-import shutil
-import string
 import sys
-import xml
 
 import parserURDF
-#import trainingSDF
 import writeProto
 
-#from xacro import xacro
+# import trainingSDF
+# from xacro import xacro
 
 from xml.dom import minidom
 
+
 def usage():
-    print sys.argv[0] + ' inputFile.urdf [-o outputFile] [--box-collision]'
+    """Display command usage on standard out stream."""
+    print (sys.argv[0] + ' inputFile.urdf [-o outputFile] [--box-collision]')
+
 
 if len(sys.argv) < 2:
     usage()
@@ -46,14 +46,14 @@ for opt, arg in opts:
 
 domFile = minidom.parse(xmlFile)
 
-#extension = os.path.splitext(xmlFile)[1]
-#if extension == '.xacro':
+# extension = os.path.splitext(xmlFile)[1]
+# if extension == '.xacro':
 #    xacro.main()
 
 for child in domFile.childNodes:
     '''
     if child.localName == 'gazebo':
-        print 'this is a sdf file'
+        print ('this is a sdf file')
         robotName = trainingSDF.getModelName(domFile)
         protoFile = xmlFile.strip('.model')
         protoFile=open(protoFile+'.proto','w')
@@ -66,15 +66,15 @@ for child in domFile.childNodes:
         protoFile.write('}\n')
         protoFile.close()
         exit(0)
-
     elif child.localName == 'robot':
-        print 'this is an urdf file'''
+        print ('this is an urdf file')
+    '''
     if child.localName == 'robot':
         robotName = parserURDF.getRobotName(child)
         robot = child
         protoFile = open(outputFile, 'w')
-        writeProto.header(protoFile,xmlFile,robotName)
-        writeProto.declaration(protoFile,robotName)
+        writeProto.header(protoFile, xmlFile, robotName)
+        writeProto.declaration(protoFile, robotName)
         linkElementList = []
         jointElementList = []
         for child in robot.childNodes:
@@ -97,11 +97,11 @@ for child in domFile.childNodes:
         childList.sort()
         for link in linkElementList:
             linkList.append(parserURDF.getLink(link))
-            if parserURDF.isRootLink(linkList[-1].name,childList):
+            if parserURDF.isRootLink(linkList[-1].name, childList):
                 rootLink = linkList[-1]
-                print 'root link is ' + rootLink.name
+                print ('root link is ' + rootLink.name)
         pluginList = parserURDF.getPlugins(robot)
-        print 'there is ' + str(len(linkList)) + ' links, ' + str(len(jointList)) + ' joints and ' + str(len(pluginList)) + ' plugins'
+        print ('there is ' + str(len(linkList)) + ' links, ' + str(len(jointList)) + ' joints and ' + str(len(pluginList)) + ' plugins')
 
         writeProto.URDFLink(protoFile, rootLink, 3, parentList, childList, linkList, jointList, boxCollision=boxCollision)
         protoFile.write('    ]\n')
@@ -110,4 +110,4 @@ for child in domFile.childNodes:
         protoFile.write('}\n')
         protoFile.close()
         exit(1)
-print 'could not read file'
+print ('could not read file')

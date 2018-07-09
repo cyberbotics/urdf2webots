@@ -1,8 +1,4 @@
-#! /usr/bin/env python
-
-
 import os
-import string
 import sys
 import xml
 import struct
@@ -16,16 +12,19 @@ except ImportError as e:
         sys.stderr.write("apt-get install python-pip\n")
         sys.stderr.write("pip install pillow\n")
     raise e
+
 from collada import *
 
 counter = 0
 
+
 class Trimesh():
     def __init__(self):
-        self.coord = [] #list of coordinate points
-        self.coordIndex = [] #list of index of points
-        self.texCoord = [] #list of coordinate points for texture
-        self.texCoordIndex = [] #list of index for texture
+        self.coord = []  # list of coordinate points
+        self.coordIndex = []  # list of index of points
+        self.texCoord = []  # list of coordinate points for texture
+        self.texCoordIndex = []  # list of index for texture
+
 
 class Inertia():
     def __init__(self):
@@ -39,20 +38,24 @@ class Inertia():
         self.iyz = 0.0
         self.izz = 1.0
 
+
 class Box():
     def __init__(self):
         self.x = 0.0
         self.y = 0.0
         self.z = 0.0
 
+
 class Cylinder():
     def __init__(self):
         self.radius = 0.0
         self.length = 0.0
 
+
 class Sphere():
     def __init__(self):
         self.radius = 0.0
+
 
 class Geometry():
     def __init__(self):
@@ -62,6 +65,7 @@ class Geometry():
         self.trimesh = Trimesh()
         self.scale = [1.0, 1.0, 1.0]
 
+
 class Color():
     def __init__(self):
         self.red = 0.0
@@ -69,10 +73,12 @@ class Color():
         self.blue = 0.0
         self.alpha = 0.0
 
+
 class Material():
     def __init__(self):
         self.color = Color()
         self.texture = ""
+
 
 class Visual():
     def __init__(self):
@@ -81,21 +87,25 @@ class Visual():
         self.geometry = Geometry()
         self.material = Material()
 
+
 class Collision():
     def __init__(self):
         self.position = [0.0, 0.0, 0.0]
         self.rotation = [1.0, 0.0, 0.0, 0.0]
         self.geometry = Geometry()
 
+
 class Calibration():
     def __init__(self):
         self.limit = 0.0
         self.rising = True
 
+
 class Dynamics():
     def __init__(self):
         self.damping = 0.0
         self.friction = 0.0
+
 
 class Limit():
     def __init__(self):
@@ -104,6 +114,7 @@ class Limit():
         self.effort = 0.0
         self.velocity = 0.0
 
+
 class Safety():
     def __init__(self):
         self.lower = 0.0
@@ -111,12 +122,14 @@ class Safety():
         self.kPosition = 0.0
         self.kVelocity = 0.0
 
+
 class Link():
     def __init__(self):
         self.name = 'default'
         self.inertia = Inertia()
         self.visual = []
         self.collision = []
+
 
 class Joint():
     def __init__(self):
@@ -132,6 +145,7 @@ class Joint():
         self.limit = Limit()
         self.safety = Safety()
 
+
 def vector_norm(data, axis=None, out=None):
     data = numpy.array(data, dtype=numpy.float64, copy=True)
     if out is None:
@@ -146,8 +160,9 @@ def vector_norm(data, axis=None, out=None):
         numpy.sum(data, axis=axis, out=out)
         numpy.sqrt(out, out)
 
-# euler-axes-angle (vrml) to quaternion
+
 def vrml_to_q(v):
+    """Convert euler-axes-angle (vrml) to quaternion."""
     q = [0.0, 0.0, 0.0, 0.0]
     l = v[0] * v[0] + v[1] * v[1] + v[2] * v[2]
     if (l > 0.0):
@@ -163,8 +178,9 @@ def vrml_to_q(v):
         q[3] = 0
     return q
 
-# quaternion to euler-axes-angle (vrml)
+
 def q_to_vrml(q):
+    """Convert quaternion to euler-axes-angle (vrml)."""
     v = [0.0, 0.0, 0.0, 0.0]
     v[3] = 2.0 * math.acos(q[0])
     if (v[3] < 0.0001):
@@ -181,14 +197,15 @@ def q_to_vrml(q):
     return v
 
 
-# quaternion multiplication (combining rotations)
 def q_mult(qb, qc):
+    """Quaternion multiplication (combining rotations)."""
     qa = [0.0, 0.0, 0.0, 0.0]
-    qa[0] = qb[0]*qc[0] - qb[1]*qc[1] - qb[2]*qc[2] - qb[3]*qc[3]
-    qa[1] = qb[0]*qc[1] + qb[1]*qc[0] + qb[2]*qc[3] - qb[3]*qc[2]
-    qa[2] = qb[0]*qc[2] + qb[2]*qc[0] + qb[3]*qc[1] - qb[1]*qc[3]
-    qa[3] = qb[0]*qc[3] + qb[3]*qc[0] + qb[1]*qc[2] - qb[2]*qc[1]
+    qa[0] = qb[0] * qc[0] - qb[1] * qc[1] - qb[2] * qc[2] - qb[3] * qc[3]
+    qa[1] = qb[0] * qc[1] + qb[1] * qc[0] + qb[2] * qc[3] - qb[3] * qc[2]
+    qa[2] = qb[0] * qc[2] + qb[2] * qc[0] + qb[3] * qc[1] - qb[1] * qc[3]
+    qa[3] = qb[0] * qc[3] + qb[3] * qc[0] + qb[1] * qc[2] - qb[2] * qc[1]
     return qa
+
 
 def convertRPYtoEulerAxis(rpy, cylinder=False):
     offset2 = 0.0
@@ -201,7 +218,7 @@ def convertRPYtoEulerAxis(rpy, cylinder=False):
     q1 = vrml_to_q(ea1)
     q2 = vrml_to_q(ea2)
     q3 = vrml_to_q(ea3)
-    #combine 3 quaternions into 1
+    # combine 3 quaternions into 1
     qa = q_mult(q1, q2)
     qb = q_mult(qa, q3)
     # convert quaternion to vrml
@@ -215,6 +232,7 @@ def getRobotName(node):
     print 'the name of the robot is ' + name
     return name
 
+
 def getPlugins(node):
     pluginList = []
     for child in node.childNodes:
@@ -222,7 +240,8 @@ def getPlugins(node):
                 pluginList.append(child)
     return pluginList
 
-def hasElement(node,element):
+
+def hasElement(node, element):
     if node.getElementsByTagName(element).length > 0:
         return True
     else:
@@ -286,7 +305,7 @@ def getColladaMesh(filename, node, link):
             for value in list(geometry.primitives())[0].texcoord_indexset[0]:
                 visual.geometry.trimesh.texCoordIndex.append(value)
             if list(geometry.primitives())[0].material and list(geometry.primitives())[0].material.effect:
-                visual.material.texture ='textures/' + list(geometry.primitives())[0].material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
+                visual.material.texture = 'textures/' + list(geometry.primitives())[0].material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
                 if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':
                     for dirname, dirnames, filenames in os.walk('.'):
                         for filename in filenames:
@@ -362,6 +381,7 @@ def getColladaTransform(node, id):
     return translation, rotation, scale
 '''
 
+
 def getPosition(node):
     position = [0.0, 0.0, 0.0]
     positionString = node.getElementsByTagName('origin')[0].getAttribute('xyz').split()
@@ -370,7 +390,8 @@ def getPosition(node):
     position[2] = float(positionString[2])
     return position
 
-def getRotation(node, isCylinder = False):
+
+def getRotation(node, isCylinder=False):
     rotation = [0.0, 0.0, 0.0]
     if hasElement(node, 'origin'):
         orientationString = node.getElementsByTagName('origin')[0].getAttribute('rpy').split()
@@ -382,17 +403,18 @@ def getRotation(node, isCylinder = False):
     else:
         return convertRPYtoEulerAxis(rotation, False)
 
+
 def getInertia(node):
     inertia = Inertia()
     inertialElement = node.getElementsByTagName('inertial')[0]
-    if hasElement(inertialElement,'origin'):
+    if hasElement(inertialElement, 'origin'):
         if inertialElement.getElementsByTagName('origin')[0].getAttribute('xyz'):
             inertia.position = getPosition(inertialElement)
         if inertialElement.getElementsByTagName('origin')[0].getAttribute('rpy'):
             inertia.rotation = getRotation(inertialElement)
-    if hasElement(inertialElement,'mass'):
+    if hasElement(inertialElement, 'mass'):
         inertia.mass = float(inertialElement.getElementsByTagName('mass')[0].getAttribute('value'))
-    if hasElement(inertialElement,'inertia'):
+    if hasElement(inertialElement, 'inertia'):
         matrixNode = inertialElement.getElementsByTagName('inertia')[0]
         inertia.ixx = float(matrixNode.getAttribute('ixx'))
         inertia.ixy = float(matrixNode.getAttribute('ixy'))
@@ -402,11 +424,12 @@ def getInertia(node):
         inertia.izz = float(matrixNode.getAttribute('izz'))
     return inertia
 
+
 def getVisual(link, node):
     for index in range(0, len(node.getElementsByTagName('visual'))):
         visual = Visual()
         visualElement = node.getElementsByTagName('visual')[index]
-        if hasElement(visualElement,'origin'):
+        if hasElement(visualElement, 'origin'):
             if visualElement.getElementsByTagName('origin')[0].getAttribute('xyz'):
                 visual.position = getPosition(visualElement)
             if visualElement.getElementsByTagName('origin')[0].getAttribute('rpy'):
@@ -419,7 +442,7 @@ def getVisual(link, node):
 
         geometryElement = visualElement.getElementsByTagName('geometry')[0]
 
-        if hasElement(visualElement,'material'):
+        if hasElement(visualElement, 'material'):
             material = visualElement.getElementsByTagName('material')[0]
 
             # find the material reference if any
@@ -433,13 +456,13 @@ def getVisual(link, node):
                             material = child
                             break
 
-            if hasElement(material,'color'):
+            if hasElement(material, 'color'):
                 colorElement = material.getElementsByTagName('color')[0].getAttribute('rgba').split()
                 visual.material.color.red = float(colorElement[0])
                 visual.material.color.green = float(colorElement[1])
                 visual.material.color.blue = float(colorElement[2])
                 visual.material.color.alpha = float(colorElement[3])
-            if hasElement(material,'texture'):
+            if hasElement(material, 'texture'):
                 visual.material.texture = material.getElementsByTagName('texture')[0].getAttribute('filename')
                 if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':
                     for dirname, dirnames, filenames in os.walk('.'):
@@ -454,21 +477,21 @@ def getVisual(link, node):
                                     visual.material.texture = ""
                                     print 'failed to open ' + os.path.join(dirname, filename)
 
-        if hasElement(geometryElement,'box'):
+        if hasElement(geometryElement, 'box'):
             visual.geometry.box.x = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[0])
             visual.geometry.box.y = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[1])
             visual.geometry.box.z = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[2])
             link.visual.append(visual)
-        elif hasElement(geometryElement,'cylinder'):
+        elif hasElement(geometryElement, 'cylinder'):
             visual.geometry.cylinder.radius = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('radius'))
             visual.geometry.cylinder.length = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('length'))
             link.visual.append(visual)
-        elif hasElement(geometryElement,'sphere'):
+        elif hasElement(geometryElement, 'sphere'):
             visual.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
             link.visual.append(visual)
-        elif hasElement(geometryElement,'mesh'):
+        elif hasElement(geometryElement, 'mesh'):
             meshfile = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
-            #hack for gazebo mesh database
+            # hack for gazebo mesh database
             if meshfile.count('package'):
                 meshfile = str(meshfile.split('/')[-2]) + '/' + str(meshfile.split('/')[-1])
             if geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale'):
@@ -482,11 +505,12 @@ def getVisual(link, node):
                 visual = getSTLMesh(meshfile, visual)
                 link.visual.append(visual)
 
+
 def getCollision(link, node):
-    for index in range(0,len(node.getElementsByTagName('collision'))):
+    for index in range(0, len(node.getElementsByTagName('collision'))):
         collision = Collision()
         collisionElement = node.getElementsByTagName('collision')[index]
-        if hasElement(collisionElement,'origin'):
+        if hasElement(collisionElement, 'origin'):
             if collisionElement.getElementsByTagName('origin')[0].getAttribute('xyz'):
                 collision.position = getPosition(collisionElement)
             if collisionElement.getElementsByTagName('origin')[0].getAttribute('rpy'):
@@ -498,19 +522,19 @@ def getCollision(link, node):
                 collision.rotation = getRotation(collisionElement, True)
 
         geometryElement = collisionElement.getElementsByTagName('geometry')[0]
-        if hasElement(geometryElement,'box'):
+        if hasElement(geometryElement, 'box'):
             collision.geometry.box.x = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[0])
             collision.geometry.box.y = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[1])
             collision.geometry.box.z = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[2])
             link.collision.append(collision)
-        elif hasElement(geometryElement,'cylinder'):
+        elif hasElement(geometryElement, 'cylinder'):
             collision.geometry.cylinder.radius = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('radius'))
             collision.geometry.cylinder.length = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('length'))
             link.collision.append(collision)
-        elif hasElement(geometryElement,'sphere'):
+        elif hasElement(geometryElement, 'sphere'):
             collision.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
             link.collision.append(collision)
-        elif hasElement(geometryElement,'mesh'):
+        elif hasElement(geometryElement, 'mesh'):
             meshfile = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
             if geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale'):
                 meshScale = geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale').split()
@@ -526,6 +550,7 @@ def getCollision(link, node):
                 collision.geometry.stl = getSTLMesh(meshfile, collision)
                 link.collision.append(collision)
 
+
 def getAxis(node):
     axis = [0.0, 0.0, 0.0]
     axisElement = node.getElementsByTagName('axis')[0].getAttribute('xyz').split()
@@ -534,16 +559,18 @@ def getAxis(node):
     axis[2] = float(axisElement[2])
     return axis
 
+
 def getCalibration(node):
     calibration = Calibration()
     calibrationElement = node.getElementsByTagName('calibration')[0]
-    if hasElement(calibrationElement,'rising'):
+    if hasElement(calibrationElement, 'rising'):
         calibration.limit = calibrationElement.getAttribute('rising')
         calibration.rising = True
     else:
         calibration.limit = calibrationElement.getAttribute('falling')
         calibration.rising = False
     return calibration
+
 
 def getDynamics(node):
     dynamics = Dynamics()
@@ -553,6 +580,7 @@ def getDynamics(node):
     if dynamicsElement.getAttribute('friction'):
         dynamics.friction = float(dynamicsElement.getAttribute('friction'))
     return dynamics
+
 
 def getLimit(node):
     limit = Limit()
@@ -565,6 +593,7 @@ def getLimit(node):
     limit.velocity = float(limitElement.getAttribute('velocity'))
     return limit
 
+
 def getSafety(node):
     safety = Safety()
     if node.getElementsByTagName('safety_controller')[0].getAttribute('soft_lower_limit'):
@@ -576,41 +605,44 @@ def getSafety(node):
     safety.kVelocity = float(node.getElementsByTagName('safety_controller')[0].getAttribute('k_velocity'))
     return safety
 
+
 def getLink(node):
     link = Link()
     link.name = node.getAttribute('name')
-    if hasElement(node,'inertial'):
+    if hasElement(node, 'inertial'):
         link.inertia = getInertia(node)
-    if hasElement(node,'visual'):
+    if hasElement(node, 'visual'):
         getVisual(link, node)
-    if hasElement(node,'collision'):
+    if hasElement(node, 'collision'):
         getCollision(link, node)
     return link
+
 
 def getJoint(node):
     joint = Joint()
     joint.name = node.getAttribute('name')
     joint.type = node.getAttribute('type')
-    if hasElement(node,'origin'):
+    if hasElement(node, 'origin'):
         if node.getElementsByTagName('origin')[0].getAttribute('xyz'):
             joint.position = getPosition(node)
         if node.getElementsByTagName('origin')[0].getAttribute('rpy'):
             joint.rotation = getRotation(node)
     joint.parent = node.getElementsByTagName('parent')[0].getAttribute('link')
     joint.child = node.getElementsByTagName('child')[0].getAttribute('link')
-    if hasElement(node,'axis'):
+    if hasElement(node, 'axis'):
         joint.axis = getAxis(node)
-    if hasElement(node,'calibration'):
+    if hasElement(node, 'calibration'):
         joint.calibration = getCalibration(node)
-    if hasElement(node,'dynamics'):
+    if hasElement(node, 'dynamics'):
         joint.dynamics = getDynamics(node)
-    if hasElement(node,'limit'):
+    if hasElement(node, 'limit'):
         joint.limit = getLimit(node)
-    if hasElement(node,'safety_controller'):
+    if hasElement(node, 'safety_controller'):
         joint.safety = getSafety(node)
     return joint
 
-def isRootLink(link,childList):
+
+def isRootLink(link, childList):
     for child in childList:
         if link == child:
             return False

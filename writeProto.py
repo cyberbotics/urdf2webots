@@ -1,19 +1,11 @@
-#! /usr/bin/env python
-
-
-import os
-import string
-import sys
-import xml
-
-
-def header(proto,srcFile, robotName):
+def header(proto, srcFile, robotName):
     proto.write('#VRML_SIM V7.4.0 utf8\n')
     proto.write('# This is a proto file for Webots for the ' + robotName + '\n')
     proto.write('# Extracted from: ' + srcFile + '\n\n')
 
+
 def declaration(proto, robotName):
-    proto.write('PROTO '+robotName+' [\n')
+    proto.write('PROTO ' + robotName + ' [\n')
     proto.write('   field SFVec3f translation 0 0 0\n')
     proto.write('   field SFRotation rotation 1 0 0 -1.57\n')
     proto.write('   field SFString controller "void"\n')
@@ -25,6 +17,7 @@ def declaration(proto, robotName):
     proto.write('    controller IS controller\n')
     proto.write('    children [\n')
 
+
 def basicPhysics(proto):
     proto.write('    boundingObject Box{\n')
     proto.write('      size 0.01 0.01 0.01\n')
@@ -32,7 +25,8 @@ def basicPhysics(proto):
     proto.write('    physics Physics {\n')
     proto.write('    }\n')
 
-def URDFLink(proto, link, level, parentList, childList, linkList, jointList, jointPosition = [0.0, 0.0, 0.0], jointRotation = [1.0, 0.0, 0.0, 0.0], boxCollision=False):
+
+def URDFLink(proto, link, level, parentList, childList, linkList, jointList, jointPosition=[0.0, 0.0, 0.0], jointRotation=[1.0, 0.0, 0.0, 0.0], boxCollision=False):
     indent = '  '
     haveChild = 0
     if link.collision:
@@ -80,7 +74,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
         boundingLevel = level + 2
 
     for boundingObject in link.collision:
-        if boundingObject.position != [0.0, 0.0, 0.0] or  boundingObject.rotation[3] != 0.0:
+        if boundingObject.position != [0.0, 0.0, 0.0] or boundingObject.rotation[3] != 0.0:
             if len(link.collision) > 1:
                 proto.write((level + 2) * indent + 'Transform {\n')
             else:
@@ -107,8 +101,10 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write(boundingLevel * indent + '}\n')
 
         elif boundingObject.geometry.trimesh.coord != [] and boxCollision:
-            aabb = { 'minimum' : { 'x' : float('inf'), 'y' : float('inf'), 'z' : float('inf') }, \
-                     'maximum' : { 'x' : float('-inf'), 'y' : float('-inf'), 'z' : float('-inf') }}
+            aabb = {
+                'minimum': {'x': float('inf'), 'y': float('inf'), 'z': float('inf')},
+                'maximum': {'x': float('-inf'), 'y': float('-inf'), 'z': float('-inf')}
+            }
             for value in boundingObject.geometry.trimesh.coord:
                 x = value[0] * boundingObject.geometry.scale[0]
                 y = value[1] * boundingObject.geometry.scale[1]
@@ -121,24 +117,24 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                 aabb['maximum']['z'] = max(aabb['maximum']['z'], z)
 
             proto.write(boundingLevel * indent + 'Transform {\n')
-            proto.write((boundingLevel + 2) * indent + 'translation %f %f %f\n' % ( \
-                0.5 * (aabb['maximum']['x'] + aabb['minimum']['x']), \
-                0.5 * (aabb['maximum']['y'] + aabb['minimum']['y']), \
-                0.5 * (aabb['maximum']['z'] + aabb['minimum']['z']), \
+            proto.write((boundingLevel + 2) * indent + 'translation %f %f %f\n' % (
+                0.5 * (aabb['maximum']['x'] + aabb['minimum']['x']),
+                0.5 * (aabb['maximum']['y'] + aabb['minimum']['y']),
+                0.5 * (aabb['maximum']['z'] + aabb['minimum']['z']),
             ))
             proto.write((boundingLevel + 1) * indent + 'children [\n')
             proto.write((boundingLevel + 2) * indent + 'Box {\n')
-            proto.write((boundingLevel + 3) * indent + 'size %f %f %f\n' % ( \
-                aabb['maximum']['x'] - aabb['minimum']['x'], \
-                aabb['maximum']['y'] - aabb['minimum']['y'], \
-                aabb['maximum']['z'] - aabb['minimum']['z'], \
+            proto.write((boundingLevel + 3) * indent + 'size %f %f %f\n' % (
+                aabb['maximum']['x'] - aabb['minimum']['x'],
+                aabb['maximum']['y'] - aabb['minimum']['y'],
+                aabb['maximum']['z'] - aabb['minimum']['z'],
             ))
             proto.write((boundingLevel + 2) * indent + '}\n')
             proto.write((boundingLevel + 1) * indent + ']\n')
             proto.write(boundingLevel * indent + '}\n')
 
         elif boundingObject.geometry.trimesh.coord != []:
-            proto.write(boundingLevel* indent + 'IndexedFaceSet {\n')
+            proto.write(boundingLevel * indent + 'IndexedFaceSet {\n')
 
             proto.write((boundingLevel + 1) * indent + 'coord Coordinate {\n')
             proto.write((boundingLevel + 2) * indent + 'point [\n')
@@ -168,6 +164,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
         proto.write((level + 1) * indent + ']\n')
         proto.write(level * indent + '}\n')
 
+
 def URDFShape(proto, link, level):
     indent = '  '
     shapeLevel = level
@@ -180,10 +177,10 @@ def URDFShape(proto, link, level):
         group = True
 
     for visualNode in link.visual:
-        if visualNode.position != [0.0, 0.0, 0.0] or  visualNode.rotation[3] != 0:
+        if visualNode.position != [0.0, 0.0, 0.0] or visualNode.rotation[3] != 0:
             proto.write(shapeLevel * indent + 'Transform {\n')
             proto.write((shapeLevel + 1) * indent + 'translation ' + str(visualNode.position[0]) + ' ' + str(visualNode.position[1]) + ' ' + str(visualNode.position[2]) + '\n')
-            proto.write((shapeLevel + 1) * indent + 'rotation ' + str(visualNode.rotation[0]) + ' ' + str(visualNode.rotation[1]) + ' ' + str(visualNode.rotation[2]) + ' ' + str(visualNode.rotation[3]) +'\n')
+            proto.write((shapeLevel + 1) * indent + 'rotation ' + str(visualNode.rotation[0]) + ' ' + str(visualNode.rotation[1]) + ' ' + str(visualNode.rotation[2]) + ' ' + str(visualNode.rotation[3]) + '\n')
             proto.write((shapeLevel + 1) * indent + 'children [\n')
             shapeLevel = shapeLevel + 2
             transform = True
