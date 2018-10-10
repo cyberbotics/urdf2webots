@@ -499,9 +499,9 @@ def getVisual(link, node):
                 visual.geometry.scale[0] = float(meshScale[0])
                 visual.geometry.scale[1] = float(meshScale[1])
                 visual.geometry.scale[2] = float(meshScale[2])
-            if os.path.splitext(meshfile)[1] == '.dae':
+            if os.path.splitext(meshfile)[1].lower() == '.dae':
                 getColladaMesh(meshfile, visual, link)
-            elif os.path.splitext(meshfile)[1] == '.stl':
+            elif os.path.splitext(meshfile)[1].lower() == '.stl':
                 visual = getSTLMesh(meshfile, visual)
                 link.visual.append(visual)
 
