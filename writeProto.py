@@ -1,3 +1,23 @@
+import numpy as np 
+
+
+class RGB(): #@ 
+    def __init__(self):
+        self.red = 0.0
+        self.green = 0.0
+        self.blue = 0.0
+
+# ref: https://marcodiiga.github.io/rgba-to-rgb-conversion
+def RGBA2RGB(RGBA_color, RGB_background = RGB()): #@ convert RGBA to RGB expression
+    alpha = RGBA_color.alpha
+
+    new_color = RGB()
+    new_color.red = (1 - alpha) * RGB_background.red + alpha * RGBA_color.red
+    new_color.green = (1 - alpha) * RGB_background.green + alpha * RGBA_color.green
+    new_color.blue = (1 - alpha) * RGB_background.blue + alpha * RGBA_color.blue
+
+    return new_color
+
 def header(proto, srcFile, robotName):
     proto.write('#VRML_SIM V7.4.0 utf8\n')
     proto.write('# This is a proto file for Webots for the ' + robotName + '\n')
@@ -23,42 +43,46 @@ def basicPhysics(proto):
     proto.write('      size 0.01 0.01 0.01\n')
     proto.write('    }\n')
     proto.write('    physics Physics {\n')
+    proto.write('      density -1\n')
+    proto.write('      mass 0.000001\n')
+    proto.write('      inertiaMatrix [0.000001 0.000001 0.000001 0 0 0]\n')
+    proto.write('      centerOfMass [0 0 0]\n')
     proto.write('    }\n')
 
-
-def URDFLink(proto, link, level, parentList, childList, linkList, jointList, jointPosition=[0.0, 0.0, 0.0], jointRotation=[1.0, 0.0, 0.0, 0.0], boxCollision=False):
+def URDFLink(proto, link, level, parentList, childList, linkList, jointList, jointPosition = [0.0, 0.0, 0.0], jointRotation = [1.0, 0.0, 0.0, 0.0], boxCollision=False, dummy = False):
     indent = '  '
     haveChild = 0
-    if link.collision:
-        proto.write(level * indent + ' Solid {\n')
-        proto.write((level + 1) * indent + 'name "' + link.name + '"\n')
-    else:
-        proto.write(level * indent + ' Transform {\n')
-
+    proto.write(level * indent + ' Solid {\n')
     proto.write((level + 1) * indent + 'translation ' + str(jointPosition[0]) + ' ' + str(jointPosition[1]) + ' ' + str(jointPosition[2]) + '\n')
     proto.write((level + 1) * indent + 'rotation ' + str(jointRotation[0]) + ' ' + str(jointRotation[1]) + ' ' + str(jointRotation[2]) + ' ' + str(jointRotation[3]) + '\n')
-
-    if link.collision:
+    if dummy:  #@ case when link not defined but cited in joint (e.g. Atlas robot)
+        pass
+    else:
+        proto.write((level + 1) * indent + 'name "' + link.name + '"\n')
         proto.write((level + 1) * indent + 'physics Physics {\n')
         proto.write((level + 2) * indent + 'density -1\n')
-        mass = link.inertia.mass
-        # mass = min(100, max(0.1, link.inertia.mass)) # evt. clamp the masses
-        proto.write((level + 2) * indent + 'mass ' + str(mass) + '\n')
+        proto.write((level + 2) * indent + 'mass ' + str(link.inertia.mass) + '\n')
         proto.write((level + 2) * indent + 'inertiaMatrix [' + str(link.inertia.ixx) + ' ' + str(link.inertia.iyy) + ' ' + str(link.inertia.izz) + ' ' + str(link.inertia.ixy) + ' ' + str(link.inertia.ixz) + ' ' + str(link.inertia.iyz) + ']\n')
+        proto.write((level + 2) * indent + 'centerOfMass [' + str(link.inertia.position[0]) + ' ' + str(link.inertia.position[1]) + ' ' + str(link.inertia.position[2]) + ']\n') #@ changed to real
         proto.write((level + 1) * indent + '}\n')
-        URDFBoundingObject(proto, link, level + 1, boxCollision)
 
-    if link.visual:
-        proto.write((level + 1) * indent + 'children [\n')
-        haveChild = 1
-        URDFShape(proto, link, level + 2)
+        if link.inertia.rotation[-1] != 0.0: #@ this should not happend
+            print 'warning: inertia of', link.name, 'has a non-zero rotation [axis-angle] =', link.inertia.rotation, 'but it will not be imported in proto!'
 
-    for joint in jointList:
-        if joint.parent == link.name:
-            if haveChild == 0:
-                haveChild = 1
-                proto.write((level + 1) * indent + 'children [\n')
-            URDFJoint(proto, joint, level + 2, parentList, childList, linkList, jointList, boxCollision)
+        if link.collision:
+            URDFBoundingObject(proto, link, level + 1, boxCollision)
+
+        if link.visual:
+            proto.write((level + 1) * indent + 'children [\n')
+            haveChild = 1
+            URDFShape(proto, link, level + 2)
+    
+        for joint in jointList:
+            if joint.parent == link.name:
+                if haveChild == 0:
+                    haveChild = 1
+                    proto.write((level + 1) * indent + 'children [\n')
+                URDFJoint(proto, joint, level + 2, parentList, childList, linkList, jointList, boxCollision)
     if haveChild == 1:
         proto.write((level + 1) * indent + ']\n')
     proto.write(level * indent + '}\n')
@@ -148,7 +172,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                 proto.write(boundingLevel * indent + str(value[0]) + ' ' + str(value[1]) + ' ' + str(value[2]) + ' -1\n')
             proto.write((boundingLevel + 1) * indent + ']\n')
 
-            proto.write((boundingLevel + 1) * indent + 'creaseAngle 0.5\n')
+            proto.write((boundingLevel + 1) * indent + 'creaseAngle 1\n')
             proto.write(boundingLevel * indent + '}\n')
 
         else:
@@ -187,10 +211,28 @@ def URDFShape(proto, link, level):
 
         proto.write(shapeLevel * indent + 'Shape {\n')
         proto.write((shapeLevel + 1) * indent + 'appearance Appearance {\n')
-        proto.write((shapeLevel + 2) * indent + 'material Material {\n')
-        if visualNode.material.color.red != 0 or visualNode.material.color.green != 0 or visualNode.material.color.blue != 0:
-            proto.write((shapeLevel + 3) * indent + 'diffuseColor ' + str(visualNode.material.color.alpha * visualNode.material.color.red + 1 - visualNode.material.color.alpha) + ' ' + str(visualNode.material.color.alpha * visualNode.material.color.green + 1 - visualNode.material.color.alpha) + ' ' + str(visualNode.material.color.alpha * visualNode.material.color.blue + 1 - visualNode.material.color.alpha) + '\n')
-        proto.write((shapeLevel + 2) * indent + '}\n')
+        if visualNode.material.diffuse.red != 0 or visualNode.material.diffuse.green != 0 or visualNode.material.diffuse.blue != 0:
+            proto.write((shapeLevel + 2) * indent + 'material Material {\n')
+            #@ the following color calculation could be wrong!!!
+            ambientColor = RGBA2RGB(visualNode.material.ambient)  
+            diffuseColor = RGBA2RGB(visualNode.material.diffuse, RGB_background=ambientColor) 
+            ambient_mag = np.linalg.norm([ambientColor.red, ambientColor.green, ambientColor.blue])
+            diffuse_mag = np.linalg.norm([diffuseColor.red, diffuseColor.green, diffuseColor.blue])
+            if diffuse_mag != 0.0:
+                ambientIntensity = ambient_mag / diffuse_mag  
+            else:
+                ambientIntensity = 0.0 
+            emissiveColor = RGBA2RGB(visualNode.material.emission, RGB_background=ambientColor)  #@ convert rgba to rgb color
+            shininess = visualNode.material.shininess
+            specularColor = RGBA2RGB(visualNode.material.specular, RGB_background=ambientColor)  
+            transparency = 1.0 - visualNode.material.diffuse.alpha 
+            proto.write((shapeLevel + 3) * indent + 'ambientIntensity ' + str(ambientIntensity) + '\n')
+            proto.write((shapeLevel + 3) * indent + 'diffuseColor ' + str(diffuseColor.red) + ' ' + str(diffuseColor.green) + ' ' + str(diffuseColor.blue) + '\n')
+            proto.write((shapeLevel + 3) * indent + 'emissiveColor ' + str(emissiveColor.red) + ' ' + str(emissiveColor.green) + ' ' + str(emissiveColor.blue) + '\n')
+            proto.write((shapeLevel + 3) * indent + 'shininess ' + str(shininess) + '\n')
+            proto.write((shapeLevel + 3) * indent + 'specularColor ' + str(specularColor.red) + ' ' + str(specularColor.green) + ' ' + str(specularColor.blue) + '\n')
+            proto.write((shapeLevel + 3) * indent + 'transparency ' + str(transparency) + '\n')
+            proto.write((shapeLevel + 2) * indent + '}\n')
         if visualNode.material.texture != "":
             proto.write((shapeLevel + 2) * indent + 'texture ImageTexture {\n')
             proto.write((shapeLevel + 3) * indent + 'url ["' + visualNode.material.texture + '"]\n')
@@ -297,7 +339,12 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList, b
     proto.write((level + 1) * indent + '}\n')
 
     proto.write((level + 1) * indent + 'endPoint')
+    found_link = False
     for childLink in linkList:
         if childLink.name == joint.child:
             URDFLink(proto, childLink, level + 1, parentList, childList, linkList, jointList, joint.position, joint.rotation, boxCollision)
+            found_link = True
+    if not found_link and joint.child: #@ case that non-existing link cited, set dummy flag
+        URDFLink(proto, joint.child, level + 1, parentList, childList, linkList, jointList, joint.position, joint.rotation, boxCollision, dummy=True)
+        print 'warning: link', joint.child, 'is dummy!'
     proto.write(level * indent + '}\n')

@@ -1,11 +1,12 @@
 #! /usr/bin/env python
 
 import getopt
-import os
+import os, errno
 import sys
 
 import parserURDF
 import writeProto
+import xml #@ 
 
 # import trainingSDF
 # from xacro import xacro
@@ -50,6 +51,31 @@ domFile = minidom.parse(xmlFile)
 # if extension == '.xacro':
 #    xacro.main()
 
+def convertLUtoUN(s):
+  r = ''
+  i = 0
+  while i < len(s):
+    if i == 0:
+      r += s[i].upper()
+      i += 1
+    elif s[i] == '_' and i < (len(s) - 1):
+      r += s[i+1].upper()
+      i += 2
+    else:
+      r += s[i]
+      i += 1
+  return r
+
+def mkdirSafe(directory): #@ create a dir safely
+    try:
+        os.makedirs(directory)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+        else:
+            print 'dir', directory, 'already existing!'
+
+
 for child in domFile.childNodes:
     '''
     if child.localName == 'gazebo':
@@ -70,9 +96,15 @@ for child in domFile.childNodes:
         print ('this is an urdf file')
     '''
     if child.localName == 'robot':
-        robotName = parserURDF.getRobotName(child)
+        robotName = convertLUtoUN( parserURDF.getRobotName(child) ) #@capitalized
+        
+        parserURDF.robotName = robotName #@ pass robotName
+        mkdirSafe(robotName+'_textures') #@ make a dir called 'x_textures'
+        
+        #protoFile = os.path.splitext(xmlFile)[0]
+        protoFile = robotName #@ use robot name rather than urdf name (capitalized)
         robot = child
-        protoFile = open(outputFile, 'w')
+        protoFile = open(protoFile+'.proto', 'w')
         writeProto.header(protoFile, xmlFile, robotName)
         writeProto.declaration(protoFile, robotName)
         linkElementList = []

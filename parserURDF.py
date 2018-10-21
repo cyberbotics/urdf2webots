@@ -14,8 +14,10 @@ except ImportError as e:
     raise e
 
 from collada import *
+import numbers 
 
 counter = 0
+robotName = '' #@ to pass from external
 
 
 class Trimesh():
@@ -30,13 +32,13 @@ class Inertia():
     def __init__(self):
         self.position = [0.0, 0.0, 0.0]
         self.rotation = [1.0, 0.0, 0.0, 0.0]
-        self.mass = 1.0
-        self.ixx = 1.0
+        self.mass = 0.000001
+        self.ixx = 0.000001
         self.ixy = 0.0
         self.ixz = 0.0
-        self.iyy = 1.0
+        self.iyy = 0.000001
         self.iyz = 0.0
-        self.izz = 1.0
+        self.izz = 0.000001
 
 
 class Box():
@@ -75,8 +77,13 @@ class Color():
 
 
 class Material():
-    def __init__(self):
-        self.color = Color()
+    def __init__(self): #@ 
+        self.emission = Color()  
+        self.ambient = Color() 
+        self.diffuse = Color() 
+        self.specular = Color()  
+        self.shininess = 0.0  
+        self.index_of_refraction = 1.0  
         self.texture = ""
 
 
@@ -224,11 +231,26 @@ def convertRPYtoEulerAxis(rpy, cylinder=False):
     # convert quaternion to vrml
     return q_to_vrml(qb)
 
+def colorVector2Instance(cv, alpha_last = True): #@ evel color object
+    c = Color()
+    if alpha_last:
+        c.red = cv[0]
+        c.green = cv[1]
+        c.blue = cv[2]
+        c.alpha = cv[3]
+    else:
+        c.red = cv[1]
+        c.green = cv[2]
+        c.blue = cv[3]
+        c.alpha = cv[0]
 
+    return c
+
+     
 def getRobotName(node):
     name = node.getAttribute('name')
-    if name == 'drc_skeleton':
-        name = 'training_atlas'
+    #if name == 'drc_skeleton':
+    #    name = 'training_atlas'
     print 'the name of the robot is ' + name
     return name
 
@@ -293,31 +315,49 @@ def getColladaMesh(filename, node, link):
             visual = Visual()
             visual.position = node.position
             visual.rotation = node.rotation
-            visual.material.color = node.material.color
+            #visual.material.diffuse = node.material.diffuse #@ should use mesh embedded color (to specify appearance in proto)
             visual.material.texture = ""
             visual.geometry.scale = node.geometry.scale
             for value in list(geometry.primitives())[0].vertex:
                 visual.geometry.trimesh.coord.append(numpy.array(value))
             for value in list(geometry.primitives())[0].vertex_index:
                 visual.geometry.trimesh.coordIndex.append(value)
-            for value in list(geometry.primitives())[0].texcoordset[0]:
-                visual.geometry.trimesh.texCoord.append(value)
-            for value in list(geometry.primitives())[0].texcoord_indexset[0]:
-                visual.geometry.trimesh.texCoordIndex.append(value)
-            if list(geometry.primitives())[0].material and list(geometry.primitives())[0].material.effect:
-                visual.material.texture = 'textures/' + list(geometry.primitives())[0].material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
-                if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':
-                    for dirname, dirnames, filenames in os.walk('.'):
-                        for filename in filenames:
-                            if filename == str(visual.material.texture.split('/')[-1]):
-                                try:
-                                    tifImage = Image.open(os.path.join(dirname, filename))
-                                    tifImage.save(os.path.splitext(os.path.join(dirname, filename))[0] + '.png')
-                                    visual.material.texture = 'textures/' + os.path.splitext(filename)[0] + '.png'
-                                    print 'translated image', visual.material.texture
-                                except:
-                                    visual.material.texture = ""
-                                    print 'failed to open ' + os.path.join(dirname, filename)
+            if list(geometry.primitives())[0].texcoordset: #@non-empty
+                for value in list(geometry.primitives())[0].texcoordset[0]: 
+                    visual.geometry.trimesh.texCoord.append(value)
+            if list(geometry.primitives())[0].texcoord_indexset: #@non-empty
+                for value in list(geometry.primitives())[0].texcoord_indexset[0]: 
+                    visual.geometry.trimesh.texCoordIndex.append(value)
+            if list(geometry.primitives())[0].material and list(geometry.primitives())[0].material.effect:                                                
+                if list(geometry.primitives())[0].material.effect.emission:
+                    visual.material.emission = colorVector2Instance(list(geometry.primitives())[0].material.effect.emission)
+                if list(geometry.primitives())[0].material.effect.ambient:
+                    visual.material.ambient = colorVector2Instance(list(geometry.primitives())[0].material.effect.ambient)
+                if list(geometry.primitives())[0].material.effect.specular:
+                    visual.material.specular = colorVector2Instance(list(geometry.primitives())[0].material.effect.specular)
+                if list(geometry.primitives())[0].material.effect.shininess:
+                    visual.material.shininess = list(geometry.primitives())[0].material.effect.shininess
+                if list(geometry.primitives())[0].material.effect.index_of_refraction:
+                    visual.material.index_of_refraction = list(geometry.primitives())[0].material.effect.index_of_refraction
+                if list(geometry.primitives())[0].material.effect.diffuse:
+                    if numpy.size(list(geometry.primitives())[0].material.effect.diffuse)>1 and all([isinstance(x,numbers.Number) for x in list(geometry.primitives())[0].material.effect.diffuse]): #@
+                        #@ diffuse is defined by values
+                        visual.material.diffuse = colorVector2Instance( list(geometry.primitives())[0].material.effect.diffuse )
+                    else:
+                        #@diffuse is defined by *.tif files
+                        visual.material.texture = 'textures/' + list(geometry.primitives())[0].material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
+                        if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':
+                            for dirname, dirnames, filenames in os.walk('.'):
+                                for filename in filenames:
+                                    if filename == str(visual.material.texture.split('/')[-1]):
+                                        try:
+                                            tifImage = Image.open(os.path.join(dirname, filename))
+                                            tifImage.save(os.path.splitext(os.path.join('./'+robotName+'_'+'textures', filename))[0] + '.png')
+                                            visual.material.texture = robotName+'_'+'textures/' + os.path.splitext(filename)[0] + '.png'
+                                            print 'translated image', visual.material.texture
+                                        except:
+                                            visual.material.texture = ""
+                                            print 'failed to open ' + os.path.join(dirname, filename)
             link.visual.append(visual)
     else:
         for geometry in list(colladaMesh.scene.objects('geometry')):
@@ -372,7 +412,6 @@ def getColladaTransform(node, id):
                             scale[0] = transform.x
                             scale[1] = transform.y
                             scale[2] = transform.z
-
     if translation == [0.0, 0.0, 0.0] and rotation == [1.0, 0.0, 0.0, 0.0] and scale == [1.0, 1.0, 1.0]:
         if node.children:
             for node in node.children:
@@ -444,24 +483,12 @@ def getVisual(link, node):
 
         if hasElement(visualElement, 'material'):
             material = visualElement.getElementsByTagName('material')[0]
-
-            # find the material reference if any
-            if not material.hasChildNodes() and material.getAttribute('name'):
-                node = material
-                while node is not None and node.tagName != 'robot':
-                    node = node.parentNode
-                if node:
-                    for child in node.childNodes:
-                        if child.nodeType == xml.dom.minidom.Node.ELEMENT_NODE and child.tagName == 'material' and child.getAttribute('name') == material.getAttribute('name'):
-                            material = child
-                            break
-
             if hasElement(material, 'color'):
                 colorElement = material.getElementsByTagName('color')[0].getAttribute('rgba').split()
-                visual.material.color.red = float(colorElement[0])
-                visual.material.color.green = float(colorElement[1])
-                visual.material.color.blue = float(colorElement[2])
-                visual.material.color.alpha = float(colorElement[3])
+                visual.material.diffuse.red = float(colorElement[0])
+                visual.material.diffuse.green = float(colorElement[1])
+                visual.material.diffuse.blue = float(colorElement[2])
+                visual.material.diffuse.alpha = float(colorElement[3])
             if hasElement(material, 'texture'):
                 visual.material.texture = material.getElementsByTagName('texture')[0].getAttribute('filename')
                 if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':
@@ -471,8 +498,8 @@ def getVisual(link, node):
                                 print 'try to translate image', filename
                                 try:
                                     tifImage = Image.open(os.path.join(dirname, filename))
-                                    tifImage.save(os.path.splitext(os.path.join(dirname, filename))[0] + '.png')
-                                    visual.material.texture = 'textures/' + os.path.splitext(filename)[0] + '.png'
+                                    tifImage.save(os.path.splitext(os.path.join('./'+robotName+'_'+'textures', filename))[0] + '.png')
+                                    visual.material.texture = robotName+'_'+'textures/' + os.path.splitext(filename)[0] + '.png'
                                 except:
                                     visual.material.texture = ""
                                     print 'failed to open ' + os.path.join(dirname, filename)
@@ -493,7 +520,8 @@ def getVisual(link, node):
             meshfile = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
             # hack for gazebo mesh database
             if meshfile.count('package'):
-                meshfile = str(meshfile.split('/')[-2]) + '/' + str(meshfile.split('/')[-1])
+                idx0 = meshfile.find('package://') #@
+                meshfile = meshfile[ idx0 + len('package://') : ] #@
             if geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale'):
                 meshScale = geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale').split()
                 visual.geometry.scale[0] = float(meshScale[0])
@@ -543,7 +571,8 @@ def getCollision(link, node):
                 collision.geometry.scale[2] = float(meshScale[2])
             # hack for gazebo mesh database
             if meshfile.count('package'):
-                meshfile = str(meshfile.split('/')[-2]) + '/' + str(meshfile.split('/')[-1])
+                idx0 = meshfile.find('package://')  #@
+                meshfile = meshfile[idx0 + len('package://'):]  #@
             if os.path.splitext(meshfile)[1] == '.dae':
                 collision.geometry.collada = getColladaMesh(meshfile, collision, link)
             elif os.path.splitext(meshfile)[1] == '.stl':
@@ -647,3 +676,4 @@ def isRootLink(link, childList):
         if link == child:
             return False
     return True
+
