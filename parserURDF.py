@@ -16,6 +16,7 @@ except ImportError as e:
 from collada import *
 import numbers 
 
+
 counter = 0
 robotName = '' #@ to pass from external
 
