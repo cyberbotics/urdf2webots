@@ -1,6 +1,5 @@
 import numpy as np 
 
-
 class RGB(): #@ 
     def __init__(self):
         self.red = 0.0
