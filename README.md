@@ -6,8 +6,7 @@ This tool converts URDF files to a Webots-readable format.
 
 `python urdf2webots.py someRobot.urdf [-o outputFile] [--box-collision]`
 
-Outputs: someRobot_textures (folder), someRobot.proto.
-
+Outputs: someRobot_textures (folder), someRobot.proto.  
 Test in webots: put the outputs in protos folder within webots project folder.
 
 ## notes
