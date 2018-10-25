@@ -9,7 +9,7 @@ This tool converts URDF files to a Webots-readable format.
 Outputs: someRobot_textures (folder), someRobot.proto.  
 Test in webots: put the outputs in protos folder within webots project folder.
 
-## notes
+## Notes
 urdf file should be in same folder as python code.  
 This has been tested with ur10, pr2 and motoman using webots pro 7.4.3 on Ubuntu16.04.  
 The repos of urdfs are here:  
