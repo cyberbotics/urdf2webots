@@ -17,5 +17,5 @@ We love pull requests from everyone.
 
 ## Sources Rules
 
-- avoid comitting files that exists elsewhere. Instead we should link to the source of these files.
-- avoid comitting files that can be re-created from other files using a Makefile, a script or a compiler.
+- Avoid comitting files that exists elsewhere. Instead we should link to the source of these files.
+- Avoid comitting files that can be re-created from other files using a Makefile, a script or a compiler.
