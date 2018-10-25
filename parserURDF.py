@@ -13,7 +13,7 @@ except ImportError as e:
         sys.stderr.write("pip install pillow\n")
     raise e
 
-from collada import *
+from pycollada.collada import *
 
 counter = 0
 
