@@ -15,7 +15,7 @@ We love pull requests from everyone.
 
     > Note: using Atom with the `linter-flake8` linter package ensures that we respect our Python coding styles: `apm install linter-flake8`.
 
-## Sources Rules
+## Source Rules
 
 - Avoid comitting files that exist elsewhere. Instead we should link to the source of these files.
 - Avoid comitting files that can be re-created from other files using a Makefile, a script or a compiler.
