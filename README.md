@@ -7,8 +7,7 @@ This tool converts URDF files to a Webots-readable format.
 ```
 git clone https://github.com/omichel/urdf2webots.git
 cd urdf2webots
-git submodule init
-git submodule update
+pip install -r requirements.txt
 ```
 
 ## Usage
