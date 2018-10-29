@@ -1,0 +1,9 @@
+[submodule "tests/sources/motoman"]
+	path = tests/sources/motoman
+	url = https://github.com/ros-industrial/motoman.git
+[submodule "tests/sources/universal_robot"]
+	path = tests/sources/universal_robot
+	url = https://github.com/ros-industrial/universal_robot.git
+[submodule "tests/sources/pr2_common"]
+	path = tests/sources/pr2_common
+	url = https://github.com/PR2/pr2_common.git
