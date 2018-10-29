@@ -50,6 +50,11 @@ domFile = minidom.parse(xmlFile)
 # if extension == '.xacro':
 #    xacro.main()
 
+parserURDF.setPossiblePathPrefixes([
+    os.path.abspath(os.path.dirname(xmlFile)),
+    os.path.abspath(os.path.join(os.path.dirname(xmlFile), '..'))
+])
+
 for child in domFile.childNodes:
     '''
     if child.localName == 'gazebo':

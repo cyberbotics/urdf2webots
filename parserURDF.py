@@ -15,6 +15,9 @@ except ImportError as e:
 
 from collada import *
 
+# Note: Such kind of global variables should be avoided.
+# To do so, parserURDF.py should be a class.
+pathPrefixes = []
 counter = 0
 
 
@@ -207,6 +210,12 @@ def q_mult(qb, qc):
     return qa
 
 
+def setPossiblePathPrefixes(prefixes):
+    """Set possible path prefixes."""
+    # Note: Path prefixes are used when files are defined relatively.
+    pathPrefixes = prefixes
+
+
 def convertRPYtoEulerAxis(rpy, cylinder=False):
     offset2 = 0.0
     if cylinder:
@@ -249,7 +258,17 @@ def hasElement(node, element):
 
 
 def getSTLMesh(filename, node):
-    stlFile = open(filename, 'rb')
+    stlFile = None
+    if os.path.isfile(filename):
+        stlFile = open(filename, 'rb')
+    else:
+        for path in pathPrefixes:
+            filePath = os.path.join(path, filename)
+            if os.path.isfile(filePath):
+                stlFile = open(filePath, 'rb')
+                break
+        return
+
     stlFile.read(80)
     vertex1 = []
     vertex2 = []
