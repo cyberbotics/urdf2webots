@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/omichel/urdf2webots.svg?branch=master)](https://travis-ci.org/omichel/urdf2webots)
+
 # urdf2webots
 
 This tool converts URDF files to a Webots-readable format.
