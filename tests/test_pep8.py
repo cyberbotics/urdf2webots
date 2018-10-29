@@ -2,8 +2,9 @@
 import unittest
 
 import pep8
+import os
 
-from tests.shared_properties import packageDirectory
+packageDirectory = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..'))
 
 
 class CustomReport(pep8.StandardReport):
