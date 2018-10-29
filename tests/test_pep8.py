@@ -48,7 +48,7 @@ class TestCodeFormat(unittest.TestCase):
         """Test that the tests are PEP8 compliant."""
         checker = pep8.StyleGuide(
             quiet=True,
-            paths=glob.glob(packageDirectory + os.sep + '*.py'),
+            paths=glob.glob(packageDirectory + os.sep + '*.py') + glob.glob(packageDirectory + os.sep + 'tests' + os.sep + '*.py'),
             reporter=CustomReport
         )
         checker.options.ignore = ('E501')  # E501: line too long (> 80 characters)
