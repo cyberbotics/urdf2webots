@@ -51,7 +51,6 @@ domFile = minidom.parse(xmlFile)
 #    xacro.main()
 
 parserURDF.setPossiblePathPrefixes([
-    os.path.abspath(os.path.dirname(xmlFile)),
     os.path.abspath(os.path.join(os.path.dirname(xmlFile), '..'))
 ])
 
