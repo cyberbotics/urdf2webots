@@ -7,3 +7,6 @@
 [submodule "tests/sources/pr2_common"]
 	path = tests/sources/pr2_common
 	url = https://github.com/PR2/pr2_common.git
+[submodule "bin/xarco"]
+	path = bin/xarco
+	url = https://github.com/ros/xacro.git
