@@ -213,6 +213,7 @@ def q_mult(qb, qc):
 def setPossiblePathPrefixes(prefixes):
     """Set possible path prefixes."""
     # Note: Path prefixes are used when files are defined relatively.
+    global pathPrefixes
     pathPrefixes = prefixes
 
 
@@ -258,17 +259,18 @@ def hasElement(node, element):
 
 
 def getSTLMesh(filename, node):
-    stlFile = None
-    if os.path.isfile(filename):
-        stlFile = open(filename, 'rb')
-    else:
+    path = filename
+    if not os.path.isfile(filename):
         for path in pathPrefixes:
             filePath = os.path.join(path, filename)
             if os.path.isfile(filePath):
-                stlFile = open(filePath, 'rb')
+                path = filePath
                 break
-        return
+        if path == filename:
+            return
 
+    print('Load "%s"...' % (filename))
+    stlFile = open(path, 'rb')
     stlFile.read(80)
     vertex1 = []
     vertex2 = []
@@ -285,7 +287,12 @@ def getSTLMesh(filename, node):
     node.geometry.trimesh.coord.append(vertex1[0])
     node.geometry.trimesh.coord.append(vertex2[0])
     node.geometry.trimesh.coord.append(vertex3[0])
+    point = numTriangles / 100
+    increment = numTriangles / 20
     for i in range(1, numTriangles):
+        if (i % (5 * point) == 0):
+            sys.stdout.write("\r[" + "=" * (i / increment) + " " * ((numTriangles - i) / increment) + "]" + str(i / point) + "%")
+            sys.stdout.flush()
         struct.unpack("<3f", stlFile.read(12))
         a = struct.unpack("<3f", stlFile.read(12))
         vertex1.append(a)
