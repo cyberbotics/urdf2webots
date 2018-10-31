@@ -315,7 +315,7 @@ def getPlugins(node):
         if child.localName != 'link'\
             and child.localName != 'joint'\
                 and child.nodeType == xml.dom.minidom.Node.ELEMENT_NODE:
-                pluginList.append(child)
+            pluginList.append(child)
     return pluginList
 
 
@@ -362,10 +362,9 @@ def getSTLMesh(filename, node):
         if trimesh.coord.count(c) == 0:
             trimesh.coord.append(c)
         struct.unpack("H", stlFile.read(2))
-        trimesh.coordIndex.append([
-                                  trimesh.coord.index(vertex1[i]),
-                                  trimesh.coord.index(vertex2[i]),
-                                  trimesh.coord.index(vertex3[i])])
+        trimesh.coordIndex.append([trimesh.coord.index(vertex1[i]),
+                                   trimesh.coord.index(vertex2[i]),
+                                   trimesh.coord.index(vertex3[i])])
     stlFile.close()
     return node
 
@@ -393,48 +392,34 @@ def getColladaMesh(filename, node, link):
                     visual.geometry.trimesh.texCoordIndex.append(val)
             if data.material and data.material.effect:
                 if data.material.effect.emission:
-                    visual.material.emission = colorVector2Instance(
-                        data.material.effect.emission)
+                    visual.material.emission = colorVector2Instance(data.material.effect.emission)
                 if data.material.effect.ambient:
-                    visual.material.ambient = colorVector2Instance(
-                        data.material.effect.ambient)
+                    visual.material.ambient = colorVector2Instance(data.material.effect.ambient)
                 if data.material.effect.specular:
-                    visual.material.specular = colorVector2Instance(
-                        data.material.effect.specular)
+                    visual.material.specular = colorVector2Instance(data.material.effect.specular)
                 if data.material.effect.shininess:
                     visual.material.shininess = data.material.effect.shininess
                 if data.material.effect.index_of_refraction:
-                    visual.material.index_of_refraction =\
-                        data.material.effect.index_of_refraction
+                    visual.material.index_of_refraction = data.material.effect.index_of_refraction
                 if data.material.effect.diffuse:
                     if numpy.size(data.material.effect.diffuse) > 1\
-                        and all([isinstance(x, numbers.Number)
-                                for x in data.material.effect.diffuse]):
+                            and all([isinstance(x, numbers.Number) for x in data.material.effect.diffuse]):
                         # diffuse is defined by values
-                        visual.material.diffuse = colorVector2Instance(
-                            data.material.effect.diffuse)
+                        visual.material.diffuse = colorVector2Instance(data.material.effect.diffuse)
                     else:
                         # diffuse is defined by *.tif files
-                        visual.material.texture = 'textures/'\
-                            + data.material.effect.diffuse.sampler\
-                            .surface.image.path.split('/')[-1]
+                        visual.material.texture = 'textures/' + data.material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
                         txt = os.path.splitext(visual.material.texture)[1]
                         if txt == '.tiff' or txt == '.tif':
                             for dirname, dirnames, filenames in os.walk('.'):
                                 for file in filenames:
-                                    if file == str(visual.material.texture
-                                                   .split('/')[-1]):
+                                    if file == str(visual.material.texture.split('/')[-1]):
                                         try:
                                             tifImage = Image.open(os.path.join(dirname, file))
                                             img = './' + robotName + '_textures'
-                                            tifImage.save(os.path.splitext(
-                                                os.path.join(img, file))[0] + '.png'
-                                            )
-                                            visual.material.texture = \
-                                                robotName + '_textures/'\
-                                                + os.path.splitext(file)[0]\
-                                                + '.png'
-                                            print ('translated image', visual.material.texture)
+                                            tifImage.save(os.path.splitext(os.path.join(img, file))[0] + '.png')
+                                            visual.material.texture = robotName + '_textures/' + os.path.splitext(file)[0] + '.png'
+                                            print ('translated image ' + visual.material.texture)
                                         except IOError:
                                             visual.material.texture = ""
                                             print ('failed to open ' + os.path.join(dirname, file))
@@ -535,8 +520,7 @@ def getInertia(node):
         if inertialElement.getElementsByTagName('origin')[0].getAttribute('rpy'):
             inertia.rotation = getRotation(inertialElement)
     if hasElement(inertialElement, 'mass'):
-        inertia.mass = float(inertialElement.getElementsByTagName('mass')[0]
-                             .getAttribute('value'))
+        inertia.mass = float(inertialElement.getElementsByTagName('mass')[0].getAttribute('value'))
     if hasElement(inertialElement, 'inertia'):
         matrixNode = inertialElement.getElementsByTagName('inertia')[0]
         inertia.ixx = float(matrixNode.getAttribute('ixx'))
@@ -557,36 +541,30 @@ def getVisual(link, node):
             if visualElement.getElementsByTagName('origin')[0].getAttribute('xyz'):
                 visual.position = getPosition(visualElement)
             if visualElement.getElementsByTagName('origin')[0].getAttribute('rpy'):
-                if hasElement(visualElement
-                              .getElementsByTagName('geometry')[0],
-                              'cylinder'):
+                if hasElement(visualElement.getElementsByTagName('geometry')[0], 'cylinder'):
                     visual.rotation = getRotation(visualElement, True)
                 else:
                     visual.rotation = getRotation(visualElement)
-        elif hasElement(visualElement
-                        .getElementsByTagName('geometry')[0],
-                        'cylinder'):
-                visual.rotation = getRotation(visualElement, True)
+        elif hasElement(visualElement.getElementsByTagName('geometry')[0], 'cylinder'):
+            visual.rotation = getRotation(visualElement, True)
 
         geometryElement = visualElement.getElementsByTagName('geometry')[0]
 
         if hasElement(visualElement, 'material'):
             material = visualElement.getElementsByTagName('material')[0]
             if hasElement(material, 'color'):
-                colorElement = material.getElementsByTagName('color')[0]\
-                    .getAttribute('rgba').split()
+                colorElement = material.getElementsByTagName('color')[0].getAttribute('rgba').split()
                 visual.material.diffuse.red = float(colorElement[0])
                 visual.material.diffuse.green = float(colorElement[1])
                 visual.material.diffuse.blue = float(colorElement[2])
                 visual.material.diffuse.alpha = float(colorElement[3])
             if hasElement(material, 'texture'):
                 visual.material.texture = material.getElementsByTagName('texture')[0].getAttribute('filename')
-                if os.path.splitext(visual.material.texture)[1] == '.tiff'\
-                        or os.path.splitext(visual.material.texture)[1] == '.tif':
+                if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':
                     for dirname, dirnames, filenames in os.walk('.'):
                         for filename in filenames:
                             if filename == str(visual.material.texture.split('/')[-1]):
-                                print ('try to translate image', filename)
+                                print ('try to translate image ' + filename)
                                 try:
                                     tifImage = Image.open(os.path.join(dirname, filename))
                                     tifImage.save(os.path.splitext(os.path.join('./'+robotName+'_'+'textures', filename))[0] + '.png')
@@ -639,26 +617,20 @@ def getCollision(link, node):
                 else:
                     collision.rotation = getRotation(collisionElement)
         elif hasElement(collisionElement.getElementsByTagName('geometry')[0], 'cylinder'):
-                collision.rotation = getRotation(collisionElement, True)
+            collision.rotation = getRotation(collisionElement, True)
 
         geometryElement = collisionElement.getElementsByTagName('geometry')[0]
         if hasElement(geometryElement, 'box'):
-            collision.geometry.box.x = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size')
-                                             .split()[0])
-            collision.geometry.box.y = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size')
-                                             .split()[1])
-            collision.geometry.box.z = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size')
-                                             .split()[2])
+            collision.geometry.box.x = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[0])
+            collision.geometry.box.y = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[1])
+            collision.geometry.box.z = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[2])
             link.collision.append(collision)
         elif hasElement(geometryElement, 'cylinder'):
-            collision.geometry.cylinder.radius = float(geometryElement.getElementsByTagName('cylinder')[0]
-                                                       .getAttribute('radius'))
-            collision.geometry.cylinder.length = float(geometryElement.getElementsByTagName('cylinder')[0]
-                                                       .getAttribute('length'))
+            collision.geometry.cylinder.radius = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('radius'))
+            collision.geometry.cylinder.length = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('length'))
             link.collision.append(collision)
         elif hasElement(geometryElement, 'sphere'):
-            collision.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0]
-                                                     .getAttribute('radius'))
+            collision.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
             link.collision.append(collision)
         elif hasElement(geometryElement, 'mesh'):
             meshfile = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
@@ -689,7 +661,7 @@ def getAxis(node):
 
 
 def getCalibration(node):
-    """??????."""
+    """Get the URDF calibration tag."""
     calibration = Calibration()
     calibrationElement = node.getElementsByTagName('calibration')[0]
     if hasElement(calibrationElement, 'rising'):
@@ -728,22 +700,13 @@ def getLimit(node):
 def getSafety(node):
     """Get safety controller of a joint."""
     safety = Safety()
-    if node.getElementsByTagName('safety_controller')[0]\
-            .getAttribute('soft_lower_limit'):
-        safety.lower = float(node.getElementsByTagName('safety_controller')[0]
-                             .getAttribute('soft_lower_limit'))
-    if node.getElementsByTagName('safety_controller')[0]\
-            .getAttribute('soft_upper_limit'):
-        safety.upper = float(node.getElementsByTagName('safety_controller')[0]
-                             .getAttribute('soft_upper_limit'))
-    if node.getElementsByTagName('safety_controller')[0]\
-            .getAttribute('k_position'):
-        safety.kPosition = float(node.getElementsByTagName(
-                                 'safety_controller')[0]
-                                 .getAttribute('k_position'))
-    safety.kVelocity = float(node.getElementsByTagName(
-                             'safety_controller')[0]
-                             .getAttribute('k_velocity'))
+    if node.getElementsByTagName('safety_controller')[0].getAttribute('soft_lower_limit'):
+        safety.lower = float(node.getElementsByTagName('safety_controller')[0].getAttribute('soft_lower_limit'))
+    if node.getElementsByTagName('safety_controller')[0].getAttribute('soft_upper_limit'):
+        safety.upper = float(node.getElementsByTagName('safety_controller')[0].getAttribute('soft_upper_limit'))
+    if node.getElementsByTagName('safety_controller')[0].getAttribute('k_position'):
+        safety.kPosition = float(node.getElementsByTagName('safety_controller')[0].getAttribute('k_position'))
+    safety.kVelocity = float(node.getElementsByTagName('safety_controller')[0].getAttribute('k_velocity'))
     return safety
 
 
