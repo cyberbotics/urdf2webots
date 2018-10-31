@@ -18,12 +18,9 @@ def RGBA2RGB(RGBA_color, RGB_background=RGB()):
     alpha = RGBA_color.alpha
 
     new_color = RGB()
-    new_color.red = (1 - alpha) * RGB_background.red\
-        + alpha * RGBA_color.red
-    new_color.green = (1 - alpha) * RGB_background.green\
-        + alpha * RGBA_color.green
-    new_color.blue = (1 - alpha) * RGB_background.blue\
-        + alpha * RGBA_color.blue
+    new_color.red = (1 - alpha) * RGB_background.red + alpha * RGBA_color.red
+    new_color.green = (1 - alpha) * RGB_background.green + alpha * RGBA_color.green
+    new_color.blue = (1 - alpha) * RGB_background.blue + alpha * RGBA_color.blue
 
     return new_color
 
@@ -31,8 +28,7 @@ def RGBA2RGB(RGBA_color, RGB_background=RGB()):
 def header(proto, srcFile, robotName):
     """Specify VRML file header."""
     proto.write('#VRML_SIM V7.4.0 utf8\n')
-    proto.write('# This is a proto file for Webots for the '
-                + robotName + '\n')
+    proto.write('# This is a proto file for Webots for the ' + robotName + '\n')
     proto.write('# Extracted from: ' + srcFile + '\n\n')
 
 
@@ -67,14 +63,15 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
     indent = '  '
     haveChild = 0
     proto.write(level * indent + ' Solid {\n')
-    proto.write((level + 1) * indent
-                + 'translation ' + str(jointPosition[0])
-                + ' ' + str(jointPosition[1])
-                + ' ' + str(jointPosition[2]) + '\n')
-    proto.write((level + 1) * indent
-                + 'rotation ' + str(jointRotation[0])
-                + ' ' + str(jointRotation[1]) + ' ' + str(jointRotation[2])
-                + ' ' + str(jointRotation[3]) + '\n')
+    proto.write((level + 1) * indent + 'translation '
+                + str(jointPosition[0]) + ' '
+                + str(jointPosition[1]) + ' '
+                + str(jointPosition[2]) + '\n')
+    proto.write((level + 1) * indent + 'rotation '
+                + str(jointRotation[0]) + ' '
+                + str(jointRotation[1]) + ' '
+                + str(jointRotation[2]) + ' '
+                + str(jointRotation[3]) + '\n')
     if dummy:  # case when link not defined but referenced (e.g. Atlas robot)
         pass
     else:
@@ -82,29 +79,25 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
         proto.write((level + 1) * indent + 'physics Physics {\n')
         proto.write((level + 2) * indent + 'density -1\n')
         proto.write((level + 2) * indent + 'mass ' + str(link.inertia.mass) + '\n')
-        proto.write((level + 2) * indent
-                    + 'inertiaMatrix ['
+        proto.write((level + 2) * indent + 'inertiaMatrix ['
                     + str(link.inertia.ixx) + ' '
                     + str(link.inertia.iyy) + ' '
                     + str(link.inertia.izz) + ' '
                     + str(link.inertia.ixy) + ' '
                     + str(link.inertia.ixz) + ' '
-                    + str(link.inertia.iyz)
-                    + ']\n')
-        proto.write((level + 2) * indent
-                    + 'centerOfMass ['
+                    + str(link.inertia.iyz) + ']\n')
+        proto.write((level + 2) * indent + 'centerOfMass ['
                     + str(link.inertia.position[0]) + ' '
                     + str(link.inertia.position[1]) + ' '
-                    + str(link.inertia.position[2])
-                    + ']\n')
+                    + str(link.inertia.position[2]) + ']\n')
         proto.write((level + 1) * indent + '}\n')
 
         if link.inertia.rotation[-1] != 0.0:  # this should not happend
-            print ('warning: inertia of',
-                   link.name,
-                   'has a non-zero rotation [axis-angle] =',
-                   link.inertia.rotation,
-                   'but it will not be imported in proto!')
+            print (' '.join(['warning: inertia of',
+                             link.name,
+                             'has a non-zero rotation [axis-angle] =',
+                             link.inertia.rotation,
+                             'but it will not be imported in proto!']))
 
         if link.collision:
             URDFBoundingObject(proto, link, level + 1, boxCollision)
@@ -137,8 +130,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
         boundingLevel = level + 2
 
     for boundingObject in link.collision:
-        if boundingObject.position != [0.0, 0.0, 0.0]\
-                or boundingObject.rotation[3] != 0.0:
+        if boundingObject.position != [0.0, 0.0, 0.0] or boundingObject.rotation[3] != 0.0:
             if len(link.collision) > 1:
                 proto.write((level + 2) * indent + 'Transform {\n')
             else:
@@ -163,19 +155,15 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                         + str(boundingObject.geometry.box.z) + '\n')
             proto.write(boundingLevel * indent + '}\n')
 
-        elif boundingObject.geometry.cylinder.radius != 0\
-                and boundingObject.geometry.cylinder.length != 0:
+        elif boundingObject.geometry.cylinder.radius != 0 and boundingObject.geometry.cylinder.length != 0:
             proto.write(boundingLevel * indent + 'Cylinder {\n')
-            proto.write((boundingLevel + 1) * indent + 'radius '
-                        + str(boundingObject.geometry.cylinder.radius) + '\n')
-            proto.write((boundingLevel + 1) * indent + 'height '
-                        + str(boundingObject.geometry.cylinder.length) + '\n')
+            proto.write((boundingLevel + 1) * indent + 'radius ' + str(boundingObject.geometry.cylinder.radius) + '\n')
+            proto.write((boundingLevel + 1) * indent + 'height ' + str(boundingObject.geometry.cylinder.length) + '\n')
             proto.write(boundingLevel * indent + '}\n')
 
         elif boundingObject.geometry.sphere.radius != 0:
             proto.write(boundingLevel * indent + 'Sphere {\n')
-            proto.write((boundingLevel + 1) * indent + 'radius '
-                        + str(boundingObject.geometry.sphere.radius) + '\n')
+            proto.write((boundingLevel + 1) * indent + 'radius ' + str(boundingObject.geometry.sphere.radius) + '\n')
             proto.write(boundingLevel * indent + '}\n')
 
         elif boundingObject.geometry.trimesh.coord != [] and boxCollision:
@@ -199,15 +187,13 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                 aabb['maximum']['z'] = max(aabb['maximum']['z'], z)
 
             proto.write(boundingLevel * indent + 'Transform {\n')
-            proto.write((boundingLevel + 2) * indent
-                        + 'translation %f %f %f\n' % (
+            proto.write((boundingLevel + 2) * indent + 'translation %f %f %f\n' % (
                         0.5 * (aabb['maximum']['x'] + aabb['minimum']['x']),
                         0.5 * (aabb['maximum']['y'] + aabb['minimum']['y']),
                         0.5 * (aabb['maximum']['z'] + aabb['minimum']['z']),))
             proto.write((boundingLevel + 1) * indent + 'children [\n')
             proto.write((boundingLevel + 2) * indent + 'Box {\n')
-            proto.write((boundingLevel + 3) * indent
-                        + 'size %f %f %f\n' % (
+            proto.write((boundingLevel + 3) * indent + 'size %f %f %f\n' % (
                         aabb['maximum']['x'] - aabb['minimum']['x'],
                         aabb['maximum']['y'] - aabb['minimum']['y'],
                         aabb['maximum']['z'] - aabb['minimum']['z'],))
@@ -222,12 +208,9 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write((boundingLevel + 2) * indent + 'point [\n')
             for value in boundingObject.geometry.trimesh.coord:
                 proto.write(boundingLevel * indent
-                            + str(value[0] * boundingObject.geometry.scale[0])
-                            + ' '
-                            + str(value[1] * boundingObject.geometry.scale[1])
-                            + ' '
-                            + str(value[2] * boundingObject.geometry.scale[2])
-                            + '\n')
+                            + str(value[0] * boundingObject.geometry.scale[0]) + ' '
+                            + str(value[1] * boundingObject.geometry.scale[1]) + ' '
+                            + str(value[2] * boundingObject.geometry.scale[2]) + '\n')
             proto.write((boundingLevel + 2) * indent + ']\n')
             proto.write((boundingLevel + 1) * indent + '}\n')
 
@@ -243,10 +226,8 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write(boundingLevel * indent + '}\n')
 
         else:
-            proto.write((boundingLevel + 1) * indent
-                        + 'Box{\n')
-            proto.write((boundingLevel + 1) * indent
-                        + ' size 0.01 0.01 0.01\n')
+            proto.write((boundingLevel + 1) * indent + 'Box{\n')
+            proto.write((boundingLevel + 1) * indent + ' size 0.01 0.01 0.01\n')
             proto.write(boundingLevel * indent + '}\n')
 
         if boundingLevel == level + 4:
@@ -271,8 +252,7 @@ def URDFShape(proto, link, level):
         group = True
 
     for visualNode in link.visual:
-        if visualNode.position != [0.0, 0.0, 0.0]\
-                or visualNode.rotation[3] != 0:
+        if visualNode.position != [0.0, 0.0, 0.0] or visualNode.rotation[3] != 0:
             proto.write(shapeLevel * indent + 'Transform {\n')
             proto.write((shapeLevel + 1) * indent + 'translation '
                         + str(visualNode.position[0]) + ' '
@@ -295,56 +275,43 @@ def URDFShape(proto, link, level):
             proto.write((shapeLevel + 2) * indent + 'material Material {\n')
             # the following color calculation could be wrong!!!
             ambientColor = RGBA2RGB(visualNode.material.ambient)
-            diffuseColor = RGBA2RGB(visualNode.material.diffuse,
-                                    RGB_background=ambientColor)
-            ambient_mag = np.linalg.norm([ambientColor.red, ambientColor.green,
-                                         ambientColor.blue])
-            diffuse_mag = np.linalg.norm([diffuseColor.red, diffuseColor.green,
-                                         diffuseColor.blue])
+            diffuseColor = RGBA2RGB(visualNode.material.diffuse, RGB_background=ambientColor)
+            ambient_mag = np.linalg.norm([ambientColor.red, ambientColor.green, ambientColor.blue])
+            diffuse_mag = np.linalg.norm([diffuseColor.red, diffuseColor.green, diffuseColor.blue])
             if diffuse_mag != 0.0:
                 ambientIntensity = ambient_mag / diffuse_mag
             else:
                 ambientIntensity = 0.0
             # convert rgba to rgb color
-            emissiveColor = RGBA2RGB(visualNode.material.emission,
-                                     RGB_background=ambientColor)
+            emissiveColor = RGBA2RGB(visualNode.material.emission, RGB_background=ambientColor)
             shininess = visualNode.material.shininess
-            specularColor = RGBA2RGB(visualNode.material.specular,
-                                     RGB_background=ambientColor)
+            specularColor = RGBA2RGB(visualNode.material.specular, RGB_background=ambientColor)
             transparency = 1.0 - visualNode.material.diffuse.alpha
-            proto.write((shapeLevel + 3) * indent
-                        + 'ambientIntensity ' + str(ambientIntensity) + '\n')
-            proto.write((shapeLevel + 3) * indent
-                        + 'diffuseColor '
+            proto.write((shapeLevel + 3) * indent + 'ambientIntensity ' + str(ambientIntensity) + '\n')
+            proto.write((shapeLevel + 3) * indent + 'diffuseColor '
                         + str(diffuseColor.red) + ' '
                         + str(diffuseColor.green) + ' '
                         + str(diffuseColor.blue) + '\n')
-            proto.write((shapeLevel + 3) * indent
-                        + 'emissiveColor '
+            proto.write((shapeLevel + 3) * indent + 'emissiveColor '
                         + str(emissiveColor.red) + ' '
                         + str(emissiveColor.green) + ' '
                         + str(emissiveColor.blue) + '\n')
-            proto.write((shapeLevel + 3) * indent
-                        + 'shininess ' + str(shininess) + '\n')
-            proto.write((shapeLevel + 3) * indent
-                        + 'specularColor '
+            proto.write((shapeLevel + 3) * indent + 'shininess ' + str(shininess) + '\n')
+            proto.write((shapeLevel + 3) * indent + 'specularColor '
                         + str(specularColor.red) + ' '
                         + str(specularColor.green) + ' '
                         + str(specularColor.blue) + '\n')
-            proto.write((shapeLevel + 3) * indent
-                        + 'transparency ' + str(transparency) + '\n')
+            proto.write((shapeLevel + 3) * indent + 'transparency ' + str(transparency) + '\n')
             proto.write((shapeLevel + 2) * indent + '}\n')
         if visualNode.material.texture != "":
             proto.write((shapeLevel + 2) * indent + 'texture ImageTexture {\n')
-            proto.write((shapeLevel + 3) * indent
-                        + 'url ["' + visualNode.material.texture + '"]\n')
+            proto.write((shapeLevel + 3) * indent + 'url ["' + visualNode.material.texture + '"]\n')
             proto.write((shapeLevel + 2) * indent + '}\n')
         proto.write((shapeLevel + 1) * indent + '}\n')
 
         if visualNode.geometry.box.x != 0:
             proto.write((shapeLevel + 1) * indent + 'geometry Box {\n')
-            proto.write((shapeLevel + 2) * indent
-                        + ' size '
+            proto.write((shapeLevel + 2) * indent + ' size '
                         + str(visualNode.geometry.box.x) + ' '
                         + str(visualNode.geometry.box.y) + ' '
                         + str(visualNode.geometry.box.z) + '\n')
@@ -352,36 +319,24 @@ def URDFShape(proto, link, level):
 
         elif visualNode.geometry.cylinder.radius != 0:
             proto.write((shapeLevel + 1) * indent + 'geometry Cylinder {\n')
-            proto.write((shapeLevel + 2) * indent
-                        + 'radius ' + str(visualNode.geometry.cylinder.radius)
-                        + '\n')
-            proto.write((shapeLevel + 2) * indent
-                        + 'height ' + str(visualNode.geometry.cylinder.length)
-                        + '\n')
+            proto.write((shapeLevel + 2) * indent + 'radius ' + str(visualNode.geometry.cylinder.radius) + '\n')
+            proto.write((shapeLevel + 2) * indent + 'height ' + str(visualNode.geometry.cylinder.length) + '\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
 
         elif visualNode.geometry.sphere.radius != 0:
             proto.write((shapeLevel + 1) * indent + 'geometry Sphere {\n')
-            proto.write((shapeLevel + 2) * indent
-                        + 'radius ' + str(visualNode.geometry.sphere.radius)
-                        + '\n')
+            proto.write((shapeLevel + 2) * indent + 'radius ' + str(visualNode.geometry.sphere.radius) + '\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
 
         elif visualNode.geometry.trimesh.coord != []:
-            proto.write((shapeLevel + 1) * indent
-                        + 'geometry IndexedFaceSet {\n')
-            proto.write((shapeLevel + 2) * indent
-                        + 'coord Coordinate {\n')
-            proto.write((shapeLevel + 3) * indent
-                        + 'point [\n')
+            proto.write((shapeLevel + 1) * indent + 'geometry IndexedFaceSet {\n')
+            proto.write((shapeLevel + 2) * indent + 'coord Coordinate {\n')
+            proto.write((shapeLevel + 3) * indent + 'point [\n')
             for value in visualNode.geometry.trimesh.coord:
                 proto.write(shapeLevel * indent
-                            + str(value[0] * visualNode.geometry.scale[0])
-                            + ' '
-                            + str(value[1] * visualNode.geometry.scale[1])
-                            + ' '
-                            + str(value[2] * visualNode.geometry.scale[2])
-                            + '\n')
+                            + str(value[0] * visualNode.geometry.scale[0]) + ' '
+                            + str(value[1] * visualNode.geometry.scale[1]) + ' '
+                            + str(value[2] * visualNode.geometry.scale[2]) + '\n')
             proto.write((shapeLevel + 3) * indent + ']\n')
             proto.write((shapeLevel + 2) * indent + '}\n')
 
@@ -394,21 +349,16 @@ def URDFShape(proto, link, level):
             proto.write((shapeLevel + 2) * indent + ']\n')
 
             if visualNode.geometry.trimesh.texCoord != []:
-                proto.write((shapeLevel + 2) * indent
-                            + 'texCoord TextureCoordinate {\n')
+                proto.write((shapeLevel + 2) * indent + 'texCoord TextureCoordinate {\n')
                 proto.write((shapeLevel + 3) * indent + 'point [\n')
                 for value in visualNode.geometry.trimesh.texCoord:
-                    proto.write(shapeLevel * indent
-                                + str(value[0]) + ' ' + str(value[1]) + '\n')
+                    proto.write(shapeLevel * indent + str(value[0]) + ' ' + str(value[1]) + '\n')
                 proto.write((shapeLevel + 3) * indent + ']\n')
                 proto.write((shapeLevel + 2) * indent + '}\n')
 
                 proto.write((shapeLevel + 2) * indent + 'texCoordIndex [\n')
                 for value in visualNode.geometry.trimesh.texCoordIndex:
-                    proto.write(shapeLevel * indent
-                                + str(value[0]) + ' '
-                                + str(value[1]) + ' '
-                                + str(value[2]) + ' -1\n')
+                    proto.write(shapeLevel * indent + str(value[0]) + ' ' + str(value[1]) + ' ' + str(value[2]) + ' -1\n')
                 proto.write((shapeLevel + 2) * indent + ']\n')
 
             proto.write((shapeLevel + 2) * indent + 'creaseAngle 1\n')
@@ -430,8 +380,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     indent = '  '
     if joint.type == 'revolute' or joint.type == 'continuous':
         proto.write(level * indent + ' HingeJoint {\n')
-        proto.write((level + 1) * indent
-                    + 'jointParameters HingeJointParameters {\n')
+        proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
         proto.write((level + 2) * indent + 'axis '
                     + str(joint.axis[0]) + ' '
                     + str(joint.axis[1]) + ' '
@@ -440,24 +389,19 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
                     + str(joint.position[0]) + ' '
                     + str(joint.position[1]) + ' '
                     + str(joint.position[2]) + '\n')
-        proto.write((level + 2) * indent
-                    + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
-        proto.write((level + 2) * indent
-                    + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
+        proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
+        proto.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         proto.write((level + 1) * indent + '}\n')
         proto.write((level + 1) * indent + 'device RotationalMotor {\n')
     elif joint.type == 'prismatic':
         proto.write(level * indent + ' SliderJoint {\n')
-        proto.write((level + 1) * indent
-                    + 'jointParameters JointParameters {\n')
+        proto.write((level + 1) * indent + 'jointParameters JointParameters {\n')
         proto.write((level + 2) * indent + 'axis '
                     + str(joint.axis[0]) + ' '
                     + str(joint.axis[1]) + ' '
                     + str(joint.axis[2]) + '\n')
-        proto.write((level + 2) * indent
-                    + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
-        proto.write((level + 2) * indent
-                    + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
+        proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
+        proto.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         proto.write((level + 1) * indent + '}\n')
         proto.write((level + 1) * indent + 'device LinearMotor {\n')
     elif joint.type == 'fixed':
@@ -474,21 +418,16 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
 
     proto.write((level + 2) * indent + 'name "' + joint.name + '"\n')
     if joint.limit.velocity != 0.0:
-        proto.write((level + 2) * indent
-                    + 'maxVelocity ' + str(joint.limit.velocity) + '\n')
+        proto.write((level + 2) * indent + 'maxVelocity ' + str(joint.limit.velocity) + '\n')
     if joint.limit.lower != 0.0:
-        proto.write((level + 2) * indent
-                    + 'minPosition ' + str(joint.limit.lower) + '\n')
+        proto.write((level + 2) * indent + 'minPosition ' + str(joint.limit.lower) + '\n')
     if joint.limit.upper != 0.0:
-        proto.write((level + 2) * indent
-                    + 'maxPosition ' + str(joint.limit.upper) + '\n')
+        proto.write((level + 2) * indent + 'maxPosition ' + str(joint.limit.upper) + '\n')
     if joint.limit.effort != 0.0:
         if joint.type == 'prismatic':
-            proto.write((level + 2) * indent
-                        + 'maxForce ' + str(joint.limit.effort) + '\n')
+            proto.write((level + 2) * indent + 'maxForce ' + str(joint.limit.effort) + '\n')
         else:
-            proto.write((level + 2) * indent
-                        + 'maxTorque ' + str(joint.limit.effort) + '\n')
+            proto.write((level + 2) * indent + 'maxTorque ' + str(joint.limit.effort) + '\n')
     proto.write((level + 1) * indent + '}\n')
 
     proto.write((level + 1) * indent + 'endPoint')
@@ -504,5 +443,5 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         URDFLink(proto, joint.child, level + 1, parentList, childList,
                  linkList, jointList, joint.position, joint.rotation,
                  boxCollision, dummy=True)
-        print ('warning: link', joint.child, 'is dummy!')
+        print ('warning: link ' + joint.child + ' is dummy!')
     proto.write(level * indent + '}\n')
