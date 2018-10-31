@@ -68,7 +68,7 @@ def mkdirSafe(directory):
         if e.errno != errno.EEXIST:
             raise
         else:
-            print ('dir', directory, 'already existing!')
+            print ('dir ' + directory + ' already existing!')
 
 
 for child in domFile.childNodes:
@@ -127,12 +127,13 @@ for child in domFile.childNodes:
                 rootLink = linkList[-1]
                 print ('root link is ' + rootLink.name)
         pluginList = parserURDF.getPlugins(robot)
-        print ('there is ' + str(len(linkList)) + ' links, '
-               + str(len(jointList))
-               + ' joints and ' + str(len(pluginList)) + ' plugins')
+        print ('there is '
+               + str(len(linkList)) + ' links, '
+               + str(len(jointList)) + ' joints and '
+               + str(len(pluginList)) + ' plugins')
 
-        writeProto.URDFLink(protoFile, rootLink, 3, parentList, childList,
-                            linkList, jointList, boxCollision=boxCollision)
+        writeProto.URDFLink(protoFile, rootLink, 3, parentList, childList, linkList, jointList,
+                            boxCollision=boxCollision)
         protoFile.write('    ]\n')
         writeProto.basicPhysics(protoFile)
         protoFile.write('  }\n')
