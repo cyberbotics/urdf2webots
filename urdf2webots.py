@@ -35,7 +35,7 @@ def mkdirSafe(directory):
         if e.errno != errno.EEXIST:
             raise
         else:
-            print('Directory "' + directory + '" already existing!')
+            print('Directory "' + directory + '" already exists!')
 
 
 optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
@@ -119,20 +119,29 @@ with open(options.inFile, 'r') as file:
             childList.sort()
             for link in linkElementList:
                 linkList.append(parserURDF.getLink(link))
-                if parserURDF.isRootLink(linkList[-1].name, childList):
-                    rootLink = linkList[-1]
+            for link in linkList:
+                if parserURDF.isRootLink(link.name, childList):
+                    rootLink = link
                     # if root link has only one joint which type is fixed,
                     # it should not be part of the model (link between robot and static environment)
-                    directJoint = []
-                    for joint in jointList:
-                        if joint.parent == rootLink.name:
-                            directJoint.append(joint)
-                    if len(directJoint) == 1 and directJoint[0].type == 'fixed':
-                        for childLink in linkList:
-                            if childLink.name == directJoint[0].child:
-                                rootLink = childLink
-                                break
+                    while True:
+                        directJoint = []
+                        found = False  # To avoid endless loop
+                        for joint in jointList:
+                            if joint.parent == rootLink.name:
+                                directJoint.append(joint)
+                        if len(directJoint) == 1 and directJoint[0].type == 'fixed':
+                            for childLink in linkList:
+                                if childLink.name == directJoint[0].child:
+                                    rootLink = childLink
+                                    found = True
+                                    break
+                        else:
+                            break
+                        if not found:
+                            break
                     print('Root link: ' + rootLink.name)
+                    break
             pluginList = parserURDF.getPlugins(robot)
             print('There are %d links, %d joints and %d plugins' % (len(linkList), len(jointList), len(pluginList)))
 

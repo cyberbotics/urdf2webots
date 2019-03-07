@@ -93,10 +93,10 @@ class Color():
 
     def __init__(self):
         """Initializatization."""
-        self.red = 0.0
-        self.green = 0.0
-        self.blue = 0.0
-        self.alpha = 0.0
+        self.red = 0.5
+        self.green = 0.5
+        self.blue = 0.5
+        self.alpha = 1.0
 
 
 class Material():
@@ -219,22 +219,22 @@ def vector_norm(data, axis=None, out=None):
         numpy.sqrt(out, out)
 
 
-def vrml_to_q(v):
-    """Convert euler-axes-angle (vrml) to quaternion."""
-    q = [0.0, 0.0, 0.0, 0.0]
-    L = v[0] * v[0] + v[1] * v[1] + v[2] * v[2]
-    if (L > 0.0):
-        q[0] = math.cos(v[3] / 2)
-        L = math.sin(v[3] / 2) / math.sqrt(L)
-        q[1] = v[0] * L
-        q[2] = v[1] * L
-        q[3] = v[2] * L
-    else:
-        q[0] = 1
-        q[1] = 0
-        q[2] = 0
-        q[3] = 0
-    return q
+# def vrml_to_q(v):
+#     """Convert euler-axes-angle (vrml) to quaternion."""
+#     q = [0.0, 0.0, 0.0, 0.0]
+#     L = v[0] * v[0] + v[1] * v[1] + v[2] * v[2]
+#     if (L > 0.0):
+#         q[0] = math.cos(v[3] / 2)
+#         L = math.sin(v[3] / 2) / math.sqrt(L)
+#         q[1] = v[0] * L
+#         q[2] = v[1] * L
+#         q[3] = v[2] * L
+#     else:
+#         q[0] = 1
+#         q[1] = 0
+#         q[2] = 0
+#         q[3] = 0
+#     return q
 
 
 def q_to_vrml(q):
@@ -255,33 +255,36 @@ def q_to_vrml(q):
     return v
 
 
-def q_mult(qb, qc):
-    """Quaternion multiplication (combining rotations)."""
-    qa = [0.0, 0.0, 0.0, 0.0]
-    qa[0] = qb[0] * qc[0] - qb[1] * qc[1] - qb[2] * qc[2] - qb[3] * qc[3]
-    qa[1] = qb[0] * qc[1] + qb[1] * qc[0] + qb[2] * qc[3] - qb[3] * qc[2]
-    qa[2] = qb[0] * qc[2] + qb[2] * qc[0] + qb[3] * qc[1] - qb[1] * qc[3]
-    qa[3] = qb[0] * qc[3] + qb[3] * qc[0] + qb[1] * qc[2] - qb[2] * qc[1]
-    return qa
+# def q_mult(qb, qc):
+#     """Quaternion multiplication (combining rotations)."""
+#     qa = [0.0, 0.0, 0.0, 0.0]
+#     qa[0] = qb[0] * qc[0] - qb[1] * qc[1] - qb[2] * qc[2] - qb[3] * qc[3]
+#     qa[1] = qb[0] * qc[1] + qb[1] * qc[0] + qb[2] * qc[3] - qb[3] * qc[2]
+#     qa[2] = qb[0] * qc[2] + qb[2] * qc[0] + qb[3] * qc[1] - qb[1] * qc[3]
+#     qa[3] = qb[0] * qc[3] + qb[3] * qc[0] + qb[1] * qc[2] - qb[2] * qc[1]
+#     return qa
+
+
+def convertRPYtoQuaternions(rpy):
+    """Convert RPY to quaternions."""
+    cy = math.cos(rpy[2] * 0.5)
+    sy = math.sin(rpy[2] * 0.5)
+    cp = math.cos(rpy[1] * 0.5)
+    sp = math.sin(rpy[1] * 0.5)
+    cr = math.cos(rpy[0] * 0.5)
+    sr = math.sin(rpy[0] * 0.5)
+
+    q = [0, 0, 0, 0]
+    q[0] = cy * cp * cr + sy * sp * sr
+    q[1] = cy * cp * sr - sy * sp * cr
+    q[2] = sy * cp * sr + cy * sp * cr
+    q[3] = sy * cp * cr - cy * sp * sr
+    return q
 
 
 def convertRPYtoEulerAxis(rpy, cylinder=False):
-    """How does this work? A reference?."""
-    offset2 = 0.0
-    if cylinder:
-        offset2 = 1.57
-    ea1 = [0.0, 1.0, 0.0, rpy[1]]
-    ea2 = [1.0, 0.0, 0.0, rpy[0] + offset2]
-    ea3 = [0.0, 0.0, 1.0, rpy[2]]
-    # convert vrml to quaternion representation
-    q1 = vrml_to_q(ea1)
-    q2 = vrml_to_q(ea2)
-    q3 = vrml_to_q(ea3)
-    # combine 3 quaternions into 1
-    qa = q_mult(q1, q2)
-    qb = q_mult(qa, q3)
-    # convert quaternion to vrml
-    return q_to_vrml(qb)
+    """Convert RPY angles to Euler angles."""
+    return q_to_vrml(convertRPYtoQuaternions(rpy))
 
 
 def colorVector2Instance(cv, alpha_last=True):
@@ -372,7 +375,7 @@ def getSTLMesh(filename, node):
 def getColladaMesh(filename, node, link):
     """Read collada file."""
     colladaMesh = Collada(filename)
-    if node.material:
+    if hasattr(node, 'material') and node.material:
         for geometry in list(colladaMesh.scene.objects('geometry')):
             for data in list(geometry.primitives()):
                 visual = Visual()
@@ -426,15 +429,16 @@ def getColladaMesh(filename, node, link):
                 link.visual.append(visual)
     else:
         for geometry in list(colladaMesh.scene.objects('geometry')):
-            collision = Collision()
-            collision.position = node.position
-            collision.rotation = node.rotation
-            collision.geometry.scale = node.geometry.scale
-            for value in data.vertex:
-                collision.geometry.trimesh.coord.append(numpy.array(value))
-            for value in data.vertex_index:
-                collision.geometry.trimesh.coordIndex.append(value)
-            link.collision.append(collision)
+            for data in list(geometry.primitives()):
+                collision = Collision()
+                collision.position = node.position
+                collision.rotation = node.rotation
+                collision.geometry.scale = node.geometry.scale
+                for value in data.vertex:
+                    collision.geometry.trimesh.coord.append(numpy.array(value))
+                for value in data.vertex_index:
+                    collision.geometry.trimesh.coordIndex.append(value)
+                link.collision.append(collision)
 
 
 # the use of collada.scene.object class makes this function useless for now but it may serves in the future

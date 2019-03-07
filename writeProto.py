@@ -6,9 +6,9 @@ class RGB():
 
     def __init__(self):
         """Initialization."""
-        self.red = 0.0
-        self.green = 0.0
-        self.blue = 0.0
+        self.red = 0.5
+        self.green = 0.5
+        self.blue = 0.5
 
 
 # ref: https://marcodiiga.github.io/rgba-to-rgb-conversion
@@ -85,8 +85,8 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
         proto.write((level + 1) * indent + 'physics Physics {\n')
         proto.write((level + 2) * indent + 'density -1\n')
         proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
-        proto.write((level + 2) * indent + 'inertiaMatrix [ %lf %lf %lf, %lf %lf %lf ]\n' % (link.inertia.ixx, link.inertia.iyy, link.inertia.izz, link.inertia.ixy, link.inertia.ixz, link.inertia.iyz))
-        proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0], link.inertia.position[1], link.inertia.position[2]))
+        if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
+            proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0], link.inertia.position[1], link.inertia.position[2]))
         proto.write((level + 1) * indent + '}\n')
 
         if link.inertia.rotation[-1] != 0.0:  # this should not happend
@@ -295,14 +295,10 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     if joint.type == 'revolute' or joint.type == 'continuous':
         proto.write(level * indent + 'HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
-        proto.write((level + 2) * indent + 'axis ' +
-                    str(joint.axis[0]) + ' ' +
-                    str(joint.axis[1]) + ' ' +
-                    str(joint.axis[2]) + '\n')
-        proto.write((level + 2) * indent + 'anchor ' +
-                    str(joint.position[0]) + ' ' +
-                    str(joint.position[1]) + ' ' +
-                    str(joint.position[2]) + '\n')
+        if joint.limit.lower > 0.0:
+            proto.write((level + 2) * indent + 'position %lf \n' % (joint.limit.lower + 0.00001))  # TODO this is wrong as it doesn't move the solid
+        proto.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (joint.axis[0], joint.axis[1], joint.axis[2]))
+        proto.write((level + 2) * indent + 'anchor  %lf %lf %lf\n' % (joint.position[0], joint.position[1], joint.position[2]))
         proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
         proto.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         proto.write((level + 1) * indent + '}\n')
@@ -310,10 +306,9 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     elif joint.type == 'prismatic':
         proto.write(level * indent + 'SliderJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters JointParameters {\n')
-        proto.write((level + 2) * indent + 'axis ' +
-                    str(joint.axis[0]) + ' ' +
-                    str(joint.axis[1]) + ' ' +
-                    str(joint.axis[2]) + '\n')
+        if joint.limit.lower > 0.0:
+            proto.write((level + 2) * indent + 'position %lf \n' % (joint.limit.lower + 0.00001))  # TODO this is wrong as it doesn't move the solid
+        proto.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (joint.axis[0], joint.axis[1], joint.axis[2]))
         proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
         proto.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         proto.write((level + 1) * indent + '}\n')
