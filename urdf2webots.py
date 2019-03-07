@@ -141,6 +141,8 @@ with open(xmlFile, 'r') as file:
                 linkList.append(parserURDF.getLink(link))
                 if parserURDF.isRootLink(linkList[-1].name, childList):
                     rootLink = linkList[-1]
+                    # if root link has only one joint which type is fixed,
+                    # it should not be part of the model (link between robot and static environment)
                     directJoint = []
                     for joint in jointList:
                         if joint.parent == rootLink.name:
