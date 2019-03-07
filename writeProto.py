@@ -45,9 +45,23 @@ def declaration(proto, robotName):
     proto.write('{\n')
 
 
-def rotateVector(vector, rotation):
-    """Rotate the vector by the VRML rotation."""
-    # convert to matrix
+def matrix_multiplication(mat1, mat2):
+    """Multiply two matrices."""
+    matrix = []
+    matrix.append(mat1[0] * mat2[0] + mat1[1] * mat2[3] + mat1[2] * mat2[6])
+    matrix.append(mat1[0] * mat2[1] + mat1[1] * mat2[4] + mat1[2] * mat2[7])
+    matrix.append(mat1[0] * mat2[2] + mat1[1] * mat2[5] + mat1[2] * mat2[8])
+    matrix.append(mat1[3] * mat2[0] + mat1[4] * mat2[3] + mat1[5] * mat2[6])
+    matrix.append(mat1[3] * mat2[1] + mat1[4] * mat2[4] + mat1[5] * mat2[7])
+    matrix.append(mat1[3] * mat2[2] + mat1[4] * mat2[5] + mat1[5] * mat2[8])
+    matrix.append(mat1[6] * mat2[0] + mat1[7] * mat2[3] + mat1[8] * mat2[6])
+    matrix.append(mat1[6] * mat2[1] + mat1[7] * mat2[4] + mat1[8] * mat2[7])
+    matrix.append(mat1[6] * mat2[2] + mat1[7] * mat2[5] + mat1[8] * mat2[8])
+    return matrix
+
+
+def matrixFromRotation(rotation):
+    """Get the 3x3 matrix associated to this VRML rotation."""
     c = math.cos(rotation[3])
     s = math.sin(rotation[3])
     t1 = 1.0 - c
@@ -64,8 +78,33 @@ def rotateVector(vector, rotation):
     matrix.append(t2 - rotation[1] * s)
     matrix.append(t4 + rotation[0] * s)
     matrix.append(rotation[2] * rotation[2] * t1 + c)
+    return matrix
 
+
+def rotationFromMatrix(matrix):
+    """Get the VRML rotation associated to this 3x3 matrix."""
+    rotation = []
+    cosAngle = 0.5 * (matrix[0] + matrix[4] + matrix[8] - 1.0)
+    absCosAngle = abs(cosAngle)
+    if absCosAngle > 1.0:
+        if (absCosAngle - 1.0) > 0.0000001:
+            return [1.0, 0.0, 0.0, 0.0]
+        if cosAngle < 0.0:
+            cosAngle = -1.0
+        else:
+            cosAngle = 1.0
+
+    rotation.append(matrix[7] - matrix[5])
+    rotation.append(matrix[2] - matrix[6])
+    rotation.append(matrix[3] - matrix[1])
+    rotation.append(math.acos(cosAngle))
+    return rotation
+
+
+def rotateVector(vector, rotation):
+    """Rotate the vector by the VRML rotation."""
     # multiply matrix by vector
+    matrix = matrixFromRotation(rotation)
     v = []
     v.append(vector[0] * matrix[0] + vector[1] * matrix[3] + vector[2] * matrix[6])
     v.append(vector[0] * matrix[1] + vector[1] * matrix[4] + vector[2] * matrix[7])
@@ -323,18 +362,28 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     """Write a Joint iteratively."""
     indent = '  '
     axis = joint.axis
+    endpointRotation = joint.rotation
     if joint.rotation[3] != 0.0:
         axis = rotateVector(axis, joint.rotation)
     if joint.type == 'revolute' or joint.type == 'continuous':
         proto.write(level * indent + 'HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
         if joint.limit.lower > 0.0:
-            proto.write((level + 2) * indent + 'position %lf \n' % (joint.limit.lower + 0.00001))  # TODO this is wrong as it doesn't move the solid
+            # if 0 is not in the range, set the position to be the middle of the range
+            position = joint.limit.lower
+            if joint.limit.upper >= joint.limit.lower:
+                position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
+            proto.write((level + 2) * indent + 'position %lf \n' % position)
+            mat1 = matrixFromRotation(endpointRotation)
+            mat2 = matrixFromRotation([axis[0], axis[1], axis[2], position])
+            mat3 = matrix_multiplication(mat2, mat1)
+            endpointRotation = rotationFromMatrix(mat3)
         proto.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
         proto.write((level + 2) * indent + 'anchor  %lf %lf %lf\n' % (joint.position[0], joint.position[1], joint.position[2]))
         proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
         proto.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         proto.write((level + 1) * indent + '}\n')
+        # TODO: add position sensors
         proto.write((level + 1) * indent + 'device RotationalMotor {\n')
     elif joint.type == 'prismatic':
         proto.write(level * indent + 'SliderJoint {\n')
@@ -377,14 +426,14 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     for childLink in linkList:
         if childLink.name == joint.child:
             URDFLink(proto, childLink, level + 1, parentList, childList,
-                     linkList, jointList, joint.position, joint.rotation,
+                     linkList, jointList, joint.position, endpointRotation,
                      boxCollision, endpoint=True)
             assert(not found_link)
             found_link = True
     # case that non-existing link cited, set dummy flag
     if not found_link and joint.child:
         URDFLink(proto, joint.child, level + 1, parentList, childList,
-                 linkList, jointList, joint.position, joint.rotation,
+                 linkList, jointList, joint.position, endpointRotation,
                  boxCollision, dummy=True)
         print('warning: link ' + joint.child + ' is dummy!')
     proto.write(level * indent + '}\n')
