@@ -1,5 +1,4 @@
 """Import modules."""
-import numpy as np
 
 
 class RGB():
