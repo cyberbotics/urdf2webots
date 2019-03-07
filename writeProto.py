@@ -36,9 +36,9 @@ def header(proto, srcFile, robotName):
 def declaration(proto, robotName):
     """Prototype declaration."""
     proto.write('PROTO ' + robotName + ' [\n')
-    proto.write('   field  SFVec3f     translation  0 0 0\n')
-    proto.write('   field  SFRotation  rotation     0 1 0 0\n')
-    proto.write('   field  SFString    controller   "void"\n')
+    proto.write('  field  SFVec3f     translation  0 0 0\n')
+    proto.write('  field  SFRotation  rotation     0 1 0 0\n')
+    proto.write('  field  SFString    controller   "void"\n')
     proto.write(']\n')
     proto.write('{\n')
 
@@ -154,7 +154,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                 aabb['maximum']['z'] = max(aabb['maximum']['z'], z)
 
             proto.write(initialIndent + 'Transform {\n')
-            proto.write((boundingLevel + 2) * indent + 'translation %f %f %f\n' % (
+            proto.write((boundingLevel + 1) * indent + 'translation %f %f %f\n' % (
                         0.5 * (aabb['maximum']['x'] + aabb['minimum']['x']),
                         0.5 * (aabb['maximum']['y'] + aabb['minimum']['y']),
                         0.5 * (aabb['maximum']['z'] + aabb['minimum']['z']),))
