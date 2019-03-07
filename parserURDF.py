@@ -374,56 +374,56 @@ def getColladaMesh(filename, node, link):
     colladaMesh = Collada(filename)
     if node.material:
         for geometry in list(colladaMesh.scene.objects('geometry')):
-            visual = Visual()
-            visual.position = node.position
-            visual.rotation = node.rotation
-            visual.material.texture = ""
-            visual.geometry.scale = node.geometry.scale
-            data = list(geometry.primitives())[0]
-            for val in data.vertex:
-                visual.geometry.trimesh.coord.append(numpy.array(val))
-            for val in data.vertex_index:
-                visual.geometry.trimesh.coordIndex.append(val)
-            if data.texcoordset:  # non-empty
-                for val in data.texcoordset[0]:
-                    visual.geometry.trimesh.texCoord.append(val)
-            if data.texcoord_indexset:  # non-empty
-                for val in data.texcoord_indexset[0]:
-                    visual.geometry.trimesh.texCoordIndex.append(val)
-            if data.material and data.material.effect:
-                if data.material.effect.emission:
-                    visual.material.emission = colorVector2Instance(data.material.effect.emission)
-                if data.material.effect.ambient:
-                    visual.material.ambient = colorVector2Instance(data.material.effect.ambient)
-                if data.material.effect.specular:
-                    visual.material.specular = colorVector2Instance(data.material.effect.specular)
-                if data.material.effect.shininess:
-                    visual.material.shininess = data.material.effect.shininess
-                if data.material.effect.index_of_refraction:
-                    visual.material.index_of_refraction = data.material.effect.index_of_refraction
-                if data.material.effect.diffuse:
-                    if numpy.size(data.material.effect.diffuse) > 1\
-                            and all([isinstance(x, numbers.Number) for x in data.material.effect.diffuse]):
-                        # diffuse is defined by values
-                        visual.material.diffuse = colorVector2Instance(data.material.effect.diffuse)
-                    else:
-                        # diffuse is defined by *.tif files
-                        visual.material.texture = 'textures/' + data.material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
-                        txt = os.path.splitext(visual.material.texture)[1]
-                        if txt == '.tiff' or txt == '.tif':
-                            for dirname, dirnames, filenames in os.walk('.'):
-                                for file in filenames:
-                                    if file == str(visual.material.texture.split('/')[-1]):
-                                        try:
-                                            tifImage = Image.open(os.path.join(dirname, file))
-                                            img = './' + robotName + '_textures'
-                                            tifImage.save(os.path.splitext(os.path.join(img, file))[0] + '.png')
-                                            visual.material.texture = robotName + '_textures/' + os.path.splitext(file)[0] + '.png'
-                                            print('translated image ' + visual.material.texture)
-                                        except IOError:
-                                            visual.material.texture = ""
-                                            print('failed to open ' + os.path.join(dirname, file))
-            link.visual.append(visual)
+            for data in list(geometry.primitives()):
+                visual = Visual()
+                visual.position = node.position
+                visual.rotation = node.rotation
+                visual.material.texture = ""
+                visual.geometry.scale = node.geometry.scale
+                for val in data.vertex:
+                    visual.geometry.trimesh.coord.append(numpy.array(val))
+                for val in data.vertex_index:
+                    visual.geometry.trimesh.coordIndex.append(val)
+                if data.texcoordset:  # non-empty
+                    for val in data.texcoordset[0]:
+                        visual.geometry.trimesh.texCoord.append(val)
+                if data.texcoord_indexset:  # non-empty
+                    for val in data.texcoord_indexset[0]:
+                        visual.geometry.trimesh.texCoordIndex.append(val)
+                if data.material and data.material.effect:
+                    if data.material.effect.emission:
+                        visual.material.emission = colorVector2Instance(data.material.effect.emission)
+                    if data.material.effect.ambient:
+                        visual.material.ambient = colorVector2Instance(data.material.effect.ambient)
+                    if data.material.effect.specular:
+                        visual.material.specular = colorVector2Instance(data.material.effect.specular)
+                    if data.material.effect.shininess:
+                        visual.material.shininess = data.material.effect.shininess
+                    if data.material.effect.index_of_refraction:
+                        visual.material.index_of_refraction = data.material.effect.index_of_refraction
+                    if data.material.effect.diffuse:
+                        if numpy.size(data.material.effect.diffuse) > 1\
+                                and all([isinstance(x, numbers.Number) for x in data.material.effect.diffuse]):
+                            # diffuse is defined by values
+                            visual.material.diffuse = colorVector2Instance(data.material.effect.diffuse)
+                        else:
+                            # diffuse is defined by *.tif files
+                            visual.material.texture = 'textures/' + data.material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
+                            txt = os.path.splitext(visual.material.texture)[1]
+                            if txt == '.tiff' or txt == '.tif':
+                                for dirname, dirnames, filenames in os.walk('.'):
+                                    for file in filenames:
+                                        if file == str(visual.material.texture.split('/')[-1]):
+                                            try:
+                                                tifImage = Image.open(os.path.join(dirname, file))
+                                                img = './' + robotName + '_textures'
+                                                tifImage.save(os.path.splitext(os.path.join(img, file))[0] + '.png')
+                                                visual.material.texture = robotName + '_textures/' + os.path.splitext(file)[0] + '.png'
+                                                print('translated image ' + visual.material.texture)
+                                            except IOError:
+                                                visual.material.texture = ""
+                                                print('failed to open ' + os.path.join(dirname, file))
+                link.visual.append(visual)
     else:
         for geometry in list(colladaMesh.scene.objects('geometry')):
             collision = Collision()
