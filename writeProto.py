@@ -63,15 +63,15 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
     indent = '  '
     haveChild = 0
     proto.write(level * indent + ' Solid {\n')
-    proto.write((level + 1) * indent + 'translation '
-                + str(jointPosition[0]) + ' '
-                + str(jointPosition[1]) + ' '
-                + str(jointPosition[2]) + '\n')
-    proto.write((level + 1) * indent + 'rotation '
-                + str(jointRotation[0]) + ' '
-                + str(jointRotation[1]) + ' '
-                + str(jointRotation[2]) + ' '
-                + str(jointRotation[3]) + '\n')
+    proto.write((level + 1) * indent + 'translation ' +
+                str(jointPosition[0]) + ' ' +
+                str(jointPosition[1]) + ' ' +
+                str(jointPosition[2]) + '\n')
+    proto.write((level + 1) * indent + 'rotation ' +
+                str(jointRotation[0]) + ' ' +
+                str(jointRotation[1]) + ' ' +
+                str(jointRotation[2]) + ' ' +
+                str(jointRotation[3]) + '\n')
     if dummy:  # case when link not defined but referenced (e.g. Atlas robot)
         pass
     else:
@@ -79,17 +79,17 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
         proto.write((level + 1) * indent + 'physics Physics {\n')
         proto.write((level + 2) * indent + 'density -1\n')
         proto.write((level + 2) * indent + 'mass ' + str(link.inertia.mass) + '\n')
-        proto.write((level + 2) * indent + 'inertiaMatrix ['
-                    + str(link.inertia.ixx) + ' '
-                    + str(link.inertia.iyy) + ' '
-                    + str(link.inertia.izz) + ' '
-                    + str(link.inertia.ixy) + ' '
-                    + str(link.inertia.ixz) + ' '
-                    + str(link.inertia.iyz) + ']\n')
-        proto.write((level + 2) * indent + 'centerOfMass ['
-                    + str(link.inertia.position[0]) + ' '
-                    + str(link.inertia.position[1]) + ' '
-                    + str(link.inertia.position[2]) + ']\n')
+        proto.write((level + 2) * indent + 'inertiaMatrix [' +
+                    str(link.inertia.ixx) + ' ' +
+                    str(link.inertia.iyy) + ' ' +
+                    str(link.inertia.izz) + ' ' +
+                    str(link.inertia.ixy) + ' ' +
+                    str(link.inertia.ixz) + ' ' +
+                    str(link.inertia.iyz) + ']\n')
+        proto.write((level + 2) * indent + 'centerOfMass [' +
+                    str(link.inertia.position[0]) + ' ' +
+                    str(link.inertia.position[1]) + ' ' +
+                    str(link.inertia.position[2]) + ']\n')
         proto.write((level + 1) * indent + '}\n')
 
         if link.inertia.rotation[-1] != 0.0:  # this should not happend
@@ -135,24 +135,24 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                 proto.write((level + 2) * indent + 'Transform {\n')
             else:
                 proto.write('Transform {\n')
-            proto.write((boundingLevel + 1) * indent + 'translation '
-                        + str(boundingObject.position[0]) + ' '
-                        + str(boundingObject.position[1]) + ' '
-                        + str(boundingObject.position[2]) + '\n')
-            proto.write((boundingLevel + 1) * indent + 'rotation '
-                        + str(boundingObject.rotation[0]) + ' '
-                        + str(boundingObject.rotation[1]) + ' '
-                        + str(boundingObject.rotation[2]) + ' '
-                        + str(boundingObject.rotation[3]) + '\n')
+            proto.write((boundingLevel + 1) * indent + 'translation ' +
+                        str(boundingObject.position[0]) + ' ' +
+                        str(boundingObject.position[1]) + ' ' +
+                        str(boundingObject.position[2]) + '\n')
+            proto.write((boundingLevel + 1) * indent + 'rotation ' +
+                        str(boundingObject.rotation[0]) + ' ' +
+                        str(boundingObject.rotation[1]) + ' ' +
+                        str(boundingObject.rotation[2]) + ' ' +
+                        str(boundingObject.rotation[3]) + '\n')
             proto.write((boundingLevel + 1) * indent + 'children [\n')
             boundingLevel = boundingLevel + 2
 
         if boundingObject.geometry.box.x != 0:
             proto.write(boundingLevel * indent + 'Box {\n')
-            proto.write((boundingLevel + 1) * indent + ' size '
-                        + str(boundingObject.geometry.box.x) + ' '
-                        + str(boundingObject.geometry.box.y) + ' '
-                        + str(boundingObject.geometry.box.z) + '\n')
+            proto.write((boundingLevel + 1) * indent + ' size ' +
+                        str(boundingObject.geometry.box.x) + ' ' +
+                        str(boundingObject.geometry.box.y) + ' ' +
+                        str(boundingObject.geometry.box.z) + '\n')
             proto.write(boundingLevel * indent + '}\n')
 
         elif boundingObject.geometry.cylinder.radius != 0 and boundingObject.geometry.cylinder.length != 0:
@@ -207,19 +207,19 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write((boundingLevel + 1) * indent + 'coord Coordinate {\n')
             proto.write((boundingLevel + 2) * indent + 'point [\n')
             for value in boundingObject.geometry.trimesh.coord:
-                proto.write(boundingLevel * indent
-                            + str(value[0] * boundingObject.geometry.scale[0]) + ' '
-                            + str(value[1] * boundingObject.geometry.scale[1]) + ' '
-                            + str(value[2] * boundingObject.geometry.scale[2]) + '\n')
+                proto.write(boundingLevel * indent +
+                            str(value[0] * boundingObject.geometry.scale[0]) + ' ' +
+                            str(value[1] * boundingObject.geometry.scale[1]) + ' ' +
+                            str(value[2] * boundingObject.geometry.scale[2]) + '\n')
             proto.write((boundingLevel + 2) * indent + ']\n')
             proto.write((boundingLevel + 1) * indent + '}\n')
 
             proto.write((boundingLevel + 1) * indent + 'coordIndex [\n')
             for value in boundingObject.geometry.trimesh.coordIndex:
-                proto.write(boundingLevel * indent
-                            + str(value[0]) + ' '
-                            + str(value[1]) + ' '
-                            + str(value[2]) + ' -1\n')
+                proto.write(boundingLevel * indent +
+                            str(value[0]) + ' ' +
+                            str(value[1]) + ' ' +
+                            str(value[2]) + ' -1\n')
             proto.write((boundingLevel + 1) * indent + ']\n')
 
             proto.write((boundingLevel + 1) * indent + 'creaseAngle 1\n')
@@ -254,15 +254,15 @@ def URDFShape(proto, link, level):
     for visualNode in link.visual:
         if visualNode.position != [0.0, 0.0, 0.0] or visualNode.rotation[3] != 0:
             proto.write(shapeLevel * indent + 'Transform {\n')
-            proto.write((shapeLevel + 1) * indent + 'translation '
-                        + str(visualNode.position[0]) + ' '
-                        + str(visualNode.position[1]) + ' '
-                        + str(visualNode.position[2]) + '\n')
-            proto.write((shapeLevel + 1) * indent + 'rotation '
-                        + str(visualNode.rotation[0]) + ' '
-                        + str(visualNode.rotation[1]) + ' '
-                        + str(visualNode.rotation[2]) + ' '
-                        + str(visualNode.rotation[3]) + '\n')
+            proto.write((shapeLevel + 1) * indent + 'translation ' +
+                        str(visualNode.position[0]) + ' ' +
+                        str(visualNode.position[1]) + ' ' +
+                        str(visualNode.position[2]) + '\n')
+            proto.write((shapeLevel + 1) * indent + 'rotation ' +
+                        str(visualNode.rotation[0]) + ' ' +
+                        str(visualNode.rotation[1]) + ' ' +
+                        str(visualNode.rotation[2]) + ' ' +
+                        str(visualNode.rotation[3]) + '\n')
             proto.write((shapeLevel + 1) * indent + 'children [\n')
             shapeLevel = shapeLevel + 2
             transform = True
@@ -288,19 +288,19 @@ def URDFShape(proto, link, level):
             specularColor = RGBA2RGB(visualNode.material.specular, RGB_background=ambientColor)
             transparency = 1.0 - visualNode.material.diffuse.alpha
             proto.write((shapeLevel + 3) * indent + 'ambientIntensity ' + str(ambientIntensity) + '\n')
-            proto.write((shapeLevel + 3) * indent + 'diffuseColor '
-                        + str(diffuseColor.red) + ' '
-                        + str(diffuseColor.green) + ' '
-                        + str(diffuseColor.blue) + '\n')
-            proto.write((shapeLevel + 3) * indent + 'emissiveColor '
-                        + str(emissiveColor.red) + ' '
-                        + str(emissiveColor.green) + ' '
-                        + str(emissiveColor.blue) + '\n')
+            proto.write((shapeLevel + 3) * indent + 'diffuseColor ' +
+                        str(diffuseColor.red) + ' ' +
+                        str(diffuseColor.green) + ' ' +
+                        str(diffuseColor.blue) + '\n')
+            proto.write((shapeLevel + 3) * indent + 'emissiveColor ' +
+                        str(emissiveColor.red) + ' ' +
+                        str(emissiveColor.green) + ' ' +
+                        str(emissiveColor.blue) + '\n')
             proto.write((shapeLevel + 3) * indent + 'shininess ' + str(shininess) + '\n')
-            proto.write((shapeLevel + 3) * indent + 'specularColor '
-                        + str(specularColor.red) + ' '
-                        + str(specularColor.green) + ' '
-                        + str(specularColor.blue) + '\n')
+            proto.write((shapeLevel + 3) * indent + 'specularColor ' +
+                        str(specularColor.red) + ' ' +
+                        str(specularColor.green) + ' ' +
+                        str(specularColor.blue) + '\n')
             proto.write((shapeLevel + 3) * indent + 'transparency ' + str(transparency) + '\n')
             proto.write((shapeLevel + 2) * indent + '}\n')
         if visualNode.material.texture != "":
@@ -311,10 +311,10 @@ def URDFShape(proto, link, level):
 
         if visualNode.geometry.box.x != 0:
             proto.write((shapeLevel + 1) * indent + 'geometry Box {\n')
-            proto.write((shapeLevel + 2) * indent + ' size '
-                        + str(visualNode.geometry.box.x) + ' '
-                        + str(visualNode.geometry.box.y) + ' '
-                        + str(visualNode.geometry.box.z) + '\n')
+            proto.write((shapeLevel + 2) * indent + ' size ' +
+                        str(visualNode.geometry.box.x) + ' ' +
+                        str(visualNode.geometry.box.y) + ' ' +
+                        str(visualNode.geometry.box.z) + '\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
 
         elif visualNode.geometry.cylinder.radius != 0:
@@ -333,19 +333,19 @@ def URDFShape(proto, link, level):
             proto.write((shapeLevel + 2) * indent + 'coord Coordinate {\n')
             proto.write((shapeLevel + 3) * indent + 'point [\n')
             for value in visualNode.geometry.trimesh.coord:
-                proto.write(shapeLevel * indent
-                            + str(value[0] * visualNode.geometry.scale[0]) + ' '
-                            + str(value[1] * visualNode.geometry.scale[1]) + ' '
-                            + str(value[2] * visualNode.geometry.scale[2]) + '\n')
+                proto.write(shapeLevel * indent +
+                            str(value[0] * visualNode.geometry.scale[0]) + ' ' +
+                            str(value[1] * visualNode.geometry.scale[1]) + ' ' +
+                            str(value[2] * visualNode.geometry.scale[2]) + '\n')
             proto.write((shapeLevel + 3) * indent + ']\n')
             proto.write((shapeLevel + 2) * indent + '}\n')
 
             proto.write((shapeLevel + 2) * indent + 'coordIndex [\n')
             for value in visualNode.geometry.trimesh.coordIndex:
-                proto.write(shapeLevel * indent
-                            + str(value[0]) + ' '
-                            + str(value[1]) + ' '
-                            + str(value[2]) + ' -1\n')
+                proto.write(shapeLevel * indent +
+                            str(value[0]) + ' ' +
+                            str(value[1]) + ' ' +
+                            str(value[2]) + ' -1\n')
             proto.write((shapeLevel + 2) * indent + ']\n')
 
             if visualNode.geometry.trimesh.texCoord != []:
@@ -381,14 +381,14 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     if joint.type == 'revolute' or joint.type == 'continuous':
         proto.write(level * indent + ' HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
-        proto.write((level + 2) * indent + 'axis '
-                    + str(joint.axis[0]) + ' '
-                    + str(joint.axis[1]) + ' '
-                    + str(joint.axis[2]) + '\n')
-        proto.write((level + 2) * indent + 'anchor '
-                    + str(joint.position[0]) + ' '
-                    + str(joint.position[1]) + ' '
-                    + str(joint.position[2]) + '\n')
+        proto.write((level + 2) * indent + 'axis ' +
+                    str(joint.axis[0]) + ' ' +
+                    str(joint.axis[1]) + ' ' +
+                    str(joint.axis[2]) + '\n')
+        proto.write((level + 2) * indent + 'anchor ' +
+                    str(joint.position[0]) + ' ' +
+                    str(joint.position[1]) + ' ' +
+                    str(joint.position[2]) + '\n')
         proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
         proto.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         proto.write((level + 1) * indent + '}\n')
@@ -396,10 +396,10 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     elif joint.type == 'prismatic':
         proto.write(level * indent + ' SliderJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters JointParameters {\n')
-        proto.write((level + 2) * indent + 'axis '
-                    + str(joint.axis[0]) + ' '
-                    + str(joint.axis[1]) + ' '
-                    + str(joint.axis[2]) + '\n')
+        proto.write((level + 2) * indent + 'axis ' +
+                    str(joint.axis[0]) + ' ' +
+                    str(joint.axis[1]) + ' ' +
+                    str(joint.axis[2]) + '\n')
         proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
         proto.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         proto.write((level + 1) * indent + '}\n')
