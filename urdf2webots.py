@@ -155,11 +155,8 @@ with open(xmlFile, 'r') as file:
             pluginList = parserURDF.getPlugins(robot)
             print('There are %d links, %d joints and %d plugins' % (len(linkList), len(jointList), len(pluginList)))
 
-            writeProto.URDFLink(protoFile, rootLink, 3, parentList, childList, linkList, jointList,
-                                boxCollision=boxCollision)
-            protoFile.write('    ]\n')
-            writeProto.basicPhysics(protoFile)
-            protoFile.write('  }\n')
+            writeProto.URDFLink(protoFile, rootLink, 1, parentList, childList, linkList, jointList,
+                                boxCollision=boxCollision, robot=True)
             protoFile.write('}\n')
             protoFile.close()
             exit(1)

@@ -37,87 +37,61 @@ def header(proto, srcFile, robotName):
 def declaration(proto, robotName):
     """Prototype declaration."""
     proto.write('PROTO ' + robotName + ' [\n')
-    proto.write('   field SFVec3f translation 0 0 0\n')
-    proto.write('   field SFRotation rotation 1 0 0 -1.57\n')
-    proto.write('   field SFString controller "void"\n')
+    proto.write('   field  SFVec3f     translation  0 0 0\n')
+    proto.write('   field  SFRotation  rotation     0 1 0 0\n')
+    proto.write('   field  SFString    controller   "void"\n')
     proto.write(']\n')
     proto.write('{\n')
-    proto.write('  Robot {\n')
-    proto.write('    translation IS translation\n')
-    proto.write('    rotation IS rotation\n')
-    proto.write('    controller IS controller\n')
-    proto.write('    children [\n')
-
-
-def basicPhysics(proto):
-    """Define default physics."""
-    proto.write('    boundingObject Box{\n')
-    proto.write('      size 0.01 0.01 0.01\n')
-    proto.write('    }\n')
-    proto.write('    physics Physics {\n')
-    proto.write('    }\n')
 
 
 def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
              jointPosition=[0.0, 0.0, 0.0], jointRotation=[1.0, 0.0, 0.0, 0.0],
-             boxCollision=False, dummy=False):
+             boxCollision=False, dummy=False, robot=False, endpoint=False):
     """Write a link iteratively."""
     indent = '  '
-    haveChild = 0
-    proto.write(level * indent + ' Solid {\n')
-    proto.write((level + 1) * indent + 'translation ' +
-                str(jointPosition[0]) + ' ' +
-                str(jointPosition[1]) + ' ' +
-                str(jointPosition[2]) + '\n')
-    proto.write((level + 1) * indent + 'rotation ' +
-                str(jointRotation[0]) + ' ' +
-                str(jointRotation[1]) + ' ' +
-                str(jointRotation[2]) + ' ' +
-                str(jointRotation[3]) + '\n')
+    haveChild = False
+    if robot:
+        proto.write(level * indent + 'Robot {\n')
+        proto.write((level + 1) * indent + 'translation IS translation\n')
+        proto.write((level + 1) * indent + 'rotation IS rotation\n')
+        proto.write((level + 1) * indent + 'controller IS controller\n')
+    else:
+        proto.write((' ' if endpoint else level * indent) + 'Solid {\n')
+        proto.write((level + 1) * indent + 'translation %lf %lf %lf\n' % (jointPosition[0], jointPosition[1], jointPosition[2]))
+        proto.write((level + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (jointRotation[0], jointRotation[1], jointRotation[2], jointRotation[3]))
     if dummy:  # case when link not defined but referenced (e.g. Atlas robot)
         pass
     else:
-        proto.write((level + 1) * indent + 'name "' + link.name + '"\n')
-        proto.write((level + 1) * indent + 'physics Physics {\n')
-        proto.write((level + 2) * indent + 'density -1\n')
-        proto.write((level + 2) * indent + 'mass ' + str(link.inertia.mass) + '\n')
-        proto.write((level + 2) * indent + 'inertiaMatrix [' +
-                    str(link.inertia.ixx) + ' ' +
-                    str(link.inertia.iyy) + ' ' +
-                    str(link.inertia.izz) + ' ' +
-                    str(link.inertia.ixy) + ' ' +
-                    str(link.inertia.ixz) + ' ' +
-                    str(link.inertia.iyz) + ']\n')
-        proto.write((level + 2) * indent + 'centerOfMass [' +
-                    str(link.inertia.position[0]) + ' ' +
-                    str(link.inertia.position[1]) + ' ' +
-                    str(link.inertia.position[2]) + ']\n')
-        proto.write((level + 1) * indent + '}\n')
-
-        if link.inertia.rotation[-1] != 0.0:  # this should not happend
-            print(' '.join(['warning: inertia of',
-                             link.name,
-                             'has a non-zero rotation [axis-angle] =',
-                             link.inertia.rotation,
-                             'but it will not be imported in proto!']))
-
-        if link.collision:
-            URDFBoundingObject(proto, link, level + 1, boxCollision)
-
         if link.visual:
             proto.write((level + 1) * indent + 'children [\n')
-            haveChild = 1
+            haveChild = True
             URDFShape(proto, link, level + 2)
 
         for joint in jointList:
             if joint.parent == link.name:
-                if haveChild == 0:
-                    haveChild = 1
+                if not haveChild:
+                    haveChild = True
                     proto.write((level + 1) * indent + 'children [\n')
                 URDFJoint(proto, joint, level + 2, parentList, childList,
                           linkList, jointList, boxCollision)
-    if haveChild == 1:
-        proto.write((level + 1) * indent + ']\n')
+        if haveChild:
+            proto.write((level + 1) * indent + ']\n')
+
+        proto.write((level + 1) * indent + 'name "' + link.name + '"\n')
+
+        if link.collision:
+            URDFBoundingObject(proto, link, level + 1, boxCollision)
+
+        proto.write((level + 1) * indent + 'physics Physics {\n')
+        proto.write((level + 2) * indent + 'density -1\n')
+        proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
+        proto.write((level + 2) * indent + 'inertiaMatrix [ %lf %lf %lf, %lf %lf %lf ]\n' % (link.inertia.ixx, link.inertia.iyy, link.inertia.izz, link.inertia.ixy, link.inertia.ixz, link.inertia.iyz))
+        proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0], link.inertia.position[1], link.inertia.position[2]))
+        proto.write((level + 1) * indent + '}\n')
+
+        if link.inertia.rotation[-1] != 0.0:  # this should not happend
+            print('Warning: inertia of %s has a non-zero rotation [axis-angle] = "%lf %lf %lf %lf" but it will not be imported in proto!' % (link.name, link.inertia.rotation[0], link.inertia.rotation[1], link.inertia.rotation[2], link.inertia.rotation[3]))
+
     proto.write(level * indent + '}\n')
 
 
@@ -126,45 +100,36 @@ def URDFBoundingObject(proto, link, level, boxCollision):
     indent = '  '
     boundingLevel = level
     proto.write(level * indent + 'boundingObject ')
-    if len(link.collision) > 1:
+    hasGroup = len(link.collision) > 1
+    if hasGroup:
         proto.write('Group {\n')
         proto.write((level + 1) * indent + 'children [\n')
         boundingLevel = level + 2
 
     for boundingObject in link.collision:
+        initialIndent = boundingLevel * indent if hasGroup else ''
         if boundingObject.position != [0.0, 0.0, 0.0] or boundingObject.rotation[3] != 0.0:
-            if len(link.collision) > 1:
-                proto.write((level + 2) * indent + 'Transform {\n')
-            else:
-                proto.write('Transform {\n')
-            proto.write((boundingLevel + 1) * indent + 'translation ' +
-                        str(boundingObject.position[0]) + ' ' +
-                        str(boundingObject.position[1]) + ' ' +
-                        str(boundingObject.position[2]) + '\n')
-            proto.write((boundingLevel + 1) * indent + 'rotation ' +
-                        str(boundingObject.rotation[0]) + ' ' +
-                        str(boundingObject.rotation[1]) + ' ' +
-                        str(boundingObject.rotation[2]) + ' ' +
-                        str(boundingObject.rotation[3]) + '\n')
+            proto.write(initialIndent + 'Transform {\n')
+            proto.write((boundingLevel + 1) * indent + 'translation %lf %lf %lf\n' % (boundingObject.position[0], boundingObject.position[1], boundingObject.position[2]))
+            proto.write((boundingLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (boundingObject.rotation[0], boundingObject.rotation[1], boundingObject.rotation[2], boundingObject.rotation[3]))
             proto.write((boundingLevel + 1) * indent + 'children [\n')
             boundingLevel = boundingLevel + 2
+            hasGroup = True
+            initialIndent = boundingLevel * indent
 
         if boundingObject.geometry.box.x != 0:
-            proto.write(boundingLevel * indent + 'Box {\n')
-            proto.write((boundingLevel + 1) * indent + ' size ' +
-                        str(boundingObject.geometry.box.x) + ' ' +
-                        str(boundingObject.geometry.box.y) + ' ' +
-                        str(boundingObject.geometry.box.z) + '\n')
+            proto.write(initialIndent + 'Box {\n')
+            proto.write((boundingLevel + 1) * indent + ' size %lf %lf %lf\n' % (boundingObject.geometry.box.x, boundingObject.geometry.box.y, boundingObject.geometry.box.z))
             proto.write(boundingLevel * indent + '}\n')
 
         elif boundingObject.geometry.cylinder.radius != 0 and boundingObject.geometry.cylinder.length != 0:
-            proto.write(boundingLevel * indent + 'Cylinder {\n')
+            proto.write(initialIndent + 'Cylinder {\n')
             proto.write((boundingLevel + 1) * indent + 'radius ' + str(boundingObject.geometry.cylinder.radius) + '\n')
             proto.write((boundingLevel + 1) * indent + 'height ' + str(boundingObject.geometry.cylinder.length) + '\n')
             proto.write(boundingLevel * indent + '}\n')
 
         elif boundingObject.geometry.sphere.radius != 0:
-            proto.write(boundingLevel * indent + 'Sphere {\n')
+            proto.write(initialIndent + 'Sphere {\n')
             proto.write((boundingLevel + 1) * indent + 'radius ' + str(boundingObject.geometry.sphere.radius) + '\n')
             proto.write(boundingLevel * indent + '}\n')
 
@@ -188,7 +153,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                 aabb['minimum']['z'] = min(aabb['minimum']['z'], z)
                 aabb['maximum']['z'] = max(aabb['maximum']['z'], z)
 
-            proto.write(boundingLevel * indent + 'Transform {\n')
+            proto.write(initialIndent + 'Transform {\n')
             proto.write((boundingLevel + 2) * indent + 'translation %f %f %f\n' % (
                         0.5 * (aabb['maximum']['x'] + aabb['minimum']['x']),
                         0.5 * (aabb['maximum']['y'] + aabb['minimum']['y']),
@@ -204,7 +169,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write(boundingLevel * indent + '}\n')
 
         elif boundingObject.geometry.trimesh.coord != []:
-            proto.write(boundingLevel * indent + 'IndexedFaceSet {\n')
+            proto.write(initialIndent + 'IndexedFaceSet {\n')
 
             proto.write((boundingLevel + 1) * indent + 'coord Coordinate {\n')
             proto.write((boundingLevel + 2) * indent + 'point [\n' + (boundingLevel + 3) * indent)
@@ -220,7 +185,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write(boundingLevel * indent + '}\n')
 
         else:
-            proto.write((boundingLevel + 1) * indent + 'Box{\n')
+            proto.write(initialIndent + 'Box{\n')
             proto.write((boundingLevel + 1) * indent + ' size 0.01 0.01 0.01\n')
             proto.write(boundingLevel * indent + '}\n')
 
@@ -344,7 +309,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     """Write a Joint iteratively."""
     indent = '  '
     if joint.type == 'revolute' or joint.type == 'continuous':
-        proto.write(level * indent + ' HingeJoint {\n')
+        proto.write(level * indent + 'HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
         proto.write((level + 2) * indent + 'axis ' +
                     str(joint.axis[0]) + ' ' +
@@ -359,7 +324,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         proto.write((level + 1) * indent + '}\n')
         proto.write((level + 1) * indent + 'device RotationalMotor {\n')
     elif joint.type == 'prismatic':
-        proto.write(level * indent + ' SliderJoint {\n')
+        proto.write(level * indent + 'SliderJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters JointParameters {\n')
         proto.write((level + 2) * indent + 'axis ' +
                     str(joint.axis[0]) + ' ' +
@@ -401,7 +366,8 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         if childLink.name == joint.child:
             URDFLink(proto, childLink, level + 1, parentList, childList,
                      linkList, jointList, joint.position, joint.rotation,
-                     boxCollision)
+                     boxCollision, endpoint=True)
+            assert(not found_link)
             found_link = True
     # case that non-existing link cited, set dummy flag
     if not found_link and joint.child:
