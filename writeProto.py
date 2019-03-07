@@ -205,24 +205,16 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write(boundingLevel * indent + 'IndexedFaceSet {\n')
 
             proto.write((boundingLevel + 1) * indent + 'coord Coordinate {\n')
-            proto.write((boundingLevel + 2) * indent + 'point [\n')
+            proto.write((boundingLevel + 2) * indent + 'point [\n' + (boundingLevel + 3) * indent)
             for value in boundingObject.geometry.trimesh.coord:
-                proto.write(boundingLevel * indent +
-                            str(value[0] * boundingObject.geometry.scale[0]) + ' ' +
-                            str(value[1] * boundingObject.geometry.scale[1]) + ' ' +
-                            str(value[2] * boundingObject.geometry.scale[2]) + '\n')
-            proto.write((boundingLevel + 2) * indent + ']\n')
+                proto.write('%lf %lf %lf, ' % (value[0] * boundingObject.geometry.scale[0], value[1] * boundingObject.geometry.scale[1], value[2] * boundingObject.geometry.scale[2]))
+            proto.write('\n' + (boundingLevel + 2) * indent + ']\n')
             proto.write((boundingLevel + 1) * indent + '}\n')
 
-            proto.write((boundingLevel + 1) * indent + 'coordIndex [\n')
+            proto.write((boundingLevel + 1) * indent + 'coordIndex [\n' + (boundingLevel + 2) * indent)
             for value in boundingObject.geometry.trimesh.coordIndex:
-                proto.write(boundingLevel * indent +
-                            str(value[0]) + ' ' +
-                            str(value[1]) + ' ' +
-                            str(value[2]) + ' -1\n')
-            proto.write((boundingLevel + 1) * indent + ']\n')
-
-            proto.write((boundingLevel + 1) * indent + 'creaseAngle 1\n')
+                proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
+            proto.write('\n' + (boundingLevel + 1) * indent + ']\n')
             proto.write(boundingLevel * indent + '}\n')
 
         else:
@@ -331,35 +323,29 @@ def URDFShape(proto, link, level):
         elif visualNode.geometry.trimesh.coord != []:
             proto.write((shapeLevel + 1) * indent + 'geometry IndexedFaceSet {\n')
             proto.write((shapeLevel + 2) * indent + 'coord Coordinate {\n')
-            proto.write((shapeLevel + 3) * indent + 'point [\n')
+            proto.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
             for value in visualNode.geometry.trimesh.coord:
-                proto.write(shapeLevel * indent +
-                            str(value[0] * visualNode.geometry.scale[0]) + ' ' +
-                            str(value[1] * visualNode.geometry.scale[1]) + ' ' +
-                            str(value[2] * visualNode.geometry.scale[2]) + '\n')
-            proto.write((shapeLevel + 3) * indent + ']\n')
+                proto.write('%lf %lf %lf, ' % (value[0] * visualNode.geometry.scale[0], value[1] * visualNode.geometry.scale[1], value[2] * visualNode.geometry.scale[2]))
+            proto.write('\n' + (shapeLevel + 3) * indent + ']\n')
             proto.write((shapeLevel + 2) * indent + '}\n')
 
-            proto.write((shapeLevel + 2) * indent + 'coordIndex [\n')
+            proto.write((shapeLevel + 2) * indent + 'coordIndex [\n' + (shapeLevel + 3) * indent)
             for value in visualNode.geometry.trimesh.coordIndex:
-                proto.write(shapeLevel * indent +
-                            str(value[0]) + ' ' +
-                            str(value[1]) + ' ' +
-                            str(value[2]) + ' -1\n')
-            proto.write((shapeLevel + 2) * indent + ']\n')
+                proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
+            proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
 
             if visualNode.geometry.trimesh.texCoord != []:
                 proto.write((shapeLevel + 2) * indent + 'texCoord TextureCoordinate {\n')
-                proto.write((shapeLevel + 3) * indent + 'point [\n')
+                proto.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
                 for value in visualNode.geometry.trimesh.texCoord:
-                    proto.write(shapeLevel * indent + str(value[0]) + ' ' + str(value[1]) + '\n')
-                proto.write((shapeLevel + 3) * indent + ']\n')
+                    proto.write('%lf %lf, ' % (value[0], value[1]))
+                proto.write('\n' + (shapeLevel + 3) * indent + ']\n')
                 proto.write((shapeLevel + 2) * indent + '}\n')
 
-                proto.write((shapeLevel + 2) * indent + 'texCoordIndex [\n')
+                proto.write((shapeLevel + 2) * indent + 'texCoordIndex [\n' + (shapeLevel + 3) * indent)
                 for value in visualNode.geometry.trimesh.texCoordIndex:
-                    proto.write(shapeLevel * indent + str(value[0]) + ' ' + str(value[1]) + ' ' + str(value[2]) + ' -1\n')
-                proto.write((shapeLevel + 2) * indent + ']\n')
+                    proto.write("%d %d %d -1 " % (value[0], value[1], value[2]))
+                proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
 
             proto.write((shapeLevel + 2) * indent + 'creaseAngle 1\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
