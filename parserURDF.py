@@ -304,7 +304,7 @@ def colorVector2Instance(cv, alpha_last=True):
 def getRobotName(node):
     """Parse robot name."""
     name = node.getAttribute('name')
-    print ('the name of the robot is ' + name)
+    print('Robot name: ' + name)
     return name
 
 
@@ -419,10 +419,10 @@ def getColladaMesh(filename, node, link):
                                             img = './' + robotName + '_textures'
                                             tifImage.save(os.path.splitext(os.path.join(img, file))[0] + '.png')
                                             visual.material.texture = robotName + '_textures/' + os.path.splitext(file)[0] + '.png'
-                                            print ('translated image ' + visual.material.texture)
+                                            print('translated image ' + visual.material.texture)
                                         except IOError:
                                             visual.material.texture = ""
-                                            print ('failed to open ' + os.path.join(dirname, file))
+                                            print('failed to open ' + os.path.join(dirname, file))
             link.visual.append(visual)
     else:
         for geometry in list(colladaMesh.scene.objects('geometry')):
@@ -564,14 +564,14 @@ def getVisual(link, node):
                     for dirname, dirnames, filenames in os.walk('.'):
                         for filename in filenames:
                             if filename == str(visual.material.texture.split('/')[-1]):
-                                print ('try to translate image ' + filename)
+                                print('try to translate image ' + filename)
                                 try:
                                     tifImage = Image.open(os.path.join(dirname, filename))
                                     tifImage.save(os.path.splitext(os.path.join('./' + robotName + '_' + 'textures', filename))[0] + '.png')
                                     visual.material.texture = robotName + '_' + 'textures/' + os.path.splitext(filename)[0] + '.png'
                                 except IOError:
                                     visual.material.texture = ""
-                                    print ('failed to open ' + os.path.join(dirname, filename))
+                                    print('failed to open ' + os.path.join(dirname, filename))
 
         if hasElement(geometryElement, 'box'):
             visual.geometry.box.x = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[0])

@@ -12,7 +12,7 @@ from xml.dom import minidom
 
 def usage():
     """Display command usage on standard out stream."""
-    print (sys.argv[0] + ' inputFile.urdf [-o outputFile] [--box-collision]')
+    print(sys.argv[0] + ' inputFile.urdf [-o outputFile] [--box-collision]')
 
 
 def convertLUtoUN(s):
@@ -40,7 +40,7 @@ def mkdirSafe(directory):
         if e.errno != errno.EEXIST:
             raise
         else:
-            print ('dir ' + directory + ' already existing!')
+            print('Directory "' + directory + '" already existing!')
 
 
 if len(sys.argv) < 2:
@@ -80,7 +80,6 @@ with open(xmlFile, 'r') as file:
             directory = os.path.dirname(directory)
         if os.path.split(directory)[1]:
             packagePath = os.path.split(directory)[0]
-            print(packagePath)
             content = content.replace('package:/', packagePath)
         else:
             sys.stderr.write("Can't determine package root path.\n")
@@ -90,7 +89,7 @@ with open(xmlFile, 'r') as file:
     for child in domFile.childNodes:
         '''
         if child.localName == 'gazebo':
-            print ('this is a sdf file')
+            print('this is a sdf file')
             robotName = trainingSDF.getModelName(domFile)
             protoFile = xmlFile.strip('.model')
             protoFile=open(protoFile+'.proto','w')
@@ -104,7 +103,7 @@ with open(xmlFile, 'r') as file:
             protoFile.close()
             exit(0)
         elif child.localName == 'robot':
-            print ('this is an urdf file')
+            print('this is an urdf file')
         '''
         if child.localName == 'robot':
             robotName = convertLUtoUN(parserURDF.getRobotName(child))  # capitalize
@@ -152,12 +151,9 @@ with open(xmlFile, 'r') as file:
                             if childLink.name == directJoint[0].child:
                                 rootLink = childLink
                                 break
-                    print ('root link is ' + rootLink.name)
+                    print('Root link: ' + rootLink.name)
             pluginList = parserURDF.getPlugins(robot)
-            print ('there is ' +
-                   str(len(linkList)) + ' links, ' +
-                   str(len(jointList)) + ' joints and ' +
-                   str(len(pluginList)) + ' plugins')
+            print('There are %d links, %d joints and %d plugins' % (len(linkList), len(jointList), len(pluginList)))
 
             writeProto.URDFLink(protoFile, rootLink, 3, parentList, childList, linkList, jointList,
                                 boxCollision=boxCollision)
@@ -167,4 +163,4 @@ with open(xmlFile, 'r') as file:
             protoFile.write('}\n')
             protoFile.close()
             exit(1)
-print ('could not read file')
+print('Could not read file')

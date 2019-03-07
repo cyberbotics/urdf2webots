@@ -95,7 +95,7 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
         proto.write((level + 1) * indent + '}\n')
 
         if link.inertia.rotation[-1] != 0.0:  # this should not happend
-            print (' '.join(['warning: inertia of',
+            print(' '.join(['warning: inertia of',
                              link.name,
                              'has a non-zero rotation [axis-angle] =',
                              link.inertia.rotation,
@@ -378,7 +378,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         return
 
     elif joint.type == 'floating' or joint.type == 'planar':
-        print (joint.type + ' is not a supported joint type in Webots')
+        print(joint.type + ' is not a supported joint type in Webots')
         return
 
     proto.write((level + 2) * indent + 'name "' + joint.name + '"\n')
@@ -408,5 +408,5 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         URDFLink(proto, joint.child, level + 1, parentList, childList,
                  linkList, jointList, joint.position, joint.rotation,
                  boxCollision, dummy=True)
-        print ('warning: link ' + joint.child + ' is dummy!')
+        print('warning: link ' + joint.child + ' is dummy!')
     proto.write(level * indent + '}\n')
