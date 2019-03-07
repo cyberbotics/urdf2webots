@@ -108,7 +108,7 @@ class Material():
         self.ambient = Color()
         self.diffuse = Color()
         self.specular = Color()
-        self.shininess = 0.0
+        self.shininess = None
         self.index_of_refraction = 1.0
         self.texture = ""
 

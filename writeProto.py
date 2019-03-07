@@ -27,7 +27,9 @@ def RGBA2RGB(RGBA_color, RGB_background=RGB()):
 
 def header(proto, srcFile, robotName):
     """Specify VRML file header."""
-    proto.write('#VRML_SIM V7.4.0 utf8\n')
+    proto.write('#VRML_SIM R2019a utf8\n')
+    proto.write('# license: Apache License 2.0\n')
+    proto.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     proto.write('# This is a proto file for Webots for the ' + robotName + '\n')
     proto.write('# Extracted from: ' + srcFile + '\n\n')
 
@@ -260,44 +262,21 @@ def URDFShape(proto, link, level):
             transform = True
 
         proto.write(shapeLevel * indent + 'Shape {\n')
-        proto.write((shapeLevel + 1) * indent + 'appearance Appearance {\n')
-        if visualNode.material.diffuse.red != 0\
-            or visualNode.material.diffuse.green != 0\
-                or visualNode.material.diffuse.blue != 0:
-            proto.write((shapeLevel + 2) * indent + 'material Material {\n')
-            # the following color calculation could be wrong!!!
-            ambientColor = RGBA2RGB(visualNode.material.ambient)
-            diffuseColor = RGBA2RGB(visualNode.material.diffuse, RGB_background=ambientColor)
-            ambient_mag = np.linalg.norm([ambientColor.red, ambientColor.green, ambientColor.blue])
-            diffuse_mag = np.linalg.norm([diffuseColor.red, diffuseColor.green, diffuseColor.blue])
-            if diffuse_mag != 0.0:
-                ambientIntensity = ambient_mag / diffuse_mag
-            else:
-                ambientIntensity = 0.0
-            # convert rgba to rgb color
-            emissiveColor = RGBA2RGB(visualNode.material.emission, RGB_background=ambientColor)
-            shininess = visualNode.material.shininess
-            specularColor = RGBA2RGB(visualNode.material.specular, RGB_background=ambientColor)
-            transparency = 1.0 - visualNode.material.diffuse.alpha
-            proto.write((shapeLevel + 3) * indent + 'ambientIntensity ' + str(ambientIntensity) + '\n')
-            proto.write((shapeLevel + 3) * indent + 'diffuseColor ' +
-                        str(diffuseColor.red) + ' ' +
-                        str(diffuseColor.green) + ' ' +
-                        str(diffuseColor.blue) + '\n')
-            proto.write((shapeLevel + 3) * indent + 'emissiveColor ' +
-                        str(emissiveColor.red) + ' ' +
-                        str(emissiveColor.green) + ' ' +
-                        str(emissiveColor.blue) + '\n')
-            proto.write((shapeLevel + 3) * indent + 'shininess ' + str(shininess) + '\n')
-            proto.write((shapeLevel + 3) * indent + 'specularColor ' +
-                        str(specularColor.red) + ' ' +
-                        str(specularColor.green) + ' ' +
-                        str(specularColor.blue) + '\n')
-            proto.write((shapeLevel + 3) * indent + 'transparency ' + str(transparency) + '\n')
-            proto.write((shapeLevel + 2) * indent + '}\n')
+        proto.write((shapeLevel + 1) * indent + 'appearance PBRAppearance {\n')
+        ambientColor = RGBA2RGB(visualNode.material.ambient)
+        diffuseColor = RGBA2RGB(visualNode.material.diffuse, RGB_background=ambientColor)
+        emissiveColor = RGBA2RGB(visualNode.material.emission, RGB_background=ambientColor)
+        roughness = 1.0 - visualNode.material.specular.alpha * (visualNode.material.specular.red + visualNode.material.specular.green + visualNode.material.specular.blue) / 3.0
+        if visualNode.material.shininess:
+            roughness *= (1.0 - 0.5 * visualNode.material.shininess)
+        proto.write((shapeLevel + 2) * indent + 'baseColor %lf %lf %lf\n' % (diffuseColor.red, diffuseColor.green, diffuseColor.blue))
+        proto.write((shapeLevel + 2) * indent + 'transparency %lf\n' % (1.0 - visualNode.material.diffuse.alpha))
+        proto.write((shapeLevel + 2) * indent + 'roughness %lf\n' % roughness)
+        proto.write((shapeLevel + 2) * indent + 'metalness 0\n')
+        proto.write((shapeLevel + 2) * indent + 'emissiveColor %lf %lf %lf\n' % (emissiveColor.red, emissiveColor.green, emissiveColor.blue))
         if visualNode.material.texture != "":
-            proto.write((shapeLevel + 2) * indent + 'texture ImageTexture {\n')
-            proto.write((shapeLevel + 3) * indent + 'url ["' + visualNode.material.texture + '"]\n')
+            proto.write((shapeLevel + 2) * indent + 'baseColorMap ImageTexture {\n')
+            proto.write((shapeLevel + 3) * indent + 'url [ "' + visualNode.material.texture + '" ]\n')
             proto.write((shapeLevel + 2) * indent + '}\n')
         proto.write((shapeLevel + 1) * indent + '}\n')
 
