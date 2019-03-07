@@ -141,6 +141,15 @@ with open(xmlFile, 'r') as file:
                 linkList.append(parserURDF.getLink(link))
                 if parserURDF.isRootLink(linkList[-1].name, childList):
                     rootLink = linkList[-1]
+                    directJoint = []
+                    for joint in jointList:
+                        if joint.parent == rootLink.name:
+                            directJoint.append(joint)
+                    if len(directJoint) == 1 and directJoint[0].type == 'fixed':
+                        for childLink in linkList:
+                            if childLink.name == directJoint[0].child:
+                                rootLink = childLink
+                                break
                     print ('root link is ' + rootLink.name)
             pluginList = parserURDF.getPlugins(robot)
             print ('there is ' +
