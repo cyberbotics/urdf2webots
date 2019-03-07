@@ -284,6 +284,7 @@ def convertRPYtoQuaternions(rpy):
 
 def convertRPYtoEulerAxis(rpy, cylinder=False):
     """Convert RPY angles to Euler angles."""
+    # TODO: cylinder is ignored
     return q_to_vrml(convertRPYtoQuaternions(rpy))
 
 
