@@ -14,7 +14,7 @@ except ImportError as e:
         sys.stderr.write("pip install pillow\n")
     raise e
 
-from collada import *
+from collada import Collada
 import numbers
 
 
@@ -567,8 +567,8 @@ def getVisual(link, node):
                                 print ('try to translate image ' + filename)
                                 try:
                                     tifImage = Image.open(os.path.join(dirname, filename))
-                                    tifImage.save(os.path.splitext(os.path.join('./'+robotName+'_'+'textures', filename))[0] + '.png')
-                                    visual.material.texture = robotName+'_'+'textures/' + os.path.splitext(filename)[0] + '.png'
+                                    tifImage.save(os.path.splitext(os.path.join('./' + robotName + '_' + 'textures', filename))[0] + '.png')
+                                    visual.material.texture = robotName + '_' + 'textures/' + os.path.splitext(filename)[0] + '.png'
                                 except IOError:
                                     visual.material.texture = ""
                                     print ('failed to open ' + os.path.join(dirname, filename))
