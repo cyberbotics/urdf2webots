@@ -62,11 +62,6 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
     if dummy:  # case when link not defined but referenced (e.g. Atlas robot)
         pass
     else:
-        if link.visual:
-            proto.write((level + 1) * indent + 'children [\n')
-            haveChild = True
-            URDFShape(proto, link, level + 2)
-
         for joint in jointList:
             if joint.parent == link.name:
                 if not haveChild:
@@ -74,6 +69,12 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
                     proto.write((level + 1) * indent + 'children [\n')
                 URDFJoint(proto, joint, level + 2, parentList, childList,
                           linkList, jointList, boxCollision)
+        if link.visual:
+            if not haveChild:
+                haveChild = True
+                proto.write((level + 1) * indent + 'children [\n')
+            URDFShape(proto, link, level + 2)
+
         if haveChild:
             proto.write((level + 1) * indent + ']\n')
 
@@ -203,27 +204,14 @@ def URDFShape(proto, link, level):
     indent = '  '
     shapeLevel = level
     transform = False
-    group = False
-    if len(link.visual) > 1:
-        proto.write(level * indent + 'Group {\n')
-        proto.write((level + 1) * indent + 'children [\n')
-        shapeLevel = level + 2
-        group = True
 
     for visualNode in link.visual:
         if visualNode.position != [0.0, 0.0, 0.0] or visualNode.rotation[3] != 0:
             proto.write(shapeLevel * indent + 'Transform {\n')
-            proto.write((shapeLevel + 1) * indent + 'translation ' +
-                        str(visualNode.position[0]) + ' ' +
-                        str(visualNode.position[1]) + ' ' +
-                        str(visualNode.position[2]) + '\n')
-            proto.write((shapeLevel + 1) * indent + 'rotation ' +
-                        str(visualNode.rotation[0]) + ' ' +
-                        str(visualNode.rotation[1]) + ' ' +
-                        str(visualNode.rotation[2]) + ' ' +
-                        str(visualNode.rotation[3]) + '\n')
+            proto.write((shapeLevel + 1) * indent + 'translation %lf %lf %lf\n' % (visualNode.position[0], visualNode.position[1], visualNode.position[2]))
+            proto.write((shapeLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (visualNode.rotation[0], visualNode.rotation[1], visualNode.rotation[2], visualNode.rotation[3]))
             proto.write((shapeLevel + 1) * indent + 'children [\n')
-            shapeLevel = shapeLevel + 2
+            shapeLevel += 2
             transform = True
 
         proto.write(shapeLevel * indent + 'Shape {\n')
@@ -298,10 +286,7 @@ def URDFShape(proto, link, level):
         if transform:
             proto.write((shapeLevel - 1) * indent + ']\n')
             proto.write((shapeLevel - 2) * indent + '}\n')
-            shapeLevel = shapeLevel - 2
-    if group:
-        proto.write((shapeLevel - 1) * indent + ']\n')
-        proto.write((shapeLevel - 2) * indent + '}\n')
+            shapeLevel -= 2
 
 
 def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
