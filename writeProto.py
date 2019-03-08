@@ -363,6 +363,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     indent = '  '
     axis = joint.axis
     endpointRotation = joint.rotation
+    endpointPosition = joint.position
     if joint.rotation[3] != 0.0:
         axis = rotateVector(axis, joint.rotation)
     if joint.type == 'revolute' or joint.type == 'continuous':
@@ -383,18 +384,28 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
         proto.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         proto.write((level + 1) * indent + '}\n')
-        # TODO: add position sensors
-        proto.write((level + 1) * indent + 'device RotationalMotor {\n')
+        proto.write((level + 1) * indent + 'device [\n')
+        proto.write((level + 2) * indent + 'RotationalMotor {\n')
     elif joint.type == 'prismatic':
         proto.write(level * indent + 'SliderJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters JointParameters {\n')
         if joint.limit.lower > 0.0:
-            proto.write((level + 2) * indent + 'position %lf \n' % (joint.limit.lower + 0.00001))  # TODO this is wrong as it doesn't move the solid
+            # if 0 is not in the range, set the position to be the middle of the range
+            position = joint.limit.lower
+            if joint.limit.upper >= joint.limit.lower:
+                position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
+            proto.write((level + 2) * indent + 'position %lf \n' % position)
+            length = math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2])
+            if length > 0:
+                endpointPosition[0] += axis[0] / length * position
+                endpointPosition[0] += axis[1] / length * position
+                endpointPosition[0] += axis[2] / length * position
         proto.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
         proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
         proto.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         proto.write((level + 1) * indent + '}\n')
-        proto.write((level + 1) * indent + 'device LinearMotor {\n')
+        proto.write((level + 1) * indent + 'device [\n')
+        proto.write((level + 2) * indent + 'LinearMotor {\n')
     elif joint.type == 'fixed':
         for childLink in linkList:
             if childLink.name == joint.child:
@@ -407,33 +418,37 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         print(joint.type + ' is not a supported joint type in Webots')
         return
 
-    proto.write((level + 2) * indent + 'name "' + joint.name + '"\n')
+    proto.write((level + 3) * indent + 'name "' + joint.name + '"\n')
     if joint.limit.velocity != 0.0:
-        proto.write((level + 2) * indent + 'maxVelocity ' + str(joint.limit.velocity) + '\n')
+        proto.write((level + 3) * indent + 'maxVelocity ' + str(joint.limit.velocity) + '\n')
     if joint.limit.lower != 0.0:
-        proto.write((level + 2) * indent + 'minPosition ' + str(joint.limit.lower) + '\n')
+        proto.write((level + 3) * indent + 'minPosition ' + str(joint.limit.lower) + '\n')
     if joint.limit.upper != 0.0:
-        proto.write((level + 2) * indent + 'maxPosition ' + str(joint.limit.upper) + '\n')
+        proto.write((level + 3) * indent + 'maxPosition ' + str(joint.limit.upper) + '\n')
     if joint.limit.effort != 0.0:
         if joint.type == 'prismatic':
-            proto.write((level + 2) * indent + 'maxForce ' + str(joint.limit.effort) + '\n')
+            proto.write((level + 3) * indent + 'maxForce ' + str(joint.limit.effort) + '\n')
         else:
-            proto.write((level + 2) * indent + 'maxTorque ' + str(joint.limit.effort) + '\n')
-    proto.write((level + 1) * indent + '}\n')
+            proto.write((level + 3) * indent + 'maxTorque ' + str(joint.limit.effort) + '\n')
+    proto.write((level + 2) * indent + '}\n')
+    proto.write((level + 2) * indent + 'PositionSensor {\n')
+    proto.write((level + 3) * indent + 'name "' + joint.name + '_sensor"\n')
+    proto.write((level + 2) * indent + '}\n')
+    proto.write((level + 1) * indent + ']\n')
 
     proto.write((level + 1) * indent + 'endPoint')
     found_link = False
     for childLink in linkList:
         if childLink.name == joint.child:
             URDFLink(proto, childLink, level + 1, parentList, childList,
-                     linkList, jointList, joint.position, endpointRotation,
+                     linkList, jointList, endpointPosition, endpointRotation,
                      boxCollision, endpoint=True)
             assert(not found_link)
             found_link = True
     # case that non-existing link cited, set dummy flag
     if not found_link and joint.child:
         URDFLink(proto, joint.child, level + 1, parentList, childList,
-                 linkList, jointList, joint.position, endpointRotation,
+                 linkList, jointList, endpointPosition, endpointRotation,
                  boxCollision, dummy=True)
         print('warning: link ' + joint.child + ' is dummy!')
     proto.write(level * indent + '}\n')
