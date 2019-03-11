@@ -114,7 +114,7 @@ def rotateVector(vector, rotation):
 
 def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
              jointPosition=[0.0, 0.0, 0.0], jointRotation=[1.0, 0.0, 0.0, 0.0],
-             boxCollision=False, dummy=False, robot=False, endpoint=False):
+             boxCollision=False, dummy=False, robot=False, endpoint=False, sensors=[]):
     """Write a link iteratively."""
     indent = '  '
     haveChild = False
@@ -142,6 +142,13 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
                 haveChild = True
                 proto.write((level + 1) * indent + 'children [\n')
             URDFShape(proto, link, level + 2)
+
+        if sensors:  # Sensors are only added a top level for now
+            if not haveChild:
+                haveChild = True
+                proto.write((level + 1) * indent + 'children [\n')
+            for sensor in sensors:
+                sensor.export(proto, level + 2)
 
         if haveChild:
             proto.write((level + 1) * indent + ']\n')

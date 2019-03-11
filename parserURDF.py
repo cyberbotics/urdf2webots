@@ -1,7 +1,6 @@
 """Import modules."""
 import os
 import sys
-import xml
 import struct
 import math
 import numpy
@@ -217,6 +216,36 @@ class Joint():
         self.safety = Safety()
 
 
+class IMU():
+    """Define an IMU sensor."""
+
+    list = []
+
+    def __init__(self):
+        """Initializatization."""
+        self.name = 'imu'
+        self.gaussianNoise = 0
+
+    def export(self, file, indentationLevel):
+        """Export this IMU."""
+        indent = '  '
+        file.write(indentationLevel * indent + 'Accelerometer [\n')
+        file.write(indentationLevel * indent + '  name "%s accelerometer"\n' % self.name)
+        if self.gaussianNoise > 0:
+            file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' % (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
+        file.write(indentationLevel * indent + '}\n')
+        file.write(indentationLevel * indent + 'Gyro [\n')
+        file.write(indentationLevel * indent + '  name "%s gyro"\n' % self.name)
+        if self.gaussianNoise > 0:
+            file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' % (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
+        file.write(indentationLevel * indent + '}\n')
+        file.write(indentationLevel * indent + 'Compass [\n')
+        file.write(indentationLevel * indent + '  name "%s compass"\n' % self.name)
+        if self.gaussianNoise > 0:
+            file.write(indentationLevel * indent + '  lookupTable [-1 -1 %lf, 1 1 %lf]\n' % -self.gaussianNoise, self.gaussianNoise)
+        file.write(indentationLevel * indent + '}\n')
+
+
 def vector_norm(data, axis=None, out=None):
     """Calculate norm of a vector."""
     data = numpy.array(data, dtype=numpy.float64, copy=True)
@@ -297,17 +326,6 @@ def getRobotName(node):
     name = node.getAttribute('name')
     print('Robot name: ' + name)
     return name
-
-
-def getPlugins(node):
-    """Get plugins."""
-    pluginList = []
-    for child in node.childNodes:
-        if child.localName != 'link'\
-            and child.localName != 'joint'\
-                and child.nodeType == xml.dom.minidom.Node.ELEMENT_NODE:
-            pluginList.append(child)
-    return pluginList
 
 
 def hasElement(node, element):
@@ -748,3 +766,15 @@ def isRootLink(link, childList):
         if link == child:
             return False
     return True
+
+
+def parseGazeboElement(element):
+    """Parse a Gazebo element."""
+    for plugin in element.getElementsByTagName('plugin'):
+        if plugin.hasAttribute('filename') and plugin.getAttribute('filename').startswith('libgazebo_ros_imu'):
+            imu = IMU()
+            if hasElement(plugin, 'topicName'):
+                imu.name = plugin.getElementsByTagName('topicName')[0].firstChild.nodeValue
+            if hasElement(plugin, 'gaussianNoise'):
+                imu.gaussianNoise = float(plugin.getElementsByTagName('gaussianNoise')[0].firstChild.nodeValue)
+            IMU.list.append(imu)
