@@ -112,9 +112,9 @@ def rotateVector(vector, rotation):
     return v
 
 
-def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
+def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sensorList,
              jointPosition=[0.0, 0.0, 0.0], jointRotation=[1.0, 0.0, 0.0, 0.0],
-             boxCollision=False, dummy=False, robot=False, endpoint=False, sensors=[]):
+             boxCollision=False, dummy=False, robot=False, endpoint=False):
     """Write a link iteratively."""
     indent = '  '
     haveChild = False
@@ -136,18 +136,18 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList,
                     haveChild = True
                     proto.write((level + 1) * indent + 'children [\n')
                 URDFJoint(proto, joint, level + 2, parentList, childList,
-                          linkList, jointList, boxCollision)
+                          linkList, jointList, sensorList, boxCollision)
         if link.visual:
             if not haveChild:
                 haveChild = True
                 proto.write((level + 1) * indent + 'children [\n')
             URDFShape(proto, link, level + 2)
 
-        if sensors:  # Sensors are only added a top level for now
-            if not haveChild:
-                haveChild = True
-                proto.write((level + 1) * indent + 'children [\n')
-            for sensor in sensors:
+        for sensor in sensorList:
+            if sensor.parentLink == link.name:
+                if not haveChild:
+                    haveChild = True
+                    proto.write((level + 1) * indent + 'children [\n')
                 sensor.export(proto, level + 2)
 
         if haveChild:
@@ -365,7 +365,7 @@ def URDFShape(proto, link, level):
 
 
 def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
-              boxCollision):
+              sensorList, boxCollision):
     """Write a Joint iteratively."""
     indent = '  '
     axis = joint.axis
@@ -417,7 +417,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         for childLink in linkList:
             if childLink.name == joint.child:
                 URDFLink(proto, childLink, level, parentList, childList,
-                         linkList, jointList, joint.position, joint.rotation,
+                         linkList, jointList, sensorList, joint.position, joint.rotation,
                          boxCollision)
         return
 
@@ -448,14 +448,14 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     for childLink in linkList:
         if childLink.name == joint.child:
             URDFLink(proto, childLink, level + 1, parentList, childList,
-                     linkList, jointList, endpointPosition, endpointRotation,
+                     linkList, jointList, sensorList, endpointPosition, endpointRotation,
                      boxCollision, endpoint=True)
             assert(not found_link)
             found_link = True
     # case that non-existing link cited, set dummy flag
     if not found_link and joint.child:
         URDFLink(proto, joint.child, level + 1, parentList, childList,
-                 linkList, jointList, endpointPosition, endpointRotation,
+                 linkList, jointList, sensorList, endpointPosition, endpointRotation,
                  boxCollision, dummy=True)
         print('warning: link ' + joint.child + ' is dummy!')
     proto.write(level * indent + '}\n')

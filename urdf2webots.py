@@ -107,8 +107,6 @@ with open(options.inFile, 'r') as file:
                 elif child.localName == 'material':
                     material = parserURDF.Material()
                     material.parseFromMaterialNode(child)
-                elif child.localName == 'gazebo':
-                    parserURDF.parseGazeboElement(child)
 
             linkList = []
             jointList = []
@@ -147,12 +145,17 @@ with open(options.inFile, 'r') as file:
                             break
                     print('Root link: ' + rootLink.name)
                     break
+
+            for child in robot.childNodes:
+                if child.localName == 'gazebo':
+                    parserURDF.parseGazeboElement(child, rootLink.name)
+
             sensorList = parserURDF.IMU.list
             print('There are %d links, %d joints and %d sensors' % (len(linkList), len(jointList), len(sensorList)))
 
             writeProto.declaration(protoFile, robotName)
             writeProto.URDFLink(protoFile, rootLink, 1, parentList, childList, linkList, jointList,
-                                boxCollision=options.boxCollision, robot=True, sensors=sensorList)
+                                sensorList, boxCollision=options.boxCollision, robot=True)
             protoFile.write('}\n')
             protoFile.close()
             exit(1)

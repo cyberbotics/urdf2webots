@@ -225,6 +225,7 @@ class IMU():
         """Initializatization."""
         self.name = 'imu'
         self.gaussianNoise = 0
+        self.parentLink = None
 
     def export(self, file, indentationLevel):
         """Export this IMU."""
@@ -768,11 +769,12 @@ def isRootLink(link, childList):
     return True
 
 
-def parseGazeboElement(element):
+def parseGazeboElement(element, parentLink):
     """Parse a Gazebo element."""
     for plugin in element.getElementsByTagName('plugin'):
         if plugin.hasAttribute('filename') and plugin.getAttribute('filename').startswith('libgazebo_ros_imu'):
             imu = IMU()
+            imu.parentLink = parentLink
             if hasElement(plugin, 'topicName'):
                 imu.name = plugin.getElementsByTagName('topicName')[0].firstChild.nodeValue
             if hasElement(plugin, 'gaussianNoise'):
