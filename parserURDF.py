@@ -247,6 +247,78 @@ class IMU():
         file.write(indentationLevel * indent + '}\n')
 
 
+class Camera():
+    """Define a camera sensor."""
+
+    list = []
+
+    def __init__(self):
+        """Initializatization."""
+        self.name = 'camera'
+        self.fov = None
+        self.width = None
+        self.height = None
+        self.noise = None
+
+    def export(self, file, indentationLevel):
+        """Export this camera."""
+        indent = '  '
+        file.write(indentationLevel * indent + 'Camera [\n')
+        file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
+        if self.fov:
+            file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
+        if self.width:
+            file.write(indentationLevel * indent + '  width %d\n' % self.width)
+        if self.height:
+            file.write(indentationLevel * indent + '  height %d\n' % self.height)
+        if self.noise:
+            file.write(indentationLevel * indent + '  noise %lf\n' % self.noise)
+        file.write(indentationLevel * indent + '}\n')
+
+
+class Lidar():
+    """Define a lidar sensor."""
+
+    list = []
+
+    def __init__(self):
+        """Initializatization."""
+        self.name = 'lidar'
+        self.fov = None
+        self.verticalFieldOfView = None
+        self.horizontalResolution = None
+        self.numberOfLayers = 1
+        self.minRange = None
+        self.maxRange = None
+        self.resolution = None
+        self.noise = None
+
+    def export(self, file, indentationLevel):
+        """Export this camera."""
+        indent = '  '
+        file.write(indentationLevel * indent + 'Lidar [\n')
+        file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
+        if self.fov:
+            file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
+        if self.verticalFieldOfView:
+            file.write(indentationLevel * indent + '  verticalFieldOfView %lf\n' % self.verticalFieldOfView)
+        if self.horizontalResolution:
+            file.write(indentationLevel * indent + '  horizontalResolution %d\n' % self.horizontalResolution)
+        if self.numberOfLayers:
+            file.write(indentationLevel * indent + '  numberOfLayers %d\n' % self.numberOfLayers)
+        if self.minRange:
+            if self.minRange < 0.01:
+                file.write(indentationLevel * indent + '  near %lf\n' % self.minRange)
+            file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
+        if self.maxRange:
+            file.write(indentationLevel * indent + '  maxRange %lf\n' % self.maxRange)
+        if self.noise:
+            file.write(indentationLevel * indent + '  noise %lf\n' % self.noise)
+        if self.resolution:
+            file.write(indentationLevel * indent + '  resolution %lf\n' % self.resolution)
+        file.write(indentationLevel * indent + '}\n')
+
+
 def vector_norm(data, axis=None, out=None):
     """Calculate norm of a vector."""
     data = numpy.array(data, dtype=numpy.float64, copy=True)
@@ -769,7 +841,7 @@ def isRootLink(link, childList):
     return True
 
 
-def parseGazeboElement(element, parentLink):
+def parseGazeboElement(element, parentLink, linkList):
     """Parse a Gazebo element."""
     for plugin in element.getElementsByTagName('plugin'):
         if plugin.hasAttribute('filename') and plugin.getAttribute('filename').startswith('libgazebo_ros_imu'):
@@ -780,3 +852,69 @@ def parseGazeboElement(element, parentLink):
             if hasElement(plugin, 'gaussianNoise'):
                 imu.gaussianNoise = float(plugin.getElementsByTagName('gaussianNoise')[0].firstChild.nodeValue)
             IMU.list.append(imu)
+    for sensorElement in element.getElementsByTagName('sensor'):
+        sensorElement = element.getElementsByTagName('sensor')[0]
+        if sensorElement.getAttribute('type') == 'camera':
+            camera = Camera()
+            camera.parentLink = parentLink
+            if element.hasAttribute('reference') and element.getAttribute('reference') in linkList:
+                camera.parentLink = element.getAttribute('reference')
+            camera.name = sensorElement.getAttribute('name')
+            if hasElement(sensorElement, 'camera'):
+                cameraElement = sensorElement.getElementsByTagName('camera')[0]
+                if hasElement(cameraElement, 'horizontal_fov'):
+                    camera.fov = float(cameraElement.getElementsByTagName('horizontal_fov')[0].firstChild.nodeValue)
+                if hasElement(cameraElement, 'image'):
+                    imageElement = cameraElement.getElementsByTagName('image')[0]
+                    if hasElement(imageElement, 'width'):
+                        camera.width = int(imageElement.getElementsByTagName('width')[0].firstChild.nodeValue)
+                    if hasElement(imageElement, 'height'):
+                        camera.height = int(imageElement.getElementsByTagName('height')[0].firstChild.nodeValue)
+                    if hasElement(imageElement, 'format') and imageElement.getElementsByTagName('format')[0].firstChild.nodeValue != 'R8G8B8A8':
+                        print('Unsupported "%lf" image format, using "R8G8B8A8" instead.' % imageElement.getElementsByTagName('format')[0].firstChild.nodeValue)
+            if hasElement(sensorElement, 'noise'):
+                noiseElement = sensorElement.getElementsByTagName('noise')[0]
+                if hasElement(noiseElement, 'stddev'):
+                    camera.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
+            Camera.list.append(camera)
+        elif sensorElement.getAttribute('type') == 'ray':
+            lidar = Lidar()
+            lidar.parentLink = parentLink
+            if element.hasAttribute('reference') and element.getAttribute('reference') in linkList:
+                lidar.parentLink = element.getAttribute('reference')
+            lidar.name = sensorElement.getAttribute('name')
+            if hasElement(sensorElement, 'ray'):
+                rayElement = sensorElement.getElementsByTagName('ray')[0]
+                if hasElement(rayElement, 'scan'):
+                    scanElement = rayElement.getElementsByTagName('scan')[0]
+                    if hasElement(scanElement, 'horizontal'):
+                        horizontalElement = scanElement.getElementsByTagName('horizontal')[0]
+                        if hasElement(horizontalElement, 'samples'):
+                            lidar.horizontalResolution = int(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
+                        if hasElement(horizontalElement, 'min_angle') and hasElement(horizontalElement, 'max_angle'):
+                            minAngle = float(horizontalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
+                            maxAngle = float(horizontalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
+                            lidar.fov = maxAngle - minAngle
+                    if hasElement(scanElement, 'vertical'):
+                        horizontalElement = scanElement.getElementsByTagName('horizontal')[0]
+                        if hasElement(horizontalElement, 'samples'):
+                            lidar.numberOfLayers = int(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
+                        if hasElement(horizontalElement, 'min_angle') and hasElement(horizontalElement, 'max_angle'):
+                            minAngle = float(horizontalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
+                            maxAngle = float(horizontalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
+                            lidar.verticalFieldOfView = maxAngle - minAngle
+                if hasElement(rayElement, 'range'):
+                    rangeElement = rayElement.getElementsByTagName('range')[0]
+                    if hasElement(rangeElement, 'min'):
+                        lidar.minRange = float(rangeElement.getElementsByTagName('min')[0].firstChild.nodeValue)
+                    if hasElement(rangeElement, 'max'):
+                        lidar.maxRange = float(rangeElement.getElementsByTagName('max')[0].firstChild.nodeValue)
+                    if hasElement(rangeElement, 'resolution'):
+                        lidar.resolution = float(rangeElement.getElementsByTagName('resolution')[0].firstChild.nodeValue)
+                if hasElement(sensorElement, 'noise'):
+                    noiseElement = sensorElement.getElementsByTagName('noise')[0]
+                    if hasElement(noiseElement, 'stddev'):
+                        lidar.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
+                        if lidar.maxRange:
+                            lidar.noise /= lidar.maxRange
+            Lidar.list.append(lidar)

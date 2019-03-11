@@ -148,9 +148,9 @@ with open(options.inFile, 'r') as file:
 
             for child in robot.childNodes:
                 if child.localName == 'gazebo':
-                    parserURDF.parseGazeboElement(child, rootLink.name)
+                    parserURDF.parseGazeboElement(child, rootLink.name, linkList)
 
-            sensorList = parserURDF.IMU.list
+            sensorList = parserURDF.IMU.list + parserURDF.Camera.list + parserURDF.Lidar.list
             print('There are %d links, %d joints and %d sensors' % (len(linkList), len(jointList), len(sensorList)))
 
             writeProto.declaration(protoFile, robotName)
