@@ -230,17 +230,17 @@ class IMU():
     def export(self, file, indentationLevel):
         """Export this IMU."""
         indent = '  '
-        file.write(indentationLevel * indent + 'Accelerometer [\n')
+        file.write(indentationLevel * indent + 'Accelerometer {\n')
         file.write(indentationLevel * indent + '  name "%s accelerometer"\n' % self.name)
         if self.gaussianNoise > 0:
             file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' % (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
         file.write(indentationLevel * indent + '}\n')
-        file.write(indentationLevel * indent + 'Gyro [\n')
+        file.write(indentationLevel * indent + 'Gyro {\n')
         file.write(indentationLevel * indent + '  name "%s gyro"\n' % self.name)
         if self.gaussianNoise > 0:
             file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' % (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
         file.write(indentationLevel * indent + '}\n')
-        file.write(indentationLevel * indent + 'Compass [\n')
+        file.write(indentationLevel * indent + 'Compass {\n')
         file.write(indentationLevel * indent + '  name "%s compass"\n' % self.name)
         if self.gaussianNoise > 0:
             file.write(indentationLevel * indent + '  lookupTable [-1 -1 %lf, 1 1 %lf]\n' % -self.gaussianNoise, self.gaussianNoise)
@@ -263,7 +263,7 @@ class Camera():
     def export(self, file, indentationLevel):
         """Export this camera."""
         indent = '  '
-        file.write(indentationLevel * indent + 'Camera [\n')
+        file.write(indentationLevel * indent + 'Camera {\n')
         file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
         if self.fov:
             file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
@@ -296,7 +296,7 @@ class Lidar():
     def export(self, file, indentationLevel):
         """Export this camera."""
         indent = '  '
-        file.write(indentationLevel * indent + 'Lidar [\n')
+        file.write(indentationLevel * indent + 'Lidar {\n')
         file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
         if self.fov:
             file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
