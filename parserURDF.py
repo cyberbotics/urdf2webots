@@ -3,6 +3,7 @@ import os
 import sys
 import struct
 import math_utils
+import gazebo_materials
 import numpy
 try:
     from PIL import Image
@@ -589,6 +590,20 @@ def getVisual(link, node):
                 visual.material.diffuse.alpha = float(colorElement[3])
             elif material.hasAttribute('name') and material.getAttribute('name') in Material.namedMaterial:
                 visual.material = Material.namedMaterial[material.getAttribute('name')]
+            elif material.firstChild and material.firstChild.nodeValue in gazebo_materials.materials:
+                materialName = material.firstChild.nodeValue
+                visual.material.diffuse.red = float(gazebo_materials.materials[materialName]['diffuse'][0])
+                visual.material.diffuse.green = float(gazebo_materials.materials[materialName]['diffuse'][1])
+                visual.material.diffuse.blue = float(gazebo_materials.materials[materialName]['diffuse'][2])
+                visual.material.diffuse.alpha = float(gazebo_materials.materials[materialName]['diffuse'][3])
+                visual.material.ambient.red = float(gazebo_materials.materials[materialName]['ambient'][0])
+                visual.material.ambient.green = float(gazebo_materials.materials[materialName]['ambient'][1])
+                visual.material.ambient.blue = float(gazebo_materials.materials[materialName]['ambient'][2])
+                visual.material.ambient.alpha = float(gazebo_materials.materials[materialName]['ambient'][3])
+                visual.material.specular.red = float(gazebo_materials.materials[materialName]['specular'][0])
+                visual.material.specular.green = float(gazebo_materials.materials[materialName]['specular'][1])
+                visual.material.specular.blue = float(gazebo_materials.materials[materialName]['specular'][2])
+                visual.material.specular.alpha = float(gazebo_materials.materials[materialName]['specular'][3])
             if hasElement(material, 'texture'):
                 visual.material.texture = material.getElementsByTagName('texture')[0].getAttribute('filename')
                 if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':
