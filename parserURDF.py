@@ -219,24 +219,6 @@ def vector_norm(data, axis=None, out=None):
         numpy.sqrt(out, out)
 
 
-# def vrml_to_q(v):
-#     """Convert euler-axes-angle (vrml) to quaternion."""
-#     q = [0.0, 0.0, 0.0, 0.0]
-#     L = v[0] * v[0] + v[1] * v[1] + v[2] * v[2]
-#     if (L > 0.0):
-#         q[0] = math.cos(v[3] / 2)
-#         L = math.sin(v[3] / 2) / math.sqrt(L)
-#         q[1] = v[0] * L
-#         q[2] = v[1] * L
-#         q[3] = v[2] * L
-#     else:
-#         q[0] = 1
-#         q[1] = 0
-#         q[2] = 0
-#         q[3] = 0
-#     return q
-
-
 def q_to_vrml(q):
     """Convert quaternion to euler-axes-angle (vrml)."""
     v = [0.0, 0.0, 0.0, 0.0]
@@ -255,18 +237,10 @@ def q_to_vrml(q):
     return v
 
 
-# def q_mult(qb, qc):
-#     """Quaternion multiplication (combining rotations)."""
-#     qa = [0.0, 0.0, 0.0, 0.0]
-#     qa[0] = qb[0] * qc[0] - qb[1] * qc[1] - qb[2] * qc[2] - qb[3] * qc[3]
-#     qa[1] = qb[0] * qc[1] + qb[1] * qc[0] + qb[2] * qc[3] - qb[3] * qc[2]
-#     qa[2] = qb[0] * qc[2] + qb[2] * qc[0] + qb[3] * qc[1] - qb[1] * qc[3]
-#     qa[3] = qb[0] * qc[3] + qb[3] * qc[0] + qb[1] * qc[2] - qb[2] * qc[1]
-#     return qa
-
-
-def convertRPYtoQuaternions(rpy):
+def convertRPYtoQuaternions(rpy, cylinder=False):
     """Convert RPY to quaternions."""
+    if cylinder:
+        rpy[0] += 0.5 * math.pi
     cy = math.cos(rpy[2] * 0.5)
     sy = math.sin(rpy[2] * 0.5)
     cp = math.cos(rpy[1] * 0.5)
@@ -284,8 +258,7 @@ def convertRPYtoQuaternions(rpy):
 
 def convertRPYtoEulerAxis(rpy, cylinder=False):
     """Convert RPY angles to Euler angles."""
-    # TODO: cylinder is ignored
-    return q_to_vrml(convertRPYtoQuaternions(rpy))
+    return q_to_vrml(convertRPYtoQuaternions(rpy, cylinder))
 
 
 def colorVector2Instance(cv, alpha_last=True):
