@@ -1,6 +1,7 @@
 """Import modules."""
 
 import math
+import math_utils
 
 
 class RGB():
@@ -43,73 +44,6 @@ def declaration(proto, robotName):
     proto.write('  field  SFString    controller   "void"\n')
     proto.write(']\n')
     proto.write('{\n')
-
-
-def matrix_multiplication(mat1, mat2):
-    """Multiply two matrices."""
-    matrix = []
-    matrix.append(mat1[0] * mat2[0] + mat1[1] * mat2[3] + mat1[2] * mat2[6])
-    matrix.append(mat1[0] * mat2[1] + mat1[1] * mat2[4] + mat1[2] * mat2[7])
-    matrix.append(mat1[0] * mat2[2] + mat1[1] * mat2[5] + mat1[2] * mat2[8])
-    matrix.append(mat1[3] * mat2[0] + mat1[4] * mat2[3] + mat1[5] * mat2[6])
-    matrix.append(mat1[3] * mat2[1] + mat1[4] * mat2[4] + mat1[5] * mat2[7])
-    matrix.append(mat1[3] * mat2[2] + mat1[4] * mat2[5] + mat1[5] * mat2[8])
-    matrix.append(mat1[6] * mat2[0] + mat1[7] * mat2[3] + mat1[8] * mat2[6])
-    matrix.append(mat1[6] * mat2[1] + mat1[7] * mat2[4] + mat1[8] * mat2[7])
-    matrix.append(mat1[6] * mat2[2] + mat1[7] * mat2[5] + mat1[8] * mat2[8])
-    return matrix
-
-
-def matrixFromRotation(rotation):
-    """Get the 3x3 matrix associated to this VRML rotation."""
-    c = math.cos(rotation[3])
-    s = math.sin(rotation[3])
-    t1 = 1.0 - c
-    t2 = rotation[0] * rotation[2] * t1
-    t3 = rotation[0] * rotation[1] * t1
-    t4 = rotation[1] * rotation[2] * t1
-    matrix = []
-    matrix.append(rotation[0] * rotation[0] * t1 + c)
-    matrix.append(t3 - rotation[2] * s)
-    matrix.append(t2 + rotation[1] * s)
-    matrix.append(t3 + rotation[2] * s)
-    matrix.append(rotation[1] * rotation[1] * t1 + c)
-    matrix.append(t4 - rotation[0] * s)
-    matrix.append(t2 - rotation[1] * s)
-    matrix.append(t4 + rotation[0] * s)
-    matrix.append(rotation[2] * rotation[2] * t1 + c)
-    return matrix
-
-
-def rotationFromMatrix(matrix):
-    """Get the VRML rotation associated to this 3x3 matrix."""
-    rotation = []
-    cosAngle = 0.5 * (matrix[0] + matrix[4] + matrix[8] - 1.0)
-    absCosAngle = abs(cosAngle)
-    if absCosAngle > 1.0:
-        if (absCosAngle - 1.0) > 0.0000001:
-            return [1.0, 0.0, 0.0, 0.0]
-        if cosAngle < 0.0:
-            cosAngle = -1.0
-        else:
-            cosAngle = 1.0
-
-    rotation.append(matrix[7] - matrix[5])
-    rotation.append(matrix[2] - matrix[6])
-    rotation.append(matrix[3] - matrix[1])
-    rotation.append(math.acos(cosAngle))
-    return rotation
-
-
-def rotateVector(vector, rotation):
-    """Rotate the vector by the VRML rotation."""
-    # multiply matrix by vector
-    matrix = matrixFromRotation(rotation)
-    v = []
-    v.append(vector[0] * matrix[0] + vector[1] * matrix[3] + vector[2] * matrix[6])
-    v.append(vector[0] * matrix[1] + vector[1] * matrix[4] + vector[2] * matrix[7])
-    v.append(vector[0] * matrix[2] + vector[1] * matrix[5] + vector[2] * matrix[8])
-    return v
 
 
 def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sensorList,
@@ -372,7 +306,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     endpointRotation = joint.rotation
     endpointPosition = joint.position
     if joint.rotation[3] != 0.0 and axis:
-        axis = rotateVector(axis, joint.rotation)
+        axis = math_utils.rotateVector(axis, joint.rotation)
     if joint.type == 'revolute' or joint.type == 'continuous':
         proto.write(level * indent + 'HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
@@ -382,10 +316,10 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
             if joint.limit.upper >= joint.limit.lower:
                 position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
             proto.write((level + 2) * indent + 'position %lf \n' % position)
-            mat1 = matrixFromRotation(endpointRotation)
-            mat2 = matrixFromRotation([axis[0], axis[1], axis[2], position])
-            mat3 = matrix_multiplication(mat2, mat1)
-            endpointRotation = rotationFromMatrix(mat3)
+            mat1 = math_utils.matrixFromRotation(endpointRotation)
+            mat2 = math_utils.matrixFromRotation([axis[0], axis[1], axis[2], position])
+            mat3 = math_utils.matrix_multiplication(mat2, mat1)
+            endpointRotation = math_utils.rotationFromMatrix(mat3)
         proto.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
         proto.write((level + 2) * indent + 'anchor %lf %lf %lf\n' % (joint.position[0], joint.position[1], joint.position[2]))
         proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')

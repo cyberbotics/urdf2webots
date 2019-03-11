@@ -2,7 +2,7 @@
 import os
 import sys
 import struct
-import math
+import math_utils
 import numpy
 try:
     from PIL import Image
@@ -319,64 +319,6 @@ class Lidar():
         file.write(indentationLevel * indent + '}\n')
 
 
-def vector_norm(data, axis=None, out=None):
-    """Calculate norm of a vector."""
-    data = numpy.array(data, dtype=numpy.float64, copy=True)
-    if out is None:
-        if data.ndim == 1:
-            return math.sqrt(numpy.dot(data, data))
-        data *= data
-        out = numpy.atleast_1d(numpy.sum(data, axis=axis))
-        numpy.sqrt(out, out)
-        return out
-    else:
-        data *= data
-        numpy.sum(data, axis=axis, out=out)
-        numpy.sqrt(out, out)
-
-
-def q_to_vrml(q):
-    """Convert quaternion to euler-axes-angle (vrml)."""
-    v = [0.0, 0.0, 0.0, 0.0]
-    v[3] = 2.0 * math.acos(q[0])
-    if (v[3] < 0.0001):
-        # if v[3] close to zero then direction of axis not important
-        v[0] = 0.0
-        v[1] = 1.0
-        v[2] = 0.0
-    else:
-        # normalise axes
-        n = math.sqrt(q[1] * q[1] + q[2] * q[2] + q[3] * q[3])
-        v[0] = q[1] / n
-        v[1] = q[2] / n
-        v[2] = q[3] / n
-    return v
-
-
-def convertRPYtoQuaternions(rpy, cylinder=False):
-    """Convert RPY to quaternions."""
-    if cylinder:
-        rpy[0] += 0.5 * math.pi
-    cy = math.cos(rpy[2] * 0.5)
-    sy = math.sin(rpy[2] * 0.5)
-    cp = math.cos(rpy[1] * 0.5)
-    sp = math.sin(rpy[1] * 0.5)
-    cr = math.cos(rpy[0] * 0.5)
-    sr = math.sin(rpy[0] * 0.5)
-
-    q = [0, 0, 0, 0]
-    q[0] = cy * cp * cr + sy * sp * sr
-    q[1] = cy * cp * sr - sy * sp * cr
-    q[2] = sy * cp * sr + cy * sp * cr
-    q[3] = sy * cp * cr - cy * sp * sr
-    return q
-
-
-def convertRPYtoEulerAxis(rpy, cylinder=False):
-    """Convert RPY angles to Euler angles."""
-    return q_to_vrml(convertRPYtoQuaternions(rpy, cylinder))
-
-
 def colorVector2Instance(cv, alpha_last=True):
     """Eval color object from a vector."""
     c = Color()
@@ -588,9 +530,9 @@ def getRotation(node, isCylinder=False):
         rotation[1] = float(orientationString[1])
         rotation[2] = float(orientationString[2])
     if isCylinder:
-        return convertRPYtoEulerAxis(rotation, True)
+        return math_utils.convertRPYtoEulerAxis(rotation, True)
     else:
-        return convertRPYtoEulerAxis(rotation, False)
+        return math_utils.convertRPYtoEulerAxis(rotation, False)
 
 
 def getInertia(node):
