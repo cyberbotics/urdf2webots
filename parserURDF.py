@@ -91,26 +91,40 @@ class Geometry():
 class Color():
     """Define color object."""
 
-    def __init__(self):
+    def __init__(self, red=0.5, green=0.0, blue=0.0, alpha=1.0):
         """Initializatization."""
-        self.red = 0.5
-        self.green = 0.5
-        self.blue = 0.5
-        self.alpha = 1.0
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.alpha = alpha
 
 
 class Material():
     """Define material object."""
 
+    namedMaterial = {}
+
     def __init__(self):
         """Initializatization."""
-        self.emission = Color()
-        self.ambient = Color()
-        self.diffuse = Color()
-        self.specular = Color()
+        self.emission = Color(0.0, 0.0, 0.0, 1.0)
+        self.ambient = Color(0.0, 0.0, 0.0, 0.0)
+        self.diffuse = Color(0.5, 0.5, 0.5, 1.0)
+        self.specular = Color(0.0, 0.0, 0.0, 1.0)
         self.shininess = None
         self.index_of_refraction = 1.0
         self.texture = ""
+
+    def parseFromMaterialNode(self, node):
+        """Parse a material node."""
+        if hasElement(node, 'color'):
+            colorElement = node.getElementsByTagName('color')[0]
+            colors = colorElement.getAttribute('rgba').split()
+            self.diffuse.r = float(colors[0])
+            self.diffuse.g = float(colors[1])
+            self.diffuse.b = float(colors[2])
+            self.diffuse.alpha = float(colors[3])
+        if node.hasAttribute('name') and node.getAttribute('name') not in Material.namedMaterial:
+            Material.namedMaterial[node.getAttribute('name')] = self
 
 
 class Visual():
@@ -536,6 +550,8 @@ def getVisual(link, node):
                 visual.material.diffuse.green = float(colorElement[1])
                 visual.material.diffuse.blue = float(colorElement[2])
                 visual.material.diffuse.alpha = float(colorElement[3])
+            elif material.hasAttribute('name') and material.getAttribute('name') in Material.namedMaterial:
+                visual.material = Material.namedMaterial[material.getAttribute('name')]
             if hasElement(material, 'texture'):
                 visual.material.texture = material.getElementsByTagName('texture')[0].getAttribute('filename')
                 if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':

@@ -104,6 +104,9 @@ with open(options.inFile, 'r') as file:
                     linkElementList.append(child)
                 elif child.localName == 'joint':
                     jointElementList.append(child)
+                elif child.localName == 'material':
+                    material = parserURDF.Material()
+                    material.parseFromMaterialNode(child)
 
             linkList = []
             jointList = []
