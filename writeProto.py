@@ -364,7 +364,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     axis = joint.axis
     endpointRotation = joint.rotation
     endpointPosition = joint.position
-    if joint.rotation[3] != 0.0:
+    if joint.rotation[3] != 0.0 and axis:
         axis = rotateVector(axis, joint.rotation)
     if joint.type == 'revolute' or joint.type == 'continuous':
         proto.write(level * indent + 'HingeJoint {\n')
@@ -380,7 +380,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
             mat3 = matrix_multiplication(mat2, mat1)
             endpointRotation = rotationFromMatrix(mat3)
         proto.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
-        proto.write((level + 2) * indent + 'anchor  %lf %lf %lf\n' % (joint.position[0], joint.position[1], joint.position[2]))
+        proto.write((level + 2) * indent + 'anchor %lf %lf %lf\n' % (joint.position[0], joint.position[1], joint.position[2]))
         proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
         proto.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         proto.write((level + 1) * indent + '}\n')
