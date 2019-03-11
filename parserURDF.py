@@ -402,7 +402,11 @@ def getColladaMesh(filename, node, link):
                 visual = Visual()
                 visual.position = node.position
                 visual.rotation = node.rotation
-                visual.material.texture = ""
+                visual.material.diffuse.red = node.material.diffuse.red
+                visual.material.diffuse.green = node.material.diffuse.green
+                visual.material.diffuse.blue = node.material.diffuse.blue
+                visual.material.diffuse.alpha = node.material.diffuse.alpha
+                visual.material.texture = node.material.texture
                 visual.geometry.scale = node.geometry.scale
                 for val in data.vertex:
                     visual.geometry.trimesh.coord.append(numpy.array(val))
