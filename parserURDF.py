@@ -481,7 +481,7 @@ def getColladaTransform(node, id):
                         if str(transform).count('Matrix'):
                             matrix = numpy.array(transform.matrix, dtype=numpy.float64, copy=True).T
                             row = matrix[:4, :4].copy()
-                            matrixScale = vector_norm(row[0])
+                            matrixScale = vectorNorm(row[0])
                             row[0] /= matrixScale
                             row[1] /= matrixScale
                             row[2] /= matrixScale

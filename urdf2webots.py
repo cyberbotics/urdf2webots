@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+"""URDF files to Webots PROTO converter."""
+
+
 import os
 import errno
 import re

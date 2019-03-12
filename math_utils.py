@@ -3,7 +3,7 @@ import math
 import numpy
 
 
-def vector_norm(data, axis=None, out=None):
+def vectorNorm(data, axis=None, out=None):
     """Calculate norm of a vector."""
     data = numpy.array(data, dtype=numpy.float64, copy=True)
     if out is None:
@@ -19,7 +19,7 @@ def vector_norm(data, axis=None, out=None):
         numpy.sqrt(out, out)
 
 
-def q_to_vrml(q):
+def rotationFromQuaternion(q):
     """Convert quaternion to euler-axes-angle (vrml)."""
     v = [0.0, 0.0, 0.0, 0.0]
     v[3] = 2.0 * math.acos(q[0])
@@ -58,10 +58,10 @@ def convertRPYtoQuaternions(rpy, cylinder=False):
 
 def convertRPYtoEulerAxis(rpy, cylinder=False):
     """Convert RPY angles to Euler angles."""
-    return q_to_vrml(convertRPYtoQuaternions(rpy, cylinder))
+    return rotationFromQuaternion(convertRPYtoQuaternions(rpy, cylinder))
 
 
-def matrix_multiplication(mat1, mat2):
+def multiplyMatrix(mat1, mat2):
     """Multiply two matrices."""
     matrix = []
     matrix.append(mat1[0] * mat2[0] + mat1[1] * mat2[3] + mat1[2] * mat2[6])

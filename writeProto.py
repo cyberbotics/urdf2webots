@@ -318,7 +318,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
             proto.write((level + 2) * indent + 'position %lf \n' % position)
             mat1 = math_utils.matrixFromRotation(endpointRotation)
             mat2 = math_utils.matrixFromRotation([axis[0], axis[1], axis[2], position])
-            mat3 = math_utils.matrix_multiplication(mat2, mat1)
+            mat3 = math_utils.multiplyMatrix(mat2, mat1)
             endpointRotation = math_utils.rotationFromMatrix(mat3)
         proto.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
         proto.write((level + 2) * indent + 'anchor %lf %lf %lf\n' % (joint.position[0], joint.position[1], joint.position[2]))
