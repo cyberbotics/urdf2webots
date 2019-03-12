@@ -18,6 +18,7 @@ def vectorNorm(data, axis=None, out=None):
         numpy.sum(data, axis=axis, out=out)
         numpy.sqrt(out, out)
 
+
 def rotationFromQuaternion(q):
     """Convert quaternion to euler-axes-angle (vrml)."""
     v = [0.0, 0.0, 0.0, 0.0]
