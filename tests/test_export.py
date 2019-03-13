@@ -30,7 +30,12 @@ class TestScript(unittest.TestCase):
         """Test that urdf2webots produces an expected result."""
         for paths in modelPaths:
             command = 'python %s --input=%s --output=%s' % (urdf2webotsPath, paths['input'], paths['output'])
-            print(command)
             retcode = os.system(command)
             self.assertEqual(retcode, 0, msg='Error when exporting "%s"' % (paths['input']))
+
+            print('### OUTPUT ###')
+            print(paths['output'])
+            print('### EXPECTED ###')
+            print(paths['expected'])
+            print('### DONE ###')
             self.assertTrue(filecmp.cmp(paths['output'], paths['expected']), msg='Expected result mismatch when exporting "%s"' % (paths['input']))
