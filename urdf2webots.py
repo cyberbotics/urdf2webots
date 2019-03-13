@@ -160,5 +160,5 @@ with open(options.inFile, 'r') as file:
                                 sensorList, boxCollision=options.boxCollision, robot=True)
             protoFile.write('}\n')
             protoFile.close()
-            exit(1)
+            exit()
 print('Could not read file')
