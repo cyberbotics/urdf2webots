@@ -1,5 +1,4 @@
 """Test module of the urdf2webots script."""
-import filecmp
 import os
 import unittest
 import shutil
@@ -19,6 +18,17 @@ modelPaths = [
 ]
 
 
+def fileCompare(file1, file2):
+    with open(file1) as f1, open(file2) as f2:
+        for line1, line2 in zip(f1, f2):
+            if line1.startswith('# Extracted from:') and line2.startswith('# Extracted from:'):
+                # This line may differ.
+                continue
+            elif line1 != line2:
+                return False
+    return True
+
+
 class TestScript(unittest.TestCase):
     """Unit test of the the urdf2webots script."""
 
@@ -32,10 +42,4 @@ class TestScript(unittest.TestCase):
             command = 'python %s --input=%s --output=%s' % (urdf2webotsPath, paths['input'], paths['output'])
             retcode = os.system(command)
             self.assertEqual(retcode, 0, msg='Error when exporting "%s"' % (paths['input']))
-
-            print('### OUTPUT ###')
-            print(open(paths['output'], 'r').read())
-            print('### EXPECTED ###')
-            print(open(paths['expected'], 'r').read())
-            print('### DONE ###')
-            self.assertTrue(filecmp.cmp(paths['output'], paths['expected']), msg='Expected result mismatch when exporting "%s"' % (paths['input']))
+            self.assertTrue(fileCompare(paths['output'], paths['expected']), msg='Expected result mismatch when exporting "%s"' % (paths['input']))
