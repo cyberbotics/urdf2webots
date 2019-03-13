@@ -1,9 +1,9 @@
 """Import modules."""
 import os
 import sys
-import xml
 import struct
-import math
+import math_utils
+import gazebo_materials
 import numpy
 try:
     from PIL import Image
@@ -14,7 +14,7 @@ except ImportError as e:
         sys.stderr.write("pip install pillow\n")
     raise e
 
-from collada import *
+from collada import Collada
 import numbers
 
 
@@ -91,26 +91,40 @@ class Geometry():
 class Color():
     """Define color object."""
 
-    def __init__(self):
+    def __init__(self, red=0.5, green=0.0, blue=0.0, alpha=1.0):
         """Initializatization."""
-        self.red = 0.0
-        self.green = 0.0
-        self.blue = 0.0
-        self.alpha = 0.0
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.alpha = alpha
 
 
 class Material():
     """Define material object."""
 
+    namedMaterial = {}
+
     def __init__(self):
         """Initializatization."""
-        self.emission = Color()
-        self.ambient = Color()
-        self.diffuse = Color()
-        self.specular = Color()
-        self.shininess = 0.0
+        self.emission = Color(0.0, 0.0, 0.0, 1.0)
+        self.ambient = Color(0.0, 0.0, 0.0, 0.0)
+        self.diffuse = Color(0.5, 0.5, 0.5, 1.0)
+        self.specular = Color(0.0, 0.0, 0.0, 1.0)
+        self.shininess = None
         self.index_of_refraction = 1.0
         self.texture = ""
+
+    def parseFromMaterialNode(self, node):
+        """Parse a material node."""
+        if hasElement(node, 'color'):
+            colorElement = node.getElementsByTagName('color')[0]
+            colors = colorElement.getAttribute('rgba').split()
+            self.diffuse.r = float(colors[0])
+            self.diffuse.g = float(colors[1])
+            self.diffuse.b = float(colors[2])
+            self.diffuse.alpha = float(colors[3])
+        if node.hasAttribute('name') and node.getAttribute('name') not in Material.namedMaterial:
+            Material.namedMaterial[node.getAttribute('name')] = self
 
 
 class Visual():
@@ -203,85 +217,107 @@ class Joint():
         self.safety = Safety()
 
 
-def vector_norm(data, axis=None, out=None):
-    """Calculate norm of a vector."""
-    data = numpy.array(data, dtype=numpy.float64, copy=True)
-    if out is None:
-        if data.ndim == 1:
-            return math.sqrt(numpy.dot(data, data))
-        data *= data
-        out = numpy.atleast_1d(numpy.sum(data, axis=axis))
-        numpy.sqrt(out, out)
-        return out
-    else:
-        data *= data
-        numpy.sum(data, axis=axis, out=out)
-        numpy.sqrt(out, out)
+class IMU():
+    """Define an IMU sensor."""
+
+    list = []
+
+    def __init__(self):
+        """Initializatization."""
+        self.name = 'imu'
+        self.gaussianNoise = 0
+        self.parentLink = None
+
+    def export(self, file, indentationLevel):
+        """Export this IMU."""
+        indent = '  '
+        file.write(indentationLevel * indent + 'Accelerometer {\n')
+        file.write(indentationLevel * indent + '  name "%s accelerometer"\n' % self.name)
+        if self.gaussianNoise > 0:
+            file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' % (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
+        file.write(indentationLevel * indent + '}\n')
+        file.write(indentationLevel * indent + 'Gyro {\n')
+        file.write(indentationLevel * indent + '  name "%s gyro"\n' % self.name)
+        if self.gaussianNoise > 0:
+            file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' % (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
+        file.write(indentationLevel * indent + '}\n')
+        file.write(indentationLevel * indent + 'Compass {\n')
+        file.write(indentationLevel * indent + '  name "%s compass"\n' % self.name)
+        if self.gaussianNoise > 0:
+            file.write(indentationLevel * indent + '  lookupTable [-1 -1 %lf, 1 1 %lf]\n' % -self.gaussianNoise, self.gaussianNoise)
+        file.write(indentationLevel * indent + '}\n')
 
 
-def vrml_to_q(v):
-    """Convert euler-axes-angle (vrml) to quaternion."""
-    q = [0.0, 0.0, 0.0, 0.0]
-    L = v[0] * v[0] + v[1] * v[1] + v[2] * v[2]
-    if (L > 0.0):
-        q[0] = math.cos(v[3] / 2)
-        L = math.sin(v[3] / 2) / math.sqrt(L)
-        q[1] = v[0] * L
-        q[2] = v[1] * L
-        q[3] = v[2] * L
-    else:
-        q[0] = 1
-        q[1] = 0
-        q[2] = 0
-        q[3] = 0
-    return q
+class Camera():
+    """Define a camera sensor."""
+
+    list = []
+
+    def __init__(self):
+        """Initializatization."""
+        self.name = 'camera'
+        self.fov = None
+        self.width = None
+        self.height = None
+        self.noise = None
+
+    def export(self, file, indentationLevel):
+        """Export this camera."""
+        indent = '  '
+        file.write(indentationLevel * indent + 'Camera {\n')
+        file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
+        if self.fov:
+            file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
+        if self.width:
+            file.write(indentationLevel * indent + '  width %d\n' % self.width)
+        if self.height:
+            file.write(indentationLevel * indent + '  height %d\n' % self.height)
+        if self.noise:
+            file.write(indentationLevel * indent + '  noise %lf\n' % self.noise)
+        file.write(indentationLevel * indent + '}\n')
 
 
-def q_to_vrml(q):
-    """Convert quaternion to euler-axes-angle (vrml)."""
-    v = [0.0, 0.0, 0.0, 0.0]
-    v[3] = 2.0 * math.acos(q[0])
-    if (v[3] < 0.0001):
-        # if v[3] close to zero then direction of axis not important
-        v[0] = 0.0
-        v[1] = 1.0
-        v[2] = 0.0
-    else:
-        # normalise axes
-        n = math.sqrt(q[1] * q[1] + q[2] * q[2] + q[3] * q[3])
-        v[0] = q[1] / n
-        v[1] = q[2] / n
-        v[2] = q[3] / n
-    return v
+class Lidar():
+    """Define a lidar sensor."""
 
+    list = []
 
-def q_mult(qb, qc):
-    """Quaternion multiplication (combining rotations)."""
-    qa = [0.0, 0.0, 0.0, 0.0]
-    qa[0] = qb[0] * qc[0] - qb[1] * qc[1] - qb[2] * qc[2] - qb[3] * qc[3]
-    qa[1] = qb[0] * qc[1] + qb[1] * qc[0] + qb[2] * qc[3] - qb[3] * qc[2]
-    qa[2] = qb[0] * qc[2] + qb[2] * qc[0] + qb[3] * qc[1] - qb[1] * qc[3]
-    qa[3] = qb[0] * qc[3] + qb[3] * qc[0] + qb[1] * qc[2] - qb[2] * qc[1]
-    return qa
+    def __init__(self):
+        """Initializatization."""
+        self.name = 'lidar'
+        self.fov = None
+        self.verticalFieldOfView = None
+        self.horizontalResolution = None
+        self.numberOfLayers = 1
+        self.minRange = None
+        self.maxRange = None
+        self.resolution = None
+        self.noise = None
 
-
-def convertRPYtoEulerAxis(rpy, cylinder=False):
-    """How does this work? A reference?."""
-    offset2 = 0.0
-    if cylinder:
-        offset2 = 1.57
-    ea1 = [0.0, 1.0, 0.0, rpy[1]]
-    ea2 = [1.0, 0.0, 0.0, rpy[0] + offset2]
-    ea3 = [0.0, 0.0, 1.0, rpy[2]]
-    # convert vrml to quaternion representation
-    q1 = vrml_to_q(ea1)
-    q2 = vrml_to_q(ea2)
-    q3 = vrml_to_q(ea3)
-    # combine 3 quaternions into 1
-    qa = q_mult(q1, q2)
-    qb = q_mult(qa, q3)
-    # convert quaternion to vrml
-    return q_to_vrml(qb)
+    def export(self, file, indentationLevel):
+        """Export this camera."""
+        indent = '  '
+        file.write(indentationLevel * indent + 'Lidar {\n')
+        file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
+        if self.fov:
+            file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
+        if self.verticalFieldOfView:
+            file.write(indentationLevel * indent + '  verticalFieldOfView %lf\n' % self.verticalFieldOfView)
+        if self.horizontalResolution:
+            file.write(indentationLevel * indent + '  horizontalResolution %d\n' % self.horizontalResolution)
+        if self.numberOfLayers:
+            file.write(indentationLevel * indent + '  numberOfLayers %d\n' % self.numberOfLayers)
+        if self.minRange:
+            if self.minRange < 0.01:
+                file.write(indentationLevel * indent + '  near %lf\n' % self.minRange)
+            file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
+        if self.maxRange:
+            file.write(indentationLevel * indent + '  maxRange %lf\n' % self.maxRange)
+        if self.noise:
+            file.write(indentationLevel * indent + '  noise %lf\n' % self.noise)
+        if self.resolution:
+            file.write(indentationLevel * indent + '  resolution %lf\n' % self.resolution)
+        file.write(indentationLevel * indent + '}\n')
 
 
 def colorVector2Instance(cv, alpha_last=True):
@@ -304,19 +340,8 @@ def colorVector2Instance(cv, alpha_last=True):
 def getRobotName(node):
     """Parse robot name."""
     name = node.getAttribute('name')
-    print ('the name of the robot is ' + name)
+    print('Robot name: ' + name)
     return name
-
-
-def getPlugins(node):
-    """Get plugins."""
-    pluginList = []
-    for child in node.childNodes:
-        if child.localName != 'link'\
-            and child.localName != 'joint'\
-                and child.nodeType == xml.dom.minidom.Node.ELEMENT_NODE:
-            pluginList.append(child)
-    return pluginList
 
 
 def hasElement(node, element):
@@ -372,69 +397,74 @@ def getSTLMesh(filename, node):
 def getColladaMesh(filename, node, link):
     """Read collada file."""
     colladaMesh = Collada(filename)
-    if node.material:
+    if hasattr(node, 'material') and node.material:
         for geometry in list(colladaMesh.scene.objects('geometry')):
-            visual = Visual()
-            visual.position = node.position
-            visual.rotation = node.rotation
-            visual.material.texture = ""
-            visual.geometry.scale = node.geometry.scale
-            data = list(geometry.primitives())[0]
-            for val in data.vertex:
-                visual.geometry.trimesh.coord.append(numpy.array(val))
-            for val in data.vertex_index:
-                visual.geometry.trimesh.coordIndex.append(val)
-            if data.texcoordset:  # non-empty
-                for val in data.texcoordset[0]:
-                    visual.geometry.trimesh.texCoord.append(val)
-            if data.texcoord_indexset:  # non-empty
-                for val in data.texcoord_indexset[0]:
-                    visual.geometry.trimesh.texCoordIndex.append(val)
-            if data.material and data.material.effect:
-                if data.material.effect.emission:
-                    visual.material.emission = colorVector2Instance(data.material.effect.emission)
-                if data.material.effect.ambient:
-                    visual.material.ambient = colorVector2Instance(data.material.effect.ambient)
-                if data.material.effect.specular:
-                    visual.material.specular = colorVector2Instance(data.material.effect.specular)
-                if data.material.effect.shininess:
-                    visual.material.shininess = data.material.effect.shininess
-                if data.material.effect.index_of_refraction:
-                    visual.material.index_of_refraction = data.material.effect.index_of_refraction
-                if data.material.effect.diffuse:
-                    if numpy.size(data.material.effect.diffuse) > 1\
-                            and all([isinstance(x, numbers.Number) for x in data.material.effect.diffuse]):
-                        # diffuse is defined by values
-                        visual.material.diffuse = colorVector2Instance(data.material.effect.diffuse)
-                    else:
-                        # diffuse is defined by *.tif files
-                        visual.material.texture = 'textures/' + data.material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
-                        txt = os.path.splitext(visual.material.texture)[1]
-                        if txt == '.tiff' or txt == '.tif':
-                            for dirname, dirnames, filenames in os.walk('.'):
-                                for file in filenames:
-                                    if file == str(visual.material.texture.split('/')[-1]):
-                                        try:
-                                            tifImage = Image.open(os.path.join(dirname, file))
-                                            img = './' + robotName + '_textures'
-                                            tifImage.save(os.path.splitext(os.path.join(img, file))[0] + '.png')
-                                            visual.material.texture = robotName + '_textures/' + os.path.splitext(file)[0] + '.png'
-                                            print ('translated image ' + visual.material.texture)
-                                        except IOError:
-                                            visual.material.texture = ""
-                                            print ('failed to open ' + os.path.join(dirname, file))
-            link.visual.append(visual)
+            for data in list(geometry.primitives()):
+                visual = Visual()
+                visual.position = node.position
+                visual.rotation = node.rotation
+                visual.material.diffuse.red = node.material.diffuse.red
+                visual.material.diffuse.green = node.material.diffuse.green
+                visual.material.diffuse.blue = node.material.diffuse.blue
+                visual.material.diffuse.alpha = node.material.diffuse.alpha
+                visual.material.texture = node.material.texture
+                visual.geometry.scale = node.geometry.scale
+                for val in data.vertex:
+                    visual.geometry.trimesh.coord.append(numpy.array(val))
+                for val in data.vertex_index:
+                    visual.geometry.trimesh.coordIndex.append(val)
+                if data.texcoordset:  # non-empty
+                    for val in data.texcoordset[0]:
+                        visual.geometry.trimesh.texCoord.append(val)
+                if data.texcoord_indexset:  # non-empty
+                    for val in data.texcoord_indexset[0]:
+                        visual.geometry.trimesh.texCoordIndex.append(val)
+                if data.material and data.material.effect:
+                    if data.material.effect.emission:
+                        visual.material.emission = colorVector2Instance(data.material.effect.emission)
+                    if data.material.effect.ambient:
+                        visual.material.ambient = colorVector2Instance(data.material.effect.ambient)
+                    if data.material.effect.specular:
+                        visual.material.specular = colorVector2Instance(data.material.effect.specular)
+                    if data.material.effect.shininess:
+                        visual.material.shininess = data.material.effect.shininess
+                    if data.material.effect.index_of_refraction:
+                        visual.material.index_of_refraction = data.material.effect.index_of_refraction
+                    if data.material.effect.diffuse:
+                        if numpy.size(data.material.effect.diffuse) > 1\
+                                and all([isinstance(x, numbers.Number) for x in data.material.effect.diffuse]):
+                            # diffuse is defined by values
+                            visual.material.diffuse = colorVector2Instance(data.material.effect.diffuse)
+                        else:
+                            # diffuse is defined by *.tif files
+                            visual.material.texture = 'textures/' + data.material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
+                            txt = os.path.splitext(visual.material.texture)[1]
+                            if txt == '.tiff' or txt == '.tif':
+                                for dirname, dirnames, filenames in os.walk('.'):
+                                    for file in filenames:
+                                        if file == str(visual.material.texture.split('/')[-1]):
+                                            try:
+                                                tifImage = Image.open(os.path.join(dirname, file))
+                                                img = './' + robotName + '_textures'
+                                                tifImage.save(os.path.splitext(os.path.join(img, file))[0] + '.png')
+                                                visual.material.texture = robotName + '_textures/' + os.path.splitext(file)[0] + '.png'
+                                                print('translated image ' + visual.material.texture)
+                                            except IOError:
+                                                visual.material.texture = ""
+                                                print('failed to open ' + os.path.join(dirname, file))
+                link.visual.append(visual)
     else:
         for geometry in list(colladaMesh.scene.objects('geometry')):
-            collision = Collision()
-            collision.position = node.position
-            collision.rotation = node.rotation
-            collision.geometry.scale = node.geometry.scale
-            for value in data.vertex:
-                collision.geometry.trimesh.coord.append(numpy.array(value))
-            for value in data.vertex_index:
-                collision.geometry.trimesh.coordIndex.append(value)
-            link.collision.append(collision)
+            for data in list(geometry.primitives()):
+                collision = Collision()
+                collision.position = node.position
+                collision.rotation = node.rotation
+                collision.geometry.scale = node.geometry.scale
+                for value in data.vertex:
+                    collision.geometry.trimesh.coord.append(numpy.array(value))
+                for value in data.vertex_index:
+                    collision.geometry.trimesh.coordIndex.append(value)
+                link.collision.append(collision)
 
 
 # the use of collada.scene.object class makes this function useless for now but it may serves in the future
@@ -451,7 +481,7 @@ def getColladaTransform(node, id):
                         if str(transform).count('Matrix'):
                             matrix = numpy.array(transform.matrix, dtype=numpy.float64, copy=True).T
                             row = matrix[:4, :4].copy()
-                            matrixScale = vector_norm(row[0])
+                            matrixScale = vectorNorm(row[0])
                             row[0] /= matrixScale
                             row[1] /= matrixScale
                             row[2] /= matrixScale
@@ -505,9 +535,9 @@ def getRotation(node, isCylinder=False):
         rotation[1] = float(orientationString[1])
         rotation[2] = float(orientationString[2])
     if isCylinder:
-        return convertRPYtoEulerAxis(rotation, True)
+        return math_utils.convertRPYtoEulerAxis(rotation, True)
     else:
-        return convertRPYtoEulerAxis(rotation, False)
+        return math_utils.convertRPYtoEulerAxis(rotation, False)
 
 
 def getInertia(node):
@@ -558,20 +588,36 @@ def getVisual(link, node):
                 visual.material.diffuse.green = float(colorElement[1])
                 visual.material.diffuse.blue = float(colorElement[2])
                 visual.material.diffuse.alpha = float(colorElement[3])
+            elif material.hasAttribute('name') and material.getAttribute('name') in Material.namedMaterial:
+                visual.material = Material.namedMaterial[material.getAttribute('name')]
+            elif material.firstChild and material.firstChild.nodeValue in gazebo_materials.materials:
+                materialName = material.firstChild.nodeValue
+                visual.material.diffuse.red = float(gazebo_materials.materials[materialName]['diffuse'][0])
+                visual.material.diffuse.green = float(gazebo_materials.materials[materialName]['diffuse'][1])
+                visual.material.diffuse.blue = float(gazebo_materials.materials[materialName]['diffuse'][2])
+                visual.material.diffuse.alpha = float(gazebo_materials.materials[materialName]['diffuse'][3])
+                visual.material.ambient.red = float(gazebo_materials.materials[materialName]['ambient'][0])
+                visual.material.ambient.green = float(gazebo_materials.materials[materialName]['ambient'][1])
+                visual.material.ambient.blue = float(gazebo_materials.materials[materialName]['ambient'][2])
+                visual.material.ambient.alpha = float(gazebo_materials.materials[materialName]['ambient'][3])
+                visual.material.specular.red = float(gazebo_materials.materials[materialName]['specular'][0])
+                visual.material.specular.green = float(gazebo_materials.materials[materialName]['specular'][1])
+                visual.material.specular.blue = float(gazebo_materials.materials[materialName]['specular'][2])
+                visual.material.specular.alpha = float(gazebo_materials.materials[materialName]['specular'][3])
             if hasElement(material, 'texture'):
                 visual.material.texture = material.getElementsByTagName('texture')[0].getAttribute('filename')
                 if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':
                     for dirname, dirnames, filenames in os.walk('.'):
                         for filename in filenames:
                             if filename == str(visual.material.texture.split('/')[-1]):
-                                print ('try to translate image ' + filename)
+                                print('try to translate image ' + filename)
                                 try:
                                     tifImage = Image.open(os.path.join(dirname, filename))
-                                    tifImage.save(os.path.splitext(os.path.join('./'+robotName+'_'+'textures', filename))[0] + '.png')
-                                    visual.material.texture = robotName+'_'+'textures/' + os.path.splitext(filename)[0] + '.png'
+                                    tifImage.save(os.path.splitext(os.path.join('./' + robotName + '_' + 'textures', filename))[0] + '.png')
+                                    visual.material.texture = robotName + '_' + 'textures/' + os.path.splitext(filename)[0] + '.png'
                                 except IOError:
                                     visual.material.texture = ""
-                                    print ('failed to open ' + os.path.join(dirname, filename))
+                                    print('failed to open ' + os.path.join(dirname, filename))
 
         if hasElement(geometryElement, 'box'):
             visual.geometry.box.x = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[0])
@@ -754,3 +800,82 @@ def isRootLink(link, childList):
         if link == child:
             return False
     return True
+
+
+def parseGazeboElement(element, parentLink, linkList):
+    """Parse a Gazebo element."""
+    for plugin in element.getElementsByTagName('plugin'):
+        if plugin.hasAttribute('filename') and plugin.getAttribute('filename').startswith('libgazebo_ros_imu'):
+            imu = IMU()
+            imu.parentLink = parentLink
+            if hasElement(plugin, 'topicName'):
+                imu.name = plugin.getElementsByTagName('topicName')[0].firstChild.nodeValue
+            if hasElement(plugin, 'gaussianNoise'):
+                imu.gaussianNoise = float(plugin.getElementsByTagName('gaussianNoise')[0].firstChild.nodeValue)
+            IMU.list.append(imu)
+    for sensorElement in element.getElementsByTagName('sensor'):
+        sensorElement = element.getElementsByTagName('sensor')[0]
+        if sensorElement.getAttribute('type') == 'camera':
+            camera = Camera()
+            camera.parentLink = parentLink
+            if element.hasAttribute('reference') and element.getAttribute('reference') in linkList:
+                camera.parentLink = element.getAttribute('reference')
+            camera.name = sensorElement.getAttribute('name')
+            if hasElement(sensorElement, 'camera'):
+                cameraElement = sensorElement.getElementsByTagName('camera')[0]
+                if hasElement(cameraElement, 'horizontal_fov'):
+                    camera.fov = float(cameraElement.getElementsByTagName('horizontal_fov')[0].firstChild.nodeValue)
+                if hasElement(cameraElement, 'image'):
+                    imageElement = cameraElement.getElementsByTagName('image')[0]
+                    if hasElement(imageElement, 'width'):
+                        camera.width = int(imageElement.getElementsByTagName('width')[0].firstChild.nodeValue)
+                    if hasElement(imageElement, 'height'):
+                        camera.height = int(imageElement.getElementsByTagName('height')[0].firstChild.nodeValue)
+                    if hasElement(imageElement, 'format') and imageElement.getElementsByTagName('format')[0].firstChild.nodeValue != 'R8G8B8A8':
+                        print('Unsupported "%lf" image format, using "R8G8B8A8" instead.' % imageElement.getElementsByTagName('format')[0].firstChild.nodeValue)
+            if hasElement(sensorElement, 'noise'):
+                noiseElement = sensorElement.getElementsByTagName('noise')[0]
+                if hasElement(noiseElement, 'stddev'):
+                    camera.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
+            Camera.list.append(camera)
+        elif sensorElement.getAttribute('type') == 'ray':
+            lidar = Lidar()
+            lidar.parentLink = parentLink
+            if element.hasAttribute('reference') and element.getAttribute('reference') in linkList:
+                lidar.parentLink = element.getAttribute('reference')
+            lidar.name = sensorElement.getAttribute('name')
+            if hasElement(sensorElement, 'ray'):
+                rayElement = sensorElement.getElementsByTagName('ray')[0]
+                if hasElement(rayElement, 'scan'):
+                    scanElement = rayElement.getElementsByTagName('scan')[0]
+                    if hasElement(scanElement, 'horizontal'):
+                        horizontalElement = scanElement.getElementsByTagName('horizontal')[0]
+                        if hasElement(horizontalElement, 'samples'):
+                            lidar.horizontalResolution = int(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
+                        if hasElement(horizontalElement, 'min_angle') and hasElement(horizontalElement, 'max_angle'):
+                            minAngle = float(horizontalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
+                            maxAngle = float(horizontalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
+                            lidar.fov = maxAngle - minAngle
+                    if hasElement(scanElement, 'vertical'):
+                        horizontalElement = scanElement.getElementsByTagName('horizontal')[0]
+                        if hasElement(horizontalElement, 'samples'):
+                            lidar.numberOfLayers = int(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
+                        if hasElement(horizontalElement, 'min_angle') and hasElement(horizontalElement, 'max_angle'):
+                            minAngle = float(horizontalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
+                            maxAngle = float(horizontalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
+                            lidar.verticalFieldOfView = maxAngle - minAngle
+                if hasElement(rayElement, 'range'):
+                    rangeElement = rayElement.getElementsByTagName('range')[0]
+                    if hasElement(rangeElement, 'min'):
+                        lidar.minRange = float(rangeElement.getElementsByTagName('min')[0].firstChild.nodeValue)
+                    if hasElement(rangeElement, 'max'):
+                        lidar.maxRange = float(rangeElement.getElementsByTagName('max')[0].firstChild.nodeValue)
+                    if hasElement(rangeElement, 'resolution'):
+                        lidar.resolution = float(rangeElement.getElementsByTagName('resolution')[0].firstChild.nodeValue)
+                if hasElement(sensorElement, 'noise'):
+                    noiseElement = sensorElement.getElementsByTagName('noise')[0]
+                    if hasElement(noiseElement, 'stddev'):
+                        lidar.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
+                        if lidar.maxRange:
+                            lidar.noise /= lidar.maxRange
+            Lidar.list.append(lidar)

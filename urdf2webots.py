@@ -1,46 +1,16 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
-import getopt
+"""URDF files to Webots PROTO converter."""
+
+
 import os
 import errno
+import re
 import sys
+import optparse
 import parserURDF
 import writeProto
 from xml.dom import minidom
-
-
-def usage():
-    """Display command usage on standard out stream."""
-    print (sys.argv[0] + ' inputFile.urdf [-o outputFile] [--box-collision]')
-
-
-if len(sys.argv) < 2:
-    usage()
-    sys.exit(-1)
-
-xmlFile = sys.argv[1]
-argv = sys.argv[2:]
-outputFile = os.path.splitext(xmlFile)[0] + '.proto'
-boxCollision = False
-
-try:
-    opts, args = getopt.getopt(argv, "ho:", ["help", "box-collision"])
-except getopt.GetoptError:
-    usage()
-    sys.exit(-1)
-for opt, arg in opts:
-    if opt in ("-h", "--help"):
-        usage()
-        sys.exit()
-    elif opt == "-o":
-        outputFile = arg
-    elif opt == "--box-collision":
-        boxCollision = True
-    else:
-        usage()
-        sys.exit(-1)
-
-domFile = minidom.parse(xmlFile)
 
 
 def convertLUtoUN(s):
@@ -52,7 +22,7 @@ def convertLUtoUN(s):
             r += s[i].upper()
             i += 1
         elif s[i] == '_' and i < (len(s) - 1):
-            r += s[i+1].upper()
+            r += s[i + 1].upper()
             i += 2
         else:
             r += s[i]
@@ -68,76 +38,128 @@ def mkdirSafe(directory):
         if e.errno != errno.EEXIST:
             raise
         else:
-            print ('dir ' + directory + ' already existing!')
+            print('Directory "' + directory + '" already exists!')
 
 
-for child in domFile.childNodes:
-    '''
-    if child.localName == 'gazebo':
-        print ('this is a sdf file')
-        robotName = trainingSDF.getModelName(domFile)
-        protoFile = xmlFile.strip('.model')
-        protoFile=open(protoFile+'.proto','w')
-        writeProto.header(protoFile,xmlFile,robotName)
-        writeProto.declaration(protoFile,robotName)
-        for Node in domFile.getElementsByTagName('link'):
-            writeProto.SDFLink(protoFile,Node)
-        protoFile.write('       ]\n')
-        protoFile.write('   }\n')
-        protoFile.write('}\n')
-        protoFile.close()
-        exit(0)
-    elif child.localName == 'robot':
-        print ('this is an urdf file')
-    '''
-    if child.localName == 'robot':
-        robotName = convertLUtoUN(parserURDF.getRobotName(child))  # capitalize
+optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
+optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
+optParser.add_option('--output', dest='outFile', default='', help='Specifies the name of the resulting PROTO file.')
+optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False, help='If set, the bounding objects are approximated using boxes.')
+options, args = optParser.parse_args()
 
-        parserURDF.robotName = robotName  # pass robotName
-        mkdirSafe(robotName+'_textures')  # make a dir called 'x_textures'
+if not options.inFile:
+    sys.exit('--input argument missing.')
+if not os.path.exists(options.inFile):
+    sys.exit('Input file "%s" does not exists.' % options.inFile)
 
-        protoFile = robotName             # use robot name rather than urdf name
-        robot = child
-        protoFile = open(protoFile+'.proto', 'w')
-        writeProto.header(protoFile, xmlFile, robotName)
-        writeProto.declaration(protoFile, robotName)
-        linkElementList = []
-        jointElementList = []
-        for child in robot.childNodes:
-            if child.localName == 'link':
-                linkElementList.append(child)
-            elif child.localName == 'joint':
-                jointElementList.append(child)
+outputFile = options.outFile if options.outFile else os.path.splitext(options.inFile)[0] + '.proto'
 
-        linkList = []
-        jointList = []
-        parentList = []
-        childList = []
-        rootLink = parserURDF.Link()
+with open(options.inFile, 'r') as file:
+    content = file.read()
 
-        for joint in jointElementList:
-            jointList.append(parserURDF.getJoint(joint))
-            parentList.append(jointList[-1].parent.encode("ascii"))
-            childList.append(jointList[-1].child.encode("ascii"))
-        parentList.sort()
-        childList.sort()
-        for link in linkElementList:
-            linkList.append(parserURDF.getLink(link))
-            if parserURDF.isRootLink(linkList[-1].name, childList):
-                rootLink = linkList[-1]
-                print ('root link is ' + rootLink.name)
-        pluginList = parserURDF.getPlugins(robot)
-        print ('there is '
-               + str(len(linkList)) + ' links, '
-               + str(len(jointList)) + ' joints and '
-               + str(len(pluginList)) + ' plugins')
+    packages = re.findall('"package://(.*)"', content)
+    if packages:
+        packageName = packages[0].split('/')[0]
+        directory = os.path.dirname(options.inFile)
+        while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
+            directory = os.path.dirname(directory)
+        if os.path.split(directory)[1]:
+            packagePath = os.path.split(directory)[0]
+            content = content.replace('package:/', packagePath)
+        else:
+            sys.stderr.write('Can\'t determine package root path.\n')
 
-        writeProto.URDFLink(protoFile, rootLink, 3, parentList, childList, linkList, jointList,
-                            boxCollision=boxCollision)
-        protoFile.write('    ]\n')
-        writeProto.basicPhysics(protoFile)
-        protoFile.write('  }\n')
-        protoFile.write('}\n')
-        protoFile.close()
-        exit(1)
-print ('could not read file')
+    domFile = minidom.parseString(content)
+
+    for child in domFile.childNodes:
+        '''
+        if child.localName == 'gazebo':
+            print('this is a sdf file')
+            robotName = trainingSDF.getModelName(domFile)
+            protoFile = options.inFile.strip('.model')
+            protoFile=open(protoFile+'.proto','w')
+            writeProto.header(protoFile,options.inFile,robotName)
+            writeProto.declaration(protoFile,robotName)
+            for Node in domFile.getElementsByTagName('link'):
+                writeProto.SDFLink(protoFile,Node)
+            protoFile.write('       ]\n')
+            protoFile.write('   }\n')
+            protoFile.write('}\n')
+            protoFile.close()
+            exit(0)
+        elif child.localName == 'robot':
+            print('this is an urdf file')
+        '''
+        if child.localName == 'robot':
+            robotName = convertLUtoUN(parserURDF.getRobotName(child))  # capitalize
+
+            parserURDF.robotName = robotName  # pass robotName
+            mkdirSafe(robotName + '_textures')  # make a dir called 'x_textures'
+
+            protoFile = robotName             # use robot name rather than urdf name
+            robot = child
+            protoFile = open(protoFile + '.proto', 'w')
+            writeProto.header(protoFile, options.inFile, robotName)
+            linkElementList = []
+            jointElementList = []
+            for child in robot.childNodes:
+                if child.localName == 'link':
+                    linkElementList.append(child)
+                elif child.localName == 'joint':
+                    jointElementList.append(child)
+                elif child.localName == 'material':
+                    material = parserURDF.Material()
+                    material.parseFromMaterialNode(child)
+
+            linkList = []
+            jointList = []
+            parentList = []
+            childList = []
+            rootLink = parserURDF.Link()
+
+            for joint in jointElementList:
+                jointList.append(parserURDF.getJoint(joint))
+                parentList.append(jointList[-1].parent.encode('ascii'))
+                childList.append(jointList[-1].child.encode('ascii'))
+            parentList.sort()
+            childList.sort()
+            for link in linkElementList:
+                linkList.append(parserURDF.getLink(link))
+            for link in linkList:
+                if parserURDF.isRootLink(link.name, childList):
+                    rootLink = link
+                    # if root link has only one joint which type is fixed,
+                    # it should not be part of the model (link between robot and static environment)
+                    while True:
+                        directJoint = []
+                        found = False  # To avoid endless loop
+                        for joint in jointList:
+                            if joint.parent == rootLink.name:
+                                directJoint.append(joint)
+                        if len(directJoint) == 1 and directJoint[0].type == 'fixed':
+                            for childLink in linkList:
+                                if childLink.name == directJoint[0].child:
+                                    rootLink = childLink
+                                    found = True
+                                    break
+                        else:
+                            break
+                        if not found:
+                            break
+                    print('Root link: ' + rootLink.name)
+                    break
+
+            for child in robot.childNodes:
+                if child.localName == 'gazebo':
+                    parserURDF.parseGazeboElement(child, rootLink.name, linkList)
+
+            sensorList = parserURDF.IMU.list + parserURDF.Camera.list + parserURDF.Lidar.list
+            print('There are %d links, %d joints and %d sensors' % (len(linkList), len(jointList), len(sensorList)))
+
+            writeProto.declaration(protoFile, robotName)
+            writeProto.URDFLink(protoFile, rootLink, 1, parentList, childList, linkList, jointList,
+                                sensorList, boxCollision=options.boxCollision, robot=True)
+            protoFile.write('}\n')
+            protoFile.close()
+            exit(1)
+print('Could not read file')
