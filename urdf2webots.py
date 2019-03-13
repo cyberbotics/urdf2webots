@@ -94,11 +94,10 @@ with open(options.inFile, 'r') as file:
             robotName = convertLUtoUN(parserURDF.getRobotName(child))  # capitalize
 
             parserURDF.robotName = robotName  # pass robotName
-            mkdirSafe(robotName + '_textures')  # make a dir called 'x_textures'
+            mkdirSafe(outputFile.replace('.proto', '') + '_textures')  # make a dir called 'x_textures'
 
-            protoFile = robotName             # use robot name rather than urdf name
             robot = child
-            protoFile = open(protoFile + '.proto', 'w')
+            protoFile = open(outputFile, 'w')
             writeProto.header(protoFile, options.inFile, robotName)
             linkElementList = []
             jointElementList = []
@@ -161,5 +160,5 @@ with open(options.inFile, 'r') as file:
                                 sensorList, boxCollision=options.boxCollision, robot=True)
             protoFile.write('}\n')
             protoFile.close()
-            exit(1)
+            exit()
 print('Could not read file')
