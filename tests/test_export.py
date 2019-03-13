@@ -34,8 +34,8 @@ class TestScript(unittest.TestCase):
             self.assertEqual(retcode, 0, msg='Error when exporting "%s"' % (paths['input']))
 
             print('### OUTPUT ###')
-            print(paths['output'])
+            print(open(paths['output'], 'r').read())
             print('### EXPECTED ###')
-            print(paths['expected'])
+            print(open(paths['expected'], 'r').read())
             print('### DONE ###')
             self.assertTrue(filecmp.cmp(paths['output'], paths['expected']), msg='Expected result mismatch when exporting "%s"' % (paths['input']))
