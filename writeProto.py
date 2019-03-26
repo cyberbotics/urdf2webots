@@ -294,9 +294,19 @@ def URDFShape(proto, link, level):
                 proto.write((shapeLevel + 2) * indent + '}\n')
 
                 proto.write((shapeLevel + 2) * indent + 'texCoordIndex [\n' + (shapeLevel + 3) * indent)
-                for value in visualNode.geometry.trimesh.texCoordIndex:
-                    proto.write("%d %d %d -1 " % (value[0], value[1], value[2]))
-                proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
+	    	if len(visualNode.geometry.trimesh.coordIndex)%3 == 0:
+			step=3
+	       		stop=int(len(visualNode.geometry.trimesh.coordIndex)/step)
+	       		limit = range(step,(stop+1)*step,step)
+	       		updated_CoordIndex = []
+               		for value in limit:
+				updated_CoordIndex.append([visualNode.geometry.trimesh.coordIndex[value-3], visualNode.geometry.trimesh.coordIndex[value-2], visualNode.geometry.trimesh.coordIndex[value-1]])
+			for value in updated_CoordIndex:
+				proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
+		else:
+                	for value in visualNode.geometry.trimesh.coordIndex:
+                    		proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
+		proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
 
             proto.write((shapeLevel + 2) * indent + 'creaseAngle 1\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
