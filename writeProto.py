@@ -302,6 +302,8 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
               sensorList, boxCollision):
     """Write a Joint iteratively."""
     indent = '  '
+    if joint.axis == []: # <axis> (optional: defaults to (1,0,0)) --> http://wiki.ros.org/urdf/XML/joint
+        joint.axis = [1,0,0]
     axis = joint.axis
     endpointRotation = joint.rotation
     endpointPosition = joint.position
