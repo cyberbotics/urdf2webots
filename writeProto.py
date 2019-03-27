@@ -195,7 +195,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                 limit = range(step,(stop+1)*step,step)
 	            updated_CoordIndex = []
                 for value in limit:
-		            updated_CoordIndex.append([boundingObject.geometry.trimesh.coordIndex[value-3], boundingObject.geometry.trimesh.coordIndex[value-2], boundingObject.geometry.trimesh.coordIndex[value-1]])
+		    updated_CoordIndex.append([boundingObject.geometry.trimesh.coordIndex[value-3], boundingObject.geometry.trimesh.coordIndex[value-2], boundingObject.geometry.trimesh.coordIndex[value-1]])
                 for value in updated_CoordIndex:
                     proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
     	    else:
