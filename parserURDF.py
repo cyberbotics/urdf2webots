@@ -421,10 +421,10 @@ def getColladaMesh(filename, node, link):
                 if data.texcoord_indexset:  # non-empty
                     for val in data.texcoord_indexset[0]:
                         visual.geometry.trimesh.texCoordIndex.append(val)
-                if hasattr(data, '_normal') and data._normal:
+                if hasattr(data, '_normal') and data._normal is not None and data._normal.size > 0:
                     for val in data._normal:
                         visual.geometry.trimesh.normal.append(numpy.array(val))
-                    if hasattr(data, '_normal_index') and data._normal_index:
+                    if hasattr(data, '_normal_index') and data._normal_index is not None and data._normal_index.size > 0:
                         for val in data._normal_index:
                             visual.geometry.trimesh.normalIndex.append(val)
                 if data.material and data.material.effect:
