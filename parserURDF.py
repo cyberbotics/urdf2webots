@@ -31,6 +31,8 @@ class Trimesh():
         self.coordIndex = []  # list of index of points
         self.texCoord = []  # list of coordinate points for texture
         self.texCoordIndex = []  # list of index for texture
+        self.normal = []  # list of normals
+        self.normalIndex = []  # list of index of normals
 
 
 class Inertia():
@@ -419,6 +421,12 @@ def getColladaMesh(filename, node, link):
                 if data.texcoord_indexset:  # non-empty
                     for val in data.texcoord_indexset[0]:
                         visual.geometry.trimesh.texCoordIndex.append(val)
+                if hasattr(data, '_normal') and data._normal:
+                    for val in data._normal:
+                        visual.geometry.trimesh.normal.append(numpy.array(val))
+                    if hasattr(data, '_normal_index') and data._normal_index:
+                        for val in data._normal_index:
+                            visual.geometry.trimesh.normalIndex.append(val)
                 if data.material and data.material.effect:
                     if data.material.effect.emission:
                         visual.material.emission = colorVector2Instance(data.material.effect.emission)

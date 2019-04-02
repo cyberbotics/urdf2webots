@@ -144,7 +144,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write((boundingLevel + 1) * indent + 'radius ' + str(boundingObject.geometry.sphere.radius) + '\n')
             proto.write(boundingLevel * indent + '}\n')
 
-        elif boundingObject.geometry.trimesh.coord != [] and boxCollision:
+        elif boundingObject.geometry.trimesh.coord and boxCollision:
             aabb = {
                 'minimum': {'x': float('inf'),
                             'y': float('inf'),
@@ -179,7 +179,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write((boundingLevel + 1) * indent + ']\n')
             proto.write(boundingLevel * indent + '}\n')
 
-        elif boundingObject.geometry.trimesh.coord != []:
+        elif boundingObject.geometry.trimesh.coord:
             proto.write(initialIndent + 'IndexedFaceSet {\n')
 
             proto.write((boundingLevel + 1) * indent + 'coord Coordinate {\n')
@@ -269,7 +269,7 @@ def URDFShape(proto, link, level):
             proto.write((shapeLevel + 2) * indent + 'radius ' + str(visualNode.geometry.sphere.radius) + '\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
 
-        elif visualNode.geometry.trimesh.coord != []:
+        elif visualNode.geometry.trimesh.coord:
             proto.write((shapeLevel + 1) * indent + 'geometry IndexedFaceSet {\n')
             proto.write((shapeLevel + 2) * indent + 'coord Coordinate {\n')
             proto.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
@@ -290,7 +290,27 @@ def URDFShape(proto, link, level):
                 print('Unsupported "%s" coordinate type' % type(visualNode.geometry.trimesh.coordIndex[0]))
             proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
 
-            if visualNode.geometry.trimesh.texCoord != []:
+            if visualNode.geometry.trimesh.normal and visualNode.geometry.trimesh.normalIndex:
+                proto.write((shapeLevel + 2) * indent + 'normal Normal {\n')
+                proto.write((shapeLevel + 3) * indent + 'normal [\n' + (shapeLevel + 4) * indent)
+                for value in visualNode.geometry.trimesh.normal:
+                    proto.write('%lf %lf %lf, ' % (value[0], value[1], value[2]))
+                proto.write('\n' + (shapeLevel + 3) * indent + ']\n')
+                proto.write((shapeLevel + 2) * indent + '}\n')
+
+                proto.write((shapeLevel + 2) * indent + 'normalIndex [\n' + (shapeLevel + 3) * indent)
+                if isinstance(visualNode.geometry.trimesh.normalIndex[0], np.ndarray) or type(visualNode.geometry.trimesh.texCoordIndex[0]) == list:
+                    for value in visualNode.geometry.trimesh.normalIndex:
+                        if len(value) == 3:
+                            proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
+                elif isinstance(visualNode.geometry.trimesh.normalIndex[0], np.int32):
+                    for i in range(len(visualNode.geometry.trimesh.normalIndex) / 3):
+                        proto.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.normalIndex[3 * i + 0], visualNode.geometry.trimesh.coordIndex[3 * i + 1], visualNode.geometry.trimesh.coordIndex[3 * i + 2]))
+                else:
+                    print('Unsupported "%s" normal type' % type(visualNode.geometry.trimesh.normalIndex[0]))
+                proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
+
+            if visualNode.geometry.trimesh.texCoord:
                 proto.write((shapeLevel + 2) * indent + 'texCoord TextureCoordinate {\n')
                 proto.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
                 for value in visualNode.geometry.trimesh.texCoord:
