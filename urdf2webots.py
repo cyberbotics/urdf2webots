@@ -44,6 +44,7 @@ def mkdirSafe(directory):
 optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
 optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
 optParser.add_option('--output', dest='outFile', default='', help='Specifies the name of the resulting PROTO file.')
+optParser.add_option('--normal', dest='normal', action='store_true', default=False, help='If set, the normals are exported if present in the URDF definition.')
 optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False, help='If set, the bounding objects are approximated using boxes.')
 options, args = optParser.parse_args()
 
@@ -51,8 +52,6 @@ if not options.inFile:
     sys.exit('--input argument missing.')
 if not os.path.exists(options.inFile):
     sys.exit('Input file "%s" does not exists.' % options.inFile)
-
-outputFile = options.outFile if options.outFile else os.path.splitext(options.inFile)[0] + '.proto'
 
 with open(options.inFile, 'r') as file:
     content = file.read()
@@ -72,26 +71,9 @@ with open(options.inFile, 'r') as file:
     domFile = minidom.parseString(content)
 
     for child in domFile.childNodes:
-        '''
-        if child.localName == 'gazebo':
-            print('this is a sdf file')
-            robotName = trainingSDF.getModelName(domFile)
-            protoFile = options.inFile.strip('.model')
-            protoFile=open(protoFile+'.proto','w')
-            writeProto.header(protoFile,options.inFile,robotName)
-            writeProto.declaration(protoFile,robotName)
-            for Node in domFile.getElementsByTagName('link'):
-                writeProto.SDFLink(protoFile,Node)
-            protoFile.write('       ]\n')
-            protoFile.write('   }\n')
-            protoFile.write('}\n')
-            protoFile.close()
-            exit(0)
-        elif child.localName == 'robot':
-            print('this is an urdf file')
-        '''
         if child.localName == 'robot':
             robotName = convertLUtoUN(parserURDF.getRobotName(child))  # capitalize
+            outputFile = options.outFile if options.outFile else robotName + '.proto'
 
             parserURDF.robotName = robotName  # pass robotName
             mkdirSafe(outputFile.replace('.proto', '') + '_textures')  # make a dir called 'x_textures'
@@ -157,7 +139,7 @@ with open(options.inFile, 'r') as file:
 
             writeProto.declaration(protoFile, robotName)
             writeProto.URDFLink(protoFile, rootLink, 1, parentList, childList, linkList, jointList,
-                                sensorList, boxCollision=options.boxCollision, robot=True)
+                                sensorList, boxCollision=options.boxCollision, normal=options.normal, robot=True)
             protoFile.write('}\n')
             protoFile.close()
             exit()

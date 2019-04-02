@@ -49,7 +49,7 @@ def declaration(proto, robotName):
 
 def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sensorList,
              jointPosition=[0.0, 0.0, 0.0], jointRotation=[1.0, 0.0, 0.0, 0.0],
-             boxCollision=False, dummy=False, robot=False, endpoint=False):
+             boxCollision=False, normal=False, dummy=False, robot=False, endpoint=False):
     """Write a link iteratively."""
     indent = '  '
     haveChild = False
@@ -71,12 +71,12 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                     haveChild = True
                     proto.write((level + 1) * indent + 'children [\n')
                 URDFJoint(proto, joint, level + 2, parentList, childList,
-                          linkList, jointList, sensorList, boxCollision)
+                          linkList, jointList, sensorList, boxCollision, normal)
         if link.visual:
             if not haveChild:
                 haveChild = True
                 proto.write((level + 1) * indent + 'children [\n')
-            URDFShape(proto, link, level + 2)
+            URDFShape(proto, link, level + 2, normal)
 
         for sensor in sensorList:
             if sensor.parentLink == link.name:
@@ -144,7 +144,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write((boundingLevel + 1) * indent + 'radius ' + str(boundingObject.geometry.sphere.radius) + '\n')
             proto.write(boundingLevel * indent + '}\n')
 
-        elif boundingObject.geometry.trimesh.coord != [] and boxCollision:
+        elif boundingObject.geometry.trimesh.coord and boxCollision:
             aabb = {
                 'minimum': {'x': float('inf'),
                             'y': float('inf'),
@@ -179,7 +179,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write((boundingLevel + 1) * indent + ']\n')
             proto.write(boundingLevel * indent + '}\n')
 
-        elif boundingObject.geometry.trimesh.coord != []:
+        elif boundingObject.geometry.trimesh.coord:
             proto.write(initialIndent + 'IndexedFaceSet {\n')
 
             proto.write((boundingLevel + 1) * indent + 'coord Coordinate {\n')
@@ -216,7 +216,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
         proto.write(level * indent + '}\n')
 
 
-def URDFShape(proto, link, level):
+def URDFShape(proto, link, level, normal=False):
     """Write a Shape."""
     indent = '  '
     shapeLevel = level
@@ -269,7 +269,7 @@ def URDFShape(proto, link, level):
             proto.write((shapeLevel + 2) * indent + 'radius ' + str(visualNode.geometry.sphere.radius) + '\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
 
-        elif visualNode.geometry.trimesh.coord != []:
+        elif visualNode.geometry.trimesh.coord:
             proto.write((shapeLevel + 1) * indent + 'geometry IndexedFaceSet {\n')
             proto.write((shapeLevel + 2) * indent + 'coord Coordinate {\n')
             proto.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
@@ -290,7 +290,27 @@ def URDFShape(proto, link, level):
                 print('Unsupported "%s" coordinate type' % type(visualNode.geometry.trimesh.coordIndex[0]))
             proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
 
-            if visualNode.geometry.trimesh.texCoord != []:
+            if normal and visualNode.geometry.trimesh.normal and visualNode.geometry.trimesh.normalIndex:
+                proto.write((shapeLevel + 2) * indent + 'normal Normal {\n')
+                proto.write((shapeLevel + 3) * indent + 'vector [\n' + (shapeLevel + 4) * indent)
+                for value in visualNode.geometry.trimesh.normal:
+                    proto.write('%lf %lf %lf, ' % (value[0], value[1], value[2]))
+                proto.write('\n' + (shapeLevel + 3) * indent + ']\n')
+                proto.write((shapeLevel + 2) * indent + '}\n')
+
+                proto.write((shapeLevel + 2) * indent + 'normalIndex [\n' + (shapeLevel + 3) * indent)
+                if isinstance(visualNode.geometry.trimesh.normalIndex[0], np.ndarray) or type(visualNode.geometry.trimesh.normalIndex[0]) == list:
+                    for value in visualNode.geometry.trimesh.normalIndex != 0:
+                        if len(value) == 3:
+                            proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
+                elif isinstance(visualNode.geometry.trimesh.normalIndex[0], np.int32):
+                    for i in range(len(visualNode.geometry.trimesh.normalIndex) / 3):
+                        proto.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.normalIndex[3 * i + 0], visualNode.geometry.trimesh.normalIndex[3 * i + 1], visualNode.geometry.trimesh.normalIndex[3 * i + 2]))
+                else:
+                    print('Unsupported "%s" normal type' % type(visualNode.geometry.trimesh.normalIndex[0]))
+                proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
+
+            if visualNode.geometry.trimesh.texCoord:
                 proto.write((shapeLevel + 2) * indent + 'texCoord TextureCoordinate {\n')
                 proto.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
                 for value in visualNode.geometry.trimesh.texCoord:
@@ -305,7 +325,7 @@ def URDFShape(proto, link, level):
                             proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
                 elif isinstance(visualNode.geometry.trimesh.texCoordIndex[0], np.int32):
                     for i in range(len(visualNode.geometry.trimesh.texCoordIndex) / 3):
-                        proto.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.texCoordIndex[3 * i + 0], visualNode.geometry.trimesh.coordIndex[3 * i + 1], visualNode.geometry.trimesh.coordIndex[3 * i + 2]))
+                        proto.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.texCoordIndex[3 * i + 0], visualNode.geometry.trimesh.texCoordIndex[3 * i + 1], visualNode.geometry.trimesh.texCoordIndex[3 * i + 2]))
                 else:
                     print('Unsupported "%s" coordinate type' % type(visualNode.geometry.trimesh.texCoordIndex[0]))
                 proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
@@ -321,7 +341,7 @@ def URDFShape(proto, link, level):
 
 
 def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
-              sensorList, boxCollision):
+              sensorList, boxCollision, normal):
     """Write a Joint iteratively."""
     indent = '  '
     if not joint.axis:
@@ -376,7 +396,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
             if childLink.name == joint.child:
                 URDFLink(proto, childLink, level, parentList, childList,
                          linkList, jointList, sensorList, joint.position, joint.rotation,
-                         boxCollision)
+                         boxCollision, normal)
         return
 
     elif joint.type == 'floating' or joint.type == 'planar':
@@ -407,13 +427,13 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         if childLink.name == joint.child:
             URDFLink(proto, childLink, level + 1, parentList, childList,
                      linkList, jointList, sensorList, endpointPosition, endpointRotation,
-                     boxCollision, endpoint=True)
+                     boxCollision, normal, endpoint=True)
             assert(not found_link)
             found_link = True
     # case that non-existing link cited, set dummy flag
     if not found_link and joint.child:
         URDFLink(proto, joint.child, level + 1, parentList, childList,
                  linkList, jointList, sensorList, endpointPosition, endpointRotation,
-                 boxCollision, dummy=True)
+                 boxCollision, normal, dummy=True)
         print('warning: link ' + joint.child + ' is dummy!')
     proto.write(level * indent + '}\n')

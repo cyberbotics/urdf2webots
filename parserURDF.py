@@ -31,6 +31,8 @@ class Trimesh():
         self.coordIndex = []  # list of index of points
         self.texCoord = []  # list of coordinate points for texture
         self.texCoordIndex = []  # list of index for texture
+        self.normal = []  # list of normals
+        self.normalIndex = []  # list of index of normals
 
 
 class Inertia():
@@ -419,6 +421,12 @@ def getColladaMesh(filename, node, link):
                 if data.texcoord_indexset:  # non-empty
                     for val in data.texcoord_indexset[0]:
                         visual.geometry.trimesh.texCoordIndex.append(val)
+                if hasattr(data, '_normal') and data._normal is not None and data._normal.size > 0:
+                    for val in data._normal:
+                        visual.geometry.trimesh.normal.append(numpy.array(val))
+                    if hasattr(data, '_normal_index') and data._normal_index is not None and data._normal_index.size > 0:
+                        for val in data._normal_index:
+                            visual.geometry.trimesh.normalIndex.append(val)
                 if data.material and data.material.effect:
                     if data.material.effect.emission:
                         visual.material.emission = colorVector2Instance(data.material.effect.emission)
@@ -465,55 +473,6 @@ def getColladaMesh(filename, node, link):
                 for value in data.vertex_index:
                     collision.geometry.trimesh.coordIndex.append(value)
                 link.collision.append(collision)
-
-
-# the use of collada.scene.object class makes this function useless for now but it may serves in the future
-'''
-def getColladaTransform(node, id):
-    translation = [0.0, 0.0, 0.0]
-    rotation = [1.0, 0.0, 0.0, 0.0]
-    scale = [1.0, 1.0, 1.0]
-    if node.children:
-        for child in node.children:
-            if str(child).count('geometry'):
-                if node.transforms:
-                    for transform in node.transforms:
-                        if str(transform).count('Matrix'):
-                            matrix = numpy.array(transform.matrix, dtype=numpy.float64, copy=True).T
-                            row = matrix[:4, :4].copy()
-                            matrixScale = vectorNorm(row[0])
-                            row[0] /= matrixScale
-                            row[1] /= matrixScale
-                            row[2] /= matrixScale
-                            row[3] /= matrixScale #not sure about this one
-                            translation[0] = matrix[3,0]
-                            translation[1] = matrix[3,1]
-                            translation[2] = matrix[3,2]
-                            if row[0][0] != 1 or row[1][1] != 1 or row[2][2] != 1:
-                                rotation[3] = math.acos((row[0][0] + row[1][1] + row[2][2] - 1.0) / 2.0)
-                                rotation[0] = -(row[2][1] - row[1][2]) / 2.0 / math.sin(rotation[3])
-                                rotation[1] = -(row[0][2] - row[2][0]) / 2.0 / math.sin(rotation[3])
-                                rotation[2] = -(row[1][0] - row[0][1]) / 2.0 / math.sin(rotation[3])
-                        elif str(transform).count('Translate'):
-                            translation[0] = transform.x
-                            translation[1] = transform.y
-                            translation[2] = transform.z
-                        elif str(transform).count('Rotate'):
-                            rotation[0] = transform.x
-                            rotation[1] = transform.y
-                            rotation[2] = transform.z
-                            rotation[3] = transform.angle
-                        elif str(transform).count('Scale'):
-                            scale[0] = transform.x
-                            scale[1] = transform.y
-                            scale[2] = transform.z
-    if translation == [0.0, 0.0, 0.0] and rotation == [1.0, 0.0, 0.0, 0.0] and scale == [1.0, 1.0, 1.0]:
-        if node.children:
-            for node in node.children:
-                if str(child).count('children'):
-                    translation, rotation, scale = getColladaTransform(child, id)
-    return translation, rotation, scale
-'''
 
 
 def getPosition(node):
