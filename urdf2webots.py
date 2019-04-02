@@ -53,8 +53,6 @@ if not options.inFile:
 if not os.path.exists(options.inFile):
     sys.exit('Input file "%s" does not exists.' % options.inFile)
 
-outputFile = options.outFile if options.outFile else os.path.splitext(options.inFile)[0] + '.proto'
-
 with open(options.inFile, 'r') as file:
     content = file.read()
 
@@ -75,6 +73,7 @@ with open(options.inFile, 'r') as file:
     for child in domFile.childNodes:
         if child.localName == 'robot':
             robotName = convertLUtoUN(parserURDF.getRobotName(child))  # capitalize
+            outputFile = options.outFile if options.outFile else robotName + '.proto'
 
             parserURDF.robotName = robotName  # pass robotName
             mkdirSafe(outputFile.replace('.proto', '') + '_textures')  # make a dir called 'x_textures'
