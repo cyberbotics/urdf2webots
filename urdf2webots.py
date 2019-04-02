@@ -73,24 +73,6 @@ with open(options.inFile, 'r') as file:
     domFile = minidom.parseString(content)
 
     for child in domFile.childNodes:
-        '''
-        if child.localName == 'gazebo':
-            print('this is a sdf file')
-            robotName = trainingSDF.getModelName(domFile)
-            protoFile = options.inFile.strip('.model')
-            protoFile=open(protoFile+'.proto','w')
-            writeProto.header(protoFile,options.inFile,robotName)
-            writeProto.declaration(protoFile,robotName)
-            for Node in domFile.getElementsByTagName('link'):
-                writeProto.SDFLink(protoFile,Node)
-            protoFile.write('       ]\n')
-            protoFile.write('   }\n')
-            protoFile.write('}\n')
-            protoFile.close()
-            exit(0)
-        elif child.localName == 'robot':
-            print('this is an urdf file')
-        '''
         if child.localName == 'robot':
             robotName = convertLUtoUN(parserURDF.getRobotName(child))  # capitalize
 
