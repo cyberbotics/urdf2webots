@@ -24,3 +24,7 @@ You can find the sources of these URDF files here:
   - pr2 robot: https://github.com/PR2/pr2_common/tree/kinetic-devel/pr2_description  
   - motoman robot: https://github.com/ros-industrial/motoman/tree/kinetic-devel/motoman_sia20d_support
   - kinova robot: https://github.com/Kinovarobotics/kinova-ros/tree/kinetic/kinova_description
+
+## Acknowledgements
+
+This tool was partially sponsored by the [ROSin european project](http://rosin-project.eu/ftp/cross-platform-ros-simulation-for-mobile-manipulators).
