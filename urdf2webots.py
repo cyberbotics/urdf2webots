@@ -46,12 +46,15 @@ optParser.add_option('--input', dest='inFile', default='', help='Specifies the u
 optParser.add_option('--output', dest='outFile', default='', help='Specifies the name of the resulting PROTO file.')
 optParser.add_option('--normal', dest='normal', action='store_true', default=False, help='If set, the normals are exported if present in the URDF definition.')
 optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False, help='If set, the bounding objects are approximated using boxes.')
+optParser.add_option('--disable-mesh-optimization', dest='disableMeshOptimization', action='store_true', default=False, help='If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the conversion).')
 options, args = optParser.parse_args()
 
 if not options.inFile:
     sys.exit('--input argument missing.')
 if not os.path.exists(options.inFile):
     sys.exit('Input file "%s" does not exists.' % options.inFile)
+
+parserURDF.disableMeshOptimization = options.disableMeshOptimization
 
 with open(options.inFile, 'r') as file:
     content = file.read()
