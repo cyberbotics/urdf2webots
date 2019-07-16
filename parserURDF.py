@@ -19,7 +19,10 @@ import numbers
 
 
 counter = 0
-robotName = ''  # to pass from external
+
+# to pass from external
+robotName = ''
+disableMeshOptimization = False
 
 
 class Trimesh():
@@ -369,23 +372,26 @@ def getSTLMesh(filename, node):
     trimesh.coord.append(a)
     trimesh.coord.append(b)
     trimesh.coord.append(c)
+    if numTriangles > 50000 and not disableMeshOptimization:
+        print('Warning: This mesh has a lot of triangles!')
+        print('Warning: It is recommended to use the script with the \'--disable-mesh-optimization\' argument.')
     for i in range(1, numTriangles):
         if i % 100 == 0:
             sys.stdout.write('%d / %d\r' % (i, numTriangles))
         struct.unpack("<3f", stlFile.read(12))
         a = struct.unpack("<3f", stlFile.read(12))
         indexA = None
-        if trimesh.coord.count(a) == 0:
+        if disableMeshOptimization or a not in trimesh.coord:
             indexA = len(trimesh.coord)
             trimesh.coord.append(a)
         b = struct.unpack("<3f", stlFile.read(12))
         indexB = None
-        if trimesh.coord.count(b) == 0:
+        if disableMeshOptimization or b not in trimesh.coord:
             indexB = len(trimesh.coord)
             trimesh.coord.append(b)
         c = struct.unpack("<3f", stlFile.read(12))
         indexC = None
-        if trimesh.coord.count(c) == 0:
+        if disableMeshOptimization or c not in trimesh.coord:
             indexC = len(trimesh.coord)
             trimesh.coord.append(c)
         struct.unpack("H", stlFile.read(2))
