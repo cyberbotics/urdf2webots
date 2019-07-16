@@ -356,48 +356,49 @@ def hasElement(node, element):
 
 def getSTLMesh(filename, node):
     """Read stl file."""
+    print('Parsing Mesh: ' + filename)
     stlFile = open(filename, 'rb')
     stlFile.read(80)
-    vertex1 = []
-    vertex2 = []
-    vertex3 = []
     numTriangles = struct.unpack("@i", stlFile.read(4))[0]
     struct.unpack("<3f", stlFile.read(12))
     a = struct.unpack("<3f", stlFile.read(12))
-    vertex1.append(a)
     b = struct.unpack("<3f", stlFile.read(12))
-    vertex2.append(b)
     c = struct.unpack("<3f", stlFile.read(12))
-    vertex3.append(c)
     struct.unpack("H", stlFile.read(2))
     trimesh = node.geometry.trimesh
-    trimesh.coord.append(vertex1[0])
-    trimesh.coord.append(vertex2[0])
-    trimesh.coord.append(vertex3[0])
+    trimesh.coord.append(a)
+    trimesh.coord.append(b)
+    trimesh.coord.append(c)
     for i in range(1, numTriangles):
+        if i % 100 == 0:
+            sys.stdout.write('%d / %d\r' % (i, numTriangles))
         struct.unpack("<3f", stlFile.read(12))
         a = struct.unpack("<3f", stlFile.read(12))
-        vertex1.append(a)
+        indexA = None
         if trimesh.coord.count(a) == 0:
+            indexA = len(trimesh.coord)
             trimesh.coord.append(a)
         b = struct.unpack("<3f", stlFile.read(12))
-        vertex2.append(b)
+        indexB = None
         if trimesh.coord.count(b) == 0:
+            indexB = len(trimesh.coord)
             trimesh.coord.append(b)
         c = struct.unpack("<3f", stlFile.read(12))
-        vertex3.append(c)
+        indexC = None
         if trimesh.coord.count(c) == 0:
+            indexC = len(trimesh.coord)
             trimesh.coord.append(c)
         struct.unpack("H", stlFile.read(2))
-        trimesh.coordIndex.append([trimesh.coord.index(vertex1[i]),
-                                   trimesh.coord.index(vertex2[i]),
-                                   trimesh.coord.index(vertex3[i])])
+        trimesh.coordIndex.append([indexA if indexA is not None else trimesh.coord.index(a),
+                                   indexB if indexB is not None else trimesh.coord.index(b),
+                                   indexC if indexC is not None else trimesh.coord.index(c)])
     stlFile.close()
     return node
 
 
 def getColladaMesh(filename, node, link):
     """Read collada file."""
+    print('Parsing Mesh: ' + filename)
     colladaMesh = Collada(filename)
     if hasattr(node, 'material') and node.material:
         for geometry in list(colladaMesh.scene.objects('geometry')):
