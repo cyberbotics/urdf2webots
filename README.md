@@ -1,4 +1,4 @@
-# urdf2webots [![Build Status](https://travis-ci.org/cyberbotics/urdf2webots.svg?branch=master)](https://travis-ci.org/cyberbotics/urdf2webots)
+# urdf2webots [![Build Status](https://travis-ci.com/cyberbotics/urdf2webots.svg?branch=master)](https://travis-ci.com/cyberbotics/urdf2webots)
 
 This tool converts URDF files into Webots PROTO files.
 
