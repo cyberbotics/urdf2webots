@@ -1,11 +1,11 @@
-# urdf2webots [![Build Status](https://travis-ci.org/omichel/urdf2webots.svg?branch=master)](https://travis-ci.org/omichel/urdf2webots)
+# urdf2webots [![Build Status](https://travis-ci.com/cyberbotics/urdf2webots.svg?branch=master)](https://travis-ci.com/cyberbotics/urdf2webots)
 
 This tool converts URDF files into Webots PROTO files.
 
 ## Install
 
 ```
-git clone https://github.com/omichel/urdf2webots.git
+git clone https://github.com/cyberbotics/urdf2webots.git
 cd urdf2webots
 pip install -r requirements.txt
 ```
