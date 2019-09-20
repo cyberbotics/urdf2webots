@@ -798,7 +798,7 @@ def parseGazeboElement(element, parentLink, linkList):
                     if hasElement(imageElement, 'height'):
                         camera.height = int(imageElement.getElementsByTagName('height')[0].firstChild.nodeValue)
                     if hasElement(imageElement, 'format') and imageElement.getElementsByTagName('format')[0].firstChild.nodeValue != 'R8G8B8A8':
-                        print('Unsupported "%lf" image format, using "R8G8B8A8" instead.' % imageElement.getElementsByTagName('format')[0].firstChild.nodeValue)
+                        print('Unsupported "%s" image format, using "R8G8B8A8" instead.' % str(imageElement.getElementsByTagName('format')[0].firstChild.nodeValue))
             if hasElement(sensorElement, 'noise'):
                 noiseElement = sensorElement.getElementsByTagName('noise')[0]
                 if hasElement(noiseElement, 'stddev'):
