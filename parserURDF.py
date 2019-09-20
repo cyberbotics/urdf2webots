@@ -817,7 +817,7 @@ def parseGazeboElement(element, parentLink, linkList):
                     if hasElement(scanElement, 'horizontal'):
                         horizontalElement = scanElement.getElementsByTagName('horizontal')[0]
                         if hasElement(horizontalElement, 'samples'):
-                            lidar.horizontalResolution = int(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
+                            lidar.horizontalResolution = int(float(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue))
                         if hasElement(horizontalElement, 'min_angle') and hasElement(horizontalElement, 'max_angle'):
                             minAngle = float(horizontalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
                             maxAngle = float(horizontalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
