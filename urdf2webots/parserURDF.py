@@ -3,7 +3,6 @@ import os
 import sys
 import struct
 import math_utils
-import gazebo_materials
 import numpy
 try:
     from PIL import Image
@@ -16,6 +15,8 @@ except ImportError as e:
 
 from collada import Collada
 import numbers
+
+from urdf2webots.gazebo_materials import materials
 
 
 counter = 0
@@ -556,20 +557,20 @@ def getVisual(link, node):
                 visual.material.diffuse.alpha = float(colorElement[3])
             elif material.hasAttribute('name') and material.getAttribute('name') in Material.namedMaterial:
                 visual.material = Material.namedMaterial[material.getAttribute('name')]
-            elif material.firstChild and material.firstChild.nodeValue in gazebo_materials.materials:
+            elif material.firstChild and material.firstChild.nodeValue in materials:
                 materialName = material.firstChild.nodeValue
-                visual.material.diffuse.red = float(gazebo_materials.materials[materialName]['diffuse'][0])
-                visual.material.diffuse.green = float(gazebo_materials.materials[materialName]['diffuse'][1])
-                visual.material.diffuse.blue = float(gazebo_materials.materials[materialName]['diffuse'][2])
-                visual.material.diffuse.alpha = float(gazebo_materials.materials[materialName]['diffuse'][3])
-                visual.material.ambient.red = float(gazebo_materials.materials[materialName]['ambient'][0])
-                visual.material.ambient.green = float(gazebo_materials.materials[materialName]['ambient'][1])
-                visual.material.ambient.blue = float(gazebo_materials.materials[materialName]['ambient'][2])
-                visual.material.ambient.alpha = float(gazebo_materials.materials[materialName]['ambient'][3])
-                visual.material.specular.red = float(gazebo_materials.materials[materialName]['specular'][0])
-                visual.material.specular.green = float(gazebo_materials.materials[materialName]['specular'][1])
-                visual.material.specular.blue = float(gazebo_materials.materials[materialName]['specular'][2])
-                visual.material.specular.alpha = float(gazebo_materials.materials[materialName]['specular'][3])
+                visual.material.diffuse.red = float(materials[materialName]['diffuse'][0])
+                visual.material.diffuse.green = float(materials[materialName]['diffuse'][1])
+                visual.material.diffuse.blue = float(materials[materialName]['diffuse'][2])
+                visual.material.diffuse.alpha = float(materials[materialName]['diffuse'][3])
+                visual.material.ambient.red = float(materials[materialName]['ambient'][0])
+                visual.material.ambient.green = float(materials[materialName]['ambient'][1])
+                visual.material.ambient.blue = float(materials[materialName]['ambient'][2])
+                visual.material.ambient.alpha = float(materials[materialName]['ambient'][3])
+                visual.material.specular.red = float(materials[materialName]['specular'][0])
+                visual.material.specular.green = float(materials[materialName]['specular'][1])
+                visual.material.specular.blue = float(materials[materialName]['specular'][2])
+                visual.material.specular.alpha = float(materials[materialName]['specular'][3])
             if hasElement(material, 'texture'):
                 visual.material.texture = material.getElementsByTagName('texture')[0].getAttribute('filename')
                 if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':

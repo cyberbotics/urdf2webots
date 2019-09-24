@@ -1,8 +1,9 @@
 """Import modules."""
 
 import math
-import math_utils
 import numpy as np
+
+from urdf2webots.math_utils import rotateVector, matrixFromRotation, matrixFromRotation, multiplyMatrix, rotationFromMatrix
 
 
 class RGB():
@@ -350,7 +351,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     endpointRotation = joint.rotation
     endpointPosition = joint.position
     if joint.rotation[3] != 0.0 and axis:
-        axis = math_utils.rotateVector(axis, joint.rotation)
+        axis = rotateVector(axis, joint.rotation)
     if joint.type == 'revolute' or joint.type == 'continuous':
         proto.write(level * indent + 'HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
@@ -360,10 +361,10 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
             if joint.limit.upper >= joint.limit.lower:
                 position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
             proto.write((level + 2) * indent + 'position %lf \n' % position)
-            mat1 = math_utils.matrixFromRotation(endpointRotation)
-            mat2 = math_utils.matrixFromRotation([axis[0], axis[1], axis[2], position])
-            mat3 = math_utils.multiplyMatrix(mat2, mat1)
-            endpointRotation = math_utils.rotationFromMatrix(mat3)
+            mat1 = matrixFromRotation(endpointRotation)
+            mat2 = matrixFromRotation([axis[0], axis[1], axis[2], position])
+            mat3 = multiplyMatrix(mat2, mat1)
+            endpointRotation = rotationFromMatrix(mat3)
         proto.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
         proto.write((level + 2) * indent + 'anchor %lf %lf %lf\n' % (joint.position[0], joint.position[1], joint.position[2]))
         proto.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
