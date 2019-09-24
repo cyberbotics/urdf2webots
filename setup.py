@@ -5,16 +5,16 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='urdf2webots',
-    version='0.1',
-    scripts=[
-        'urdf2webots.py',
-        'gazebo_materials.py',
-        'math_utils.py',
-        'parserURDF.py',
-        'writeProto.py'
-    ],
+    version='0.2.2',
+    # scripts=[
+    #     'urdf2webots.py',
+    #     'gazebo_materials.py',
+    #     'math_utils.py',
+    #     'parserURDF.py',
+    #     'writeProto.py'
+    # ],
     author="Cyberbotics",
-    author_email="suuport@cyberbotics.com",
+    author_email="support@cyberbotics.com",
     description="A converter between URDF and PROTO files.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -26,5 +26,9 @@ setuptools.setup(
         'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python',
         'Topic :: Software Development'
+    ],
+    install_requires=[
+#       "pycollada >= 0.6",
+#       "Pillow"
     ]
  )
