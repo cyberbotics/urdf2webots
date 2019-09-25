@@ -22,7 +22,7 @@ setuptools.setup(
         'Topic :: Software Development'
     ],
     install_requires=[
-#       "pycollada >= 0.6",
-#       "Pillow"
+        # "pycollada >= 0.6",
+        # "Pillow"
     ]
- )
+)
