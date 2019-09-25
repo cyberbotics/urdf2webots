@@ -137,7 +137,7 @@ def convert2urdf(inFile=None, outFile=None, normal=False, boxCollision=False, di
                                                 sensorList, boxCollision=boxCollision, normal=normal, robot=True)
                 protoFile.write('}\n')
                 protoFile.close()
-                exit()
+                return
     print('Could not read file')
 
 
