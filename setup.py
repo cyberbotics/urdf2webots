@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='urdf2webots',
-    version='0.2.9',
+    version='0.2.11',
     scripts=['bin/urdf2webots'],
     author="Cyberbotics",
     author_email="support@cyberbotics.com",
