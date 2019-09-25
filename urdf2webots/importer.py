@@ -134,7 +134,7 @@ def convert2urdf(inFile=None, outFile=None, normal=False, boxCollision=False, di
 
                 urdf2webots.writeProto.declaration(protoFile, robotName)
                 urdf2webots.writeProto.URDFLink(protoFile, rootLink, 1, parentList, childList, linkList, jointList,
-                                    sensorList, boxCollision=boxCollision, normal=normal, robot=True)
+                                                sensorList, boxCollision=boxCollision, normal=normal, robot=True)
                 protoFile.write('}\n')
                 protoFile.close()
                 exit()
