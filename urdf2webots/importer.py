@@ -41,7 +41,7 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convert2urdf(inFile=None):
+def convert2urdf(inFile=None, outFile=None, normal=False, boxCollision=False, disableMeshOptimization=False):
     optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
     optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
     optParser.add_option('--output', dest='outFile', default='', help='Specifies the name of the resulting PROTO file.')
@@ -51,6 +51,14 @@ def convert2urdf(inFile=None):
     options, args = optParser.parse_args()
     if inFile is not None:
         options.inFile = inFile
+    if outFile is not None:
+        options.outFile = outFile
+    if normal:
+        options.normal = normal
+    if boxCollision:
+        options.boxCollision = boxCollision
+    if disableMeshOptimization:
+        options.disableMeshOptimization = disableMeshOptimization
 
     if not options.inFile:
         sys.exit('--input argument missing.')
