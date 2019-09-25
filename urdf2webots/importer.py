@@ -7,7 +7,6 @@ import os
 import errno
 import re
 import sys
-import optparse
 import urdf2webots.parserURDF
 import urdf2webots.writeProto
 from xml.dom import minidom
@@ -42,38 +41,20 @@ def mkdirSafe(directory):
 
 
 def convert2urdf(inFile=None, outFile=None, normal=False, boxCollision=False, disableMeshOptimization=False):
-    optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
-    optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
-    optParser.add_option('--output', dest='outFile', default='', help='Specifies the name of the resulting PROTO file.')
-    optParser.add_option('--normal', dest='normal', action='store_true', default=False, help='If set, the normals are exported if present in the URDF definition.')
-    optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False, help='If set, the bounding objects are approximated using boxes.')
-    optParser.add_option('--disable-mesh-optimization', dest='disableMeshOptimization', action='store_true', default=False, help='If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the conversion).')
-    options, args = optParser.parse_args()
-    if inFile is not None:
-        options.inFile = inFile
-    if outFile is not None:
-        options.outFile = outFile
-    if normal:
-        options.normal = normal
-    if boxCollision:
-        options.boxCollision = boxCollision
-    if disableMeshOptimization:
-        options.disableMeshOptimization = disableMeshOptimization
-
-    if not options.inFile:
+    if not inFile:
         sys.exit('--input argument missing.')
-    if not os.path.exists(options.inFile):
-        sys.exit('Input file "%s" does not exists.' % options.inFile)
+    if not os.path.exists(inFile):
+        sys.exit('Input file "%s" does not exists.' % inFile)
 
-    urdf2webots.parserURDF.disableMeshOptimization = options.disableMeshOptimization
+    urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
 
-    with open(options.inFile, 'r') as file:
+    with open(inFile, 'r') as file:
         content = file.read()
 
         packages = re.findall('"package://(.*)"', content)
         if packages:
             packageName = packages[0].split('/')[0]
-            directory = os.path.dirname(options.inFile)
+            directory = os.path.dirname(inFile)
             while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
                 directory = os.path.dirname(directory)
             if os.path.split(directory)[1]:
@@ -87,14 +68,14 @@ def convert2urdf(inFile=None, outFile=None, normal=False, boxCollision=False, di
         for child in domFile.childNodes:
             if child.localName == 'robot':
                 robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize
-                outputFile = options.outFile if options.outFile else robotName + '.proto'
+                outputFile = outFile if outFile else robotName + '.proto'
 
                 urdf2webots.parserURDF.robotName = robotName  # pass robotName
                 mkdirSafe(outputFile.replace('.proto', '') + '_textures')  # make a dir called 'x_textures'
 
                 robot = child
                 protoFile = open(outputFile, 'w')
-                urdf2webots.writeProto.header(protoFile, options.inFile, robotName)
+                urdf2webots.writeProto.header(protoFile, inFile, robotName)
                 linkElementList = []
                 jointElementList = []
                 for child in robot.childNodes:
@@ -153,7 +134,7 @@ def convert2urdf(inFile=None, outFile=None, normal=False, boxCollision=False, di
 
                 urdf2webots.writeProto.declaration(protoFile, robotName)
                 urdf2webots.writeProto.URDFLink(protoFile, rootLink, 1, parentList, childList, linkList, jointList,
-                                    sensorList, boxCollision=options.boxCollision, normal=options.normal, robot=True)
+                                    sensorList, boxCollision=boxCollision, normal=normal, robot=True)
                 protoFile.write('}\n')
                 protoFile.close()
                 exit()
