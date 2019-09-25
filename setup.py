@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='urdf2webots',
-    version='0.2.11',
+    version='1.0.0',
     scripts=['bin/urdf2webots'],
     author="Cyberbotics",
     author_email="support@cyberbotics.com",
@@ -22,8 +22,7 @@ setuptools.setup(
         'Topic :: Software Development'
     ],
     install_requires=[
-        # "pycollada >= 0.6",
-        # "Pillow",
-        # "optparse"
+        "pycollada >= 0.6",
+        "Pillow"
     ]
 )
