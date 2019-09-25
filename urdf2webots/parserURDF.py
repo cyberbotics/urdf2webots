@@ -2,7 +2,6 @@
 import os
 import sys
 import struct
-import math_utils
 import numpy
 try:
     from PIL import Image
@@ -17,6 +16,7 @@ from collada import Collada
 import numbers
 
 from urdf2webots.gazebo_materials import materials
+from urdf2webots.math_utils import convertRPYtoEulerAxis
 
 
 counter = 0
@@ -502,9 +502,9 @@ def getRotation(node, isCylinder=False):
         rotation[1] = float(orientationString[1])
         rotation[2] = float(orientationString[2])
     if isCylinder:
-        return math_utils.convertRPYtoEulerAxis(rotation, True)
+        return convertRPYtoEulerAxis(rotation, True)
     else:
-        return math_utils.convertRPYtoEulerAxis(rotation, False)
+        return convertRPYtoEulerAxis(rotation, False)
 
 
 def getInertia(node):

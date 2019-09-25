@@ -3,7 +3,7 @@
 import math
 import numpy as np
 
-from urdf2webots.math_utils import rotateVector, matrixFromRotation, matrixFromRotation, multiplyMatrix, rotationFromMatrix
+from urdf2webots.math_utils import rotateVector, matrixFromRotation, multiplyMatrix, rotationFromMatrix
 
 
 class RGB():
