@@ -139,7 +139,3 @@ def convert2urdf(inFile=None, outFile=None, normal=False, boxCollision=False, di
                 protoFile.close()
                 return
     print('Could not read file')
-
-
-if __name__ == '__main__':
-    convert2urdf()
