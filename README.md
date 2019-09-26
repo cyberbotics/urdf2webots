@@ -10,6 +10,8 @@ This tool converts URDF files into Webots PROTO files.
 pip install urdf2webots
 ```
 
+On macOS, export the pip binary path to the PATH: `export PATH="/Users/$USER/Library/Python/3.7/bin:$PATH"`
+
 ### From Sources
 
 ```
