@@ -411,7 +411,7 @@ def getColladaMesh(filename, node, link):
         for geometry in list(colladaMesh.scene.objects('geometry')):
             for data in list(geometry.primitives()):
                 visual = Visual()
-                visual.name = os.path.splitext(os.path.basename(filename))[0]
+                visual.name = os.path.splitext(os.path.basename(filename))[0]  #TODO: index because several shapee in same file
                 visual.position = node.position
                 visual.rotation = node.rotation
                 visual.material.diffuse.red = node.material.diffuse.red
