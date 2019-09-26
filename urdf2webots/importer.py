@@ -40,9 +40,7 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convert2urdf(inFile=None, outFile=None, normal=False, boxCollision=False, disableMeshOptimization=False):
-    if not inFile:
-        sys.exit('--input argument missing.')
+def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disableMeshOptimization=False):
     if not os.path.exists(inFile):
         sys.exit('Input file "%s" does not exists.' % inFile)
 
