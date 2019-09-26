@@ -141,6 +141,7 @@ class Visual():
         self.rotation = [1.0, 0.0, 0.0, 0.0]
         self.geometry = Geometry()
         self.material = Material()
+        self.name = None
 
 
 class Collision():
@@ -410,6 +411,7 @@ def getColladaMesh(filename, node, link):
         for geometry in list(colladaMesh.scene.objects('geometry')):
             for data in list(geometry.primitives()):
                 visual = Visual()
+                visual.name = os.path.splitext(os.path.basename(filename))[0]
                 visual.position = node.position
                 visual.rotation = node.rotation
                 visual.material.diffuse.red = node.material.diffuse.red
@@ -612,6 +614,7 @@ def getVisual(link, node):
                 getColladaMesh(meshfile, visual, link)
             elif os.path.splitext(meshfile)[1].lower() == '.stl':
                 visual = getSTLMesh(meshfile, visual)
+                visual.name = os.path.splitext(os.path.basename(meshfile))[0]
                 link.visual.append(visual)
 
 

@@ -231,7 +231,10 @@ def URDFShape(proto, link, level, normal=False):
             shapeLevel += 2
             transform = True
 
-        proto.write(shapeLevel * indent + 'Shape {\n')
+        if visualNode.name is not None:
+            proto.write(shapeLevel * indent + 'Shape DEF %s {\n' % str(visualNode.name))
+        else:
+            proto.write(shapeLevel * indent + 'Shape {\n')
         proto.write((shapeLevel + 1) * indent + 'appearance PBRAppearance {\n')
         ambientColor = RGBA2RGB(visualNode.material.ambient)
         diffuseColor = RGBA2RGB(visualNode.material.diffuse, RGB_background=ambientColor)
