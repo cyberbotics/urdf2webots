@@ -24,18 +24,21 @@ pip install -r requirements.txt
 
 ### From pip
 
-`urdf2webots --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization]`
+```
+urdf2webots --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization]
+```
 
 ### From Sources
 
-`python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization]`
+```
+python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization]
+```
 
 ### In your Python Code
 
 ```
 from urdf2webots.importer import convert2urdf
-
-convert2urdf('MY_PATH/MY_URDF.urdf')
+convert2urdf('MY_PATH/MY_URDF.urd')
 ```
 
 ### Arguments

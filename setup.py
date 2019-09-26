@@ -1,18 +1,18 @@
 import setuptools
 
-with open("README.md", "r") as fh:
+with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name='urdf2webots',
     version='1.0.0',
     scripts=['bin/urdf2webots'],
-    author="Cyberbotics",
-    author_email="support@cyberbotics.com",
-    description="A converter between URDF and PROTO files.",
+    author='Cyberbotics',
+    author_email='support@cyberbotics.com',
+    description='A converter between URDF and PROTO files.',
     long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/cyberbotics/urdf2webots",
+    long_description_content_type='text/markdown',
+    url='https://github.com/cyberbotics/urdf2webots',
     packages=setuptools.find_packages(),
     license='Apache License, Version 2.0',
     classifiers=[
