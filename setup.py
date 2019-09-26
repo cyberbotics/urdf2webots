@@ -23,6 +23,7 @@ setuptools.setup(
     ],
     install_requires=[
         "pycollada >= 0.6",
-        "Pillow"
+        "Pillow",
+        "numpy"
     ]
 )
