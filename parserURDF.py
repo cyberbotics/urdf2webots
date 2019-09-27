@@ -122,6 +122,8 @@ class Material():
         self.shininess = None
         self.index_of_refraction = 1.0
         self.texture = ""
+        self.name = None
+        self.defName = None
 
     def parseFromMaterialNode(self, node):
         """Parse a material node."""
@@ -132,8 +134,12 @@ class Material():
             self.diffuse.g = float(colors[1])
             self.diffuse.b = float(colors[2])
             self.diffuse.alpha = float(colors[3])
-        if node.hasAttribute('name') and node.getAttribute('name') not in Material.namedMaterial:
-            Material.namedMaterial[node.getAttribute('name')] = self
+        if node.hasAttribute('name'):
+            self.name = node.getAttribute('name')
+            if self.name not in Material.namedMaterial:
+                Material.namedMaterial[self.name] = self
+            else:
+                assert False
 
 
 class Visual():
@@ -560,14 +566,17 @@ def getVisual(link, node):
 
         if hasElement(visualElement, 'material'):
             material = visualElement.getElementsByTagName('material')[0]
-            if hasElement(material, 'color'):
+            if material.hasAttribute('name') and material.getAttribute('name') in Material.namedMaterial:
+                visual.material = Material.namedMaterial[material.getAttribute('name')]
+            elif hasElement(material, 'color'):
                 colorElement = material.getElementsByTagName('color')[0].getAttribute('rgba').split()
                 visual.material.diffuse.red = float(colorElement[0])
                 visual.material.diffuse.green = float(colorElement[1])
                 visual.material.diffuse.blue = float(colorElement[2])
                 visual.material.diffuse.alpha = float(colorElement[3])
-            elif material.hasAttribute('name') and material.getAttribute('name') in Material.namedMaterial:
-                visual.material = Material.namedMaterial[material.getAttribute('name')]
+                if material.hasAttribute('name'):
+                    visual.material.name = material.getAttribute('name')
+                    Material.namedMaterial[visual.material.name] = visual.material
             elif material.firstChild and material.firstChild.nodeValue in gazebo_materials.materials:
                 materialName = material.firstChild.nodeValue
                 visual.material.diffuse.red = float(gazebo_materials.materials[materialName]['diffuse'][0])
@@ -582,6 +591,8 @@ def getVisual(link, node):
                 visual.material.specular.green = float(gazebo_materials.materials[materialName]['specular'][1])
                 visual.material.specular.blue = float(gazebo_materials.materials[materialName]['specular'][2])
                 visual.material.specular.alpha = float(gazebo_materials.materials[materialName]['specular'][3])
+                visual.material.name = materialName
+                Material.namedMaterial[materialName] = visual.material
             if hasElement(material, 'texture'):
                 visual.material.texture = material.getElementsByTagName('texture')[0].getAttribute('filename')
                 if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':
