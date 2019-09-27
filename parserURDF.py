@@ -407,11 +407,13 @@ def getColladaMesh(filename, node, link):
     """Read collada file."""
     print('Parsing Mesh: ' + filename)
     colladaMesh = Collada(filename)
+    index = -1
     if hasattr(node, 'material') and node.material:
         for geometry in list(colladaMesh.scene.objects('geometry')):
             for data in list(geometry.primitives()):
                 visual = Visual()
-                visual.name = os.path.splitext(os.path.basename(filename))[0]  #TODO: index because several shapee in same file
+                index += 1
+                visual.name = os.path.splitext(os.path.basename(filename))[0] + '_' + str(index)
                 visual.position = node.position
                 visual.rotation = node.rotation
                 visual.material.diffuse.red = node.material.diffuse.red
