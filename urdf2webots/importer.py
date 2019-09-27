@@ -83,8 +83,9 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disable
                     elif child.localName == 'joint':
                         jointElementList.append(child)
                     elif child.localName == 'material':
-                        material = urdf2webots.parserURDF.Material()
-                        material.parseFromMaterialNode(child)
+                        if not child.hasAttribute('name') or child.getAttribute('name') not in urdf2webots.parserURDF.Material.namedMaterial:
+                            material = urdf2webots.parserURDF.Material()
+                            material.parseFromMaterialNode(child)
 
                 linkList = []
                 jointList = []

@@ -85,6 +85,8 @@ class Sphere():
 class Geometry():
     """Define geometry object."""
 
+    reference = {}
+
     def __init__(self):
         """Initializatization."""
         self.box = Box()
@@ -92,6 +94,8 @@ class Geometry():
         self.sphere = Sphere()
         self.trimesh = Trimesh()
         self.scale = [1.0, 1.0, 1.0]
+        self.name = None
+        self.defName = None
 
 
 class Color():
@@ -119,6 +123,8 @@ class Material():
         self.shininess = None
         self.index_of_refraction = 1.0
         self.texture = ""
+        self.name = None
+        self.defName = None
 
     def parseFromMaterialNode(self, node):
         """Parse a material node."""
@@ -129,8 +135,12 @@ class Material():
             self.diffuse.g = float(colors[1])
             self.diffuse.b = float(colors[2])
             self.diffuse.alpha = float(colors[3])
-        if node.hasAttribute('name') and node.getAttribute('name') not in Material.namedMaterial:
-            Material.namedMaterial[node.getAttribute('name')] = self
+        if node.hasAttribute('name'):
+            self.name = node.getAttribute('name')
+            if self.name not in Material.namedMaterial:
+                Material.namedMaterial[self.name] = self
+            else:
+                assert False
 
 
 class Visual():
@@ -407,10 +417,12 @@ def getColladaMesh(filename, node, link):
     """Read collada file."""
     print('Parsing Mesh: ' + filename)
     colladaMesh = Collada(filename)
+    index = -1
     if hasattr(node, 'material') and node.material:
         for geometry in list(colladaMesh.scene.objects('geometry')):
             for data in list(geometry.primitives()):
                 visual = Visual()
+                index += 1
                 visual.position = node.position
                 visual.rotation = node.rotation
                 visual.material.diffuse.red = node.material.diffuse.red
@@ -418,23 +430,29 @@ def getColladaMesh(filename, node, link):
                 visual.material.diffuse.blue = node.material.diffuse.blue
                 visual.material.diffuse.alpha = node.material.diffuse.alpha
                 visual.material.texture = node.material.texture
-                visual.geometry.scale = node.geometry.scale
-                for val in data.vertex:
-                    visual.geometry.trimesh.coord.append(numpy.array(val))
-                for val in data.vertex_index:
-                    visual.geometry.trimesh.coordIndex.append(val)
-                if data.texcoordset:  # non-empty
-                    for val in data.texcoordset[0]:
-                        visual.geometry.trimesh.texCoord.append(val)
-                if data.texcoord_indexset:  # non-empty
-                    for val in data.texcoord_indexset[0]:
-                        visual.geometry.trimesh.texCoordIndex.append(val)
-                if hasattr(data, '_normal') and data._normal is not None and data._normal.size > 0:
-                    for val in data._normal:
-                        visual.geometry.trimesh.normal.append(numpy.array(val))
-                    if hasattr(data, '_normal_index') and data._normal_index is not None and data._normal_index.size > 0:
-                        for val in data._normal_index:
-                            visual.geometry.trimesh.normalIndex.append(val)
+                name = '%s_%d' % (os.path.splitext(os.path.basename(filename))[0], index)
+                if name in Geometry.reference:
+                    visual.geometry = Geometry.reference[name]
+                else:
+                    Geometry.reference[name] = visual.geometry
+                    visual.geometry.name = name
+                    visual.geometry.scale = node.geometry.scale
+                    for val in data.vertex:
+                        visual.geometry.trimesh.coord.append(numpy.array(val))
+                    for val in data.vertex_index:
+                        visual.geometry.trimesh.coordIndex.append(val)
+                    if data.texcoordset:  # non-empty
+                        for val in data.texcoordset[0]:
+                            visual.geometry.trimesh.texCoord.append(val)
+                    if data.texcoord_indexset:  # non-empty
+                        for val in data.texcoord_indexset[0]:
+                            visual.geometry.trimesh.texCoordIndex.append(val)
+                    if hasattr(data, '_normal') and data._normal is not None and data._normal.size > 0:
+                        for val in data._normal:
+                            visual.geometry.trimesh.normal.append(numpy.array(val))
+                        if hasattr(data, '_normal_index') and data._normal_index is not None and data._normal_index.size > 0:
+                            for val in data._normal_index:
+                                visual.geometry.trimesh.normalIndex.append(val)
                 if data.material and data.material.effect:
                     if data.material.effect.emission:
                         visual.material.emission = colorVector2Instance(data.material.effect.emission)
@@ -549,14 +567,17 @@ def getVisual(link, node):
 
         if hasElement(visualElement, 'material'):
             material = visualElement.getElementsByTagName('material')[0]
-            if hasElement(material, 'color'):
+            if material.hasAttribute('name') and material.getAttribute('name') in Material.namedMaterial:
+                visual.material = Material.namedMaterial[material.getAttribute('name')]
+            elif hasElement(material, 'color'):
                 colorElement = material.getElementsByTagName('color')[0].getAttribute('rgba').split()
                 visual.material.diffuse.red = float(colorElement[0])
                 visual.material.diffuse.green = float(colorElement[1])
                 visual.material.diffuse.blue = float(colorElement[2])
                 visual.material.diffuse.alpha = float(colorElement[3])
-            elif material.hasAttribute('name') and material.getAttribute('name') in Material.namedMaterial:
-                visual.material = Material.namedMaterial[material.getAttribute('name')]
+                if material.hasAttribute('name'):
+                    visual.material.name = material.getAttribute('name')
+                    Material.namedMaterial[visual.material.name] = visual.material
             elif material.firstChild and material.firstChild.nodeValue in materials:
                 materialName = material.firstChild.nodeValue
                 visual.material.diffuse.red = float(materials[materialName]['diffuse'][0])
@@ -571,6 +592,8 @@ def getVisual(link, node):
                 visual.material.specular.green = float(materials[materialName]['specular'][1])
                 visual.material.specular.blue = float(materials[materialName]['specular'][2])
                 visual.material.specular.alpha = float(materials[materialName]['specular'][3])
+                visual.material.name = materialName
+                Material.namedMaterial[materialName] = visual.material
             if hasElement(material, 'texture'):
                 visual.material.texture = material.getElementsByTagName('texture')[0].getAttribute('filename')
                 if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':
@@ -612,7 +635,13 @@ def getVisual(link, node):
             if os.path.splitext(meshfile)[1].lower() == '.dae':
                 getColladaMesh(meshfile, visual, link)
             elif os.path.splitext(meshfile)[1].lower() == '.stl':
-                visual = getSTLMesh(meshfile, visual)
+                name = os.path.splitext(os.path.basename(meshfile))[0]
+                if name in Geometry.reference:
+                    visual.geometry = Geometry.reference[name]
+                else:
+                    visual = getSTLMesh(meshfile, visual)
+                    visual.geometry.name = name
+                    Geometry.reference[name] = visual.geometry
                 link.visual.append(visual)
 
 
@@ -659,7 +688,13 @@ def getCollision(link, node):
             if os.path.splitext(meshfile)[1] == '.dae':
                 collision.geometry.collada = getColladaMesh(meshfile, collision, link)
             elif os.path.splitext(meshfile)[1] == '.stl':
-                collision.geometry.stl = getSTLMesh(meshfile, collision)
+                name = os.path.splitext(os.path.basename(meshfile))[0]
+                if name in Geometry.reference:
+                    collision.geometry = Geometry.reference[name]
+                else:
+                    collision.geometry.stl = getSTLMesh(meshfile, collision)
+                    collision.geometry.name = name
+                    Geometry.reference[name] = collision.geometry
                 link.collision.append(collision)
 
 
