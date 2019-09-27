@@ -181,7 +181,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
 
         elif boundingObject.geometry.trimesh.coord:
             if boundingObject.geometry.defName is not None:
-                proto.write(initialIndent + 'geometry USE %s\n' % boundingObject.geometry.defName)
+                proto.write(initialIndent + 'USE %s\n' % boundingObject.geometry.defName)
             else:
                 if boundingObject.geometry.name is not None:
                     proto.write(initialIndent + 'DEF %s IndexedFaceSet {\n' % boundingObject.geometry.name)
