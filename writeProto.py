@@ -62,9 +62,21 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
         proto.write((' ' if endpoint else level * indent) + 'Solid {\n')
         proto.write((level + 1) * indent + 'translation %lf %lf %lf\n' % (jointPosition[0], jointPosition[1], jointPosition[2]))
         proto.write((level + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (jointRotation[0], jointRotation[1], jointRotation[2], jointRotation[3]))
-    if dummy:  # case when link not defined but referenced (e.g. Atlas robot)
-        pass
-    else:
+    if not dummy:  # dummy: case when link not defined but referenced (e.g. Atlas robot)
+        # 1: export Shapes
+        if link.visual:
+            if not haveChild:
+                haveChild = True
+                proto.write((level + 1) * indent + 'children [\n')
+            URDFShape(proto, link, level + 2, normal)
+        # 2: export Sensors
+        for sensor in sensorList:
+            if sensor.parentLink == link.name:
+                if not haveChild:
+                    haveChild = True
+                    proto.write((level + 1) * indent + 'children [\n')
+                sensor.export(proto, level + 2)
+        # 3: export Joints
         for joint in jointList:
             if joint.parent == link.name:
                 if not haveChild:
@@ -72,18 +84,6 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                     proto.write((level + 1) * indent + 'children [\n')
                 URDFJoint(proto, joint, level + 2, parentList, childList,
                           linkList, jointList, sensorList, boxCollision, normal)
-        if link.visual:
-            if not haveChild:
-                haveChild = True
-                proto.write((level + 1) * indent + 'children [\n')
-            URDFShape(proto, link, level + 2, normal)
-
-        for sensor in sensorList:
-            if sensor.parentLink == link.name:
-                if not haveChild:
-                    haveChild = True
-                    proto.write((level + 1) * indent + 'children [\n')
-                sensor.export(proto, level + 2)
 
         if haveChild:
             proto.write((level + 1) * indent + ']\n')
