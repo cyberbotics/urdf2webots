@@ -16,7 +16,7 @@ PROTO MotomanSia20d [
     controller IS controller
     children [
       Shape {
-        appearance PBRAppearance {
+        appearance DEF blue PBRAppearance {
           baseColor 0.000000 0.000000 1.000000
           transparency 0.000000
           roughness 1.000000
@@ -63,7 +63,7 @@ PROTO MotomanSia20d [
               rotation -0.000000 0.000000 1.000000 3.141600
               children [
                 Shape {
-                  appearance PBRAppearance {
+                  appearance DEF silver PBRAppearance {
                     baseColor 0.800000 0.800000 0.800000
                     transparency 0.000000
                     roughness 1.000000
@@ -112,13 +112,7 @@ PROTO MotomanSia20d [
                     rotation -1.000000 -0.000007 -0.000000 1.571593
                     children [
                       Shape {
-                        appearance PBRAppearance {
-                          baseColor 0.500000 0.500000 0.500000
-                          transparency 0.000000
-                          roughness 1.000000
-                          metalness 0
-                          emissiveColor 0.000000 0.000000 0.000000
-                        }
+                        appearance USE blue
                         geometry DEF MOTOMAN_AXIS_L IndexedFaceSet {
                           coord Coordinate {
                             point [
@@ -157,13 +151,7 @@ PROTO MotomanSia20d [
                       rotation 0.000000 1.000000 0.000000 0.000000
                       children [
                         Shape {
-                          appearance PBRAppearance {
-                            baseColor 0.500000 0.500000 0.500000
-                            transparency 0.000000
-                            roughness 1.000000
-                            metalness 0
-                            emissiveColor 0.000000 0.000000 0.000000
-                          }
+                          appearance USE silver
                           geometry DEF MOTOMAN_AXIS_E IndexedFaceSet {
                             coord Coordinate {
                               point [
@@ -204,13 +192,7 @@ PROTO MotomanSia20d [
                                 rotation 1.000000 0.000050 0.000043 4.711593
                                 children [
                                   Shape {
-                                    appearance PBRAppearance {
-                                      baseColor 0.500000 0.500000 0.500000
-                                      transparency 0.000000
-                                      roughness 1.000000
-                                      metalness 0
-                                      emissiveColor 0.000000 0.000000 0.000000
-                                    }
+                                    appearance USE blue
                                     geometry DEF MOTOMAN_AXIS_U IndexedFaceSet {
                                       coord Coordinate {
                                         point [
@@ -249,13 +231,7 @@ PROTO MotomanSia20d [
                                   rotation 0.000000 1.000000 0.000000 0.000000
                                   children [
                                     Shape {
-                                      appearance PBRAppearance {
-                                        baseColor 0.500000 0.500000 0.500000
-                                        transparency 0.000000
-                                        roughness 1.000000
-                                        metalness 0
-                                        emissiveColor 0.000000 0.000000 0.000000
-                                      }
+                                      appearance USE silver
                                       geometry DEF MOTOMAN_AXIS_R IndexedFaceSet {
                                         coord Coordinate {
                                           point [
@@ -296,13 +272,7 @@ PROTO MotomanSia20d [
                                             rotation -1.000000 0.000000 0.000000 1.570000
                                             children [
                                               Shape {
-                                                appearance PBRAppearance {
-                                                  baseColor 0.500000 0.500000 0.500000
-                                                  transparency 0.000000
-                                                  roughness 1.000000
-                                                  metalness 0
-                                                  emissiveColor 0.000000 0.000000 0.000000
-                                                }
+                                                appearance USE blue
                                                 geometry DEF MOTOMAN_AXIS_B IndexedFaceSet {
                                                   coord Coordinate {
                                                     point [
@@ -341,13 +311,7 @@ PROTO MotomanSia20d [
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [
                                                 Shape {
-                                                  appearance PBRAppearance {
-                                                    baseColor 0.500000 0.500000 0.500000
-                                                    transparency 0.000000
-                                                    roughness 1.000000
-                                                    metalness 0
-                                                    emissiveColor 0.000000 0.000000 0.000000
-                                                  }
+                                                  appearance USE silver
                                                   geometry USE MOTOMAN_AXIS_S
                                                 }
                                                 Solid {
