@@ -7,7 +7,7 @@ testDirectory = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 sourceDirectory = os.path.join(testDirectory, 'sources')
 resultDirectory = os.path.join(testDirectory, 'results')
 expectedDirectory = os.path.join(testDirectory, 'expected')
-urdf2webotsPath = os.path.abspath(os.path.join(testDirectory, '..', 'urdf2webots.py'))
+urdf2webotsPath = os.path.abspath(os.path.join(testDirectory, '..', 'demo.py'))
 
 modelPaths = [
     {
