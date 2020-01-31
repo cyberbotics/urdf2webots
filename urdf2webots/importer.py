@@ -12,6 +12,11 @@ import urdf2webots.parserURDF
 import urdf2webots.writeProto
 from xml.dom import minidom
 
+try:
+    import rospkg
+except ImportError:
+    pass
+
 
 def convertLUtoUN(s):
     """Capitalize a string."""
@@ -49,13 +54,20 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disable
 
     with open(inFile, 'r') as file:
         content = file.read()
-
         packages = re.findall('"package://(.*)"', content)
         if packages:
             packageName = packages[0].split('/')[0]
             directory = os.path.dirname(inFile)
             while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
                 directory = os.path.dirname(directory)
+            if not os.path.split(directory)[1]:
+                try:
+                    rospack = rospkg.RosPack()
+                    directory = rospack.get_path(packageName)
+                except rospkg.common.ResourceNotFound:
+                    sys.stderr.write('Package "%s" not found.\n' % packageName)
+                except NameError:
+                    sys.stderr.write('Impossible to find location of "%s" package, installing "rospkg" might help.\n' % packageName)
             if os.path.split(directory)[1]:
                 packagePath = os.path.split(directory)[0]
                 content = content.replace('package:/', packagePath)

@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='urdf2webots',
-    version='1.0.0',
+    version='1.0.1',
     author='Cyberbotics',
     author_email='support@cyberbotics.com',
     description='A converter between URDF and PROTO files.',
@@ -23,6 +23,7 @@ setuptools.setup(
     install_requires=[
         "pycollada >= 0.6",
         "Pillow",
-        "numpy"
+        "numpy",
+        "rospkg"
     ]
 )
