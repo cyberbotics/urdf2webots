@@ -11,7 +11,8 @@ import sys
 import urdf2webots.parserURDF
 import urdf2webots.writeProto
 from xml.dom import minidom
-
+import rospkg
+rospack = rospkg.RosPack()
 
 def convertLUtoUN(s):
     """Capitalize a string."""
@@ -49,11 +50,10 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disable
 
     with open(inFile, 'r') as file:
         content = file.read()
-
         packages = re.findall('"package://(.*)"', content)
         if packages:
             packageName = packages[0].split('/')[0]
-            directory = os.path.dirname(inFile)
+            directory = rospack.get_path(packageName)
             while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
                 directory = os.path.dirname(directory)
             if os.path.split(directory)[1]:
