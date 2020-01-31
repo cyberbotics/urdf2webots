@@ -250,17 +250,20 @@ class IMU():
         file.write(indentationLevel * indent + 'Accelerometer {\n')
         file.write(indentationLevel * indent + '  name "%s accelerometer"\n' % self.name)
         if self.gaussianNoise > 0:
-            file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' % (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
+            file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' %
+                       (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
         file.write(indentationLevel * indent + '}\n')
         file.write(indentationLevel * indent + 'Gyro {\n')
         file.write(indentationLevel * indent + '  name "%s gyro"\n' % self.name)
         if self.gaussianNoise > 0:
-            file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' % (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
+            file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' %
+                       (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
         file.write(indentationLevel * indent + '}\n')
         file.write(indentationLevel * indent + 'Compass {\n')
         file.write(indentationLevel * indent + '  name "%s compass"\n' % self.name)
         if self.gaussianNoise > 0:
-            file.write(indentationLevel * indent + '  lookupTable [-1 -1 %lf, 1 1 %lf]\n' % -self.gaussianNoise, self.gaussianNoise)
+            file.write(indentationLevel * indent + '  lookupTable [-1 -1 %lf, 1 1 %lf]\n' %
+                       -self.gaussianNoise, self.gaussianNoise)
         file.write(indentationLevel * indent + '}\n')
 
 
@@ -471,7 +474,8 @@ def getColladaMesh(filename, node, link):
                             visual.material.diffuse = colorVector2Instance(data.material.effect.diffuse)
                         else:
                             # diffuse is defined by *.tif files
-                            visual.material.texture = 'textures/' + data.material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
+                            visual.material.texture = 'textures/' + \
+                                                      data.material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
                             txt = os.path.splitext(visual.material.texture)[1]
                             if txt == '.tiff' or txt == '.tif':
                                 for dirname, dirnames, filenames in os.walk('.'):
@@ -481,7 +485,8 @@ def getColladaMesh(filename, node, link):
                                                 tifImage = Image.open(os.path.join(dirname, file))
                                                 img = './' + robotName + '_textures'
                                                 tifImage.save(os.path.splitext(os.path.join(img, file))[0] + '.png')
-                                                visual.material.texture = robotName + '_textures/' + os.path.splitext(file)[0] + '.png'
+                                                visual.material.texture = (robotName +
+                                                                           '_textures/' + os.path.splitext(file)[0] + '.png')
                                                 print('translated image ' + visual.material.texture)
                                             except IOError:
                                                 visual.material.texture = ""
@@ -596,15 +601,18 @@ def getVisual(link, node):
                 Material.namedMaterial[materialName] = visual.material
             if hasElement(material, 'texture'):
                 visual.material.texture = material.getElementsByTagName('texture')[0].getAttribute('filename')
-                if os.path.splitext(visual.material.texture)[1] == '.tiff' or os.path.splitext(visual.material.texture)[1] == '.tif':
+                if os.path.splitext(visual.material.texture)[1] == '.tiff' \
+                   or os.path.splitext(visual.material.texture)[1] == '.tif':
                     for dirname, dirnames, filenames in os.walk('.'):
                         for filename in filenames:
                             if filename == str(visual.material.texture.split('/')[-1]):
                                 print('try to translate image ' + filename)
                                 try:
                                     tifImage = Image.open(os.path.join(dirname, filename))
-                                    tifImage.save(os.path.splitext(os.path.join('./' + robotName + '_' + 'textures', filename))[0] + '.png')
-                                    visual.material.texture = robotName + '_' + 'textures/' + os.path.splitext(filename)[0] + '.png'
+                                    tifImage.save(os.path.splitext(os.path.join('./' + robotName + '_' + 'textures',
+                                                                                filename))[0] + '.png')
+                                    visual.material.texture = (robotName + '_' + 'textures/' +
+                                                               os.path.splitext(filename)[0] + '.png')
                                 except IOError:
                                     visual.material.texture = ""
                                     print('failed to open ' + os.path.join(dirname, filename))
@@ -663,13 +671,15 @@ def getCollision(link, node):
 
         geometryElement = collisionElement.getElementsByTagName('geometry')[0]
         if hasElement(geometryElement, 'box'):
-            collision.geometry.box.x = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[0])
-            collision.geometry.box.y = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[1])
-            collision.geometry.box.z = float(geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()[2])
+            size = geometryElement.getElementsByTagName('box')[0].getAttribute('size').split()
+            collision.geometry.box.x = float(size[0])
+            collision.geometry.box.y = float(size[1])
+            collision.geometry.box.z = float(size[2])
             link.collision.append(collision)
         elif hasElement(geometryElement, 'cylinder'):
-            collision.geometry.cylinder.radius = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('radius'))
-            collision.geometry.cylinder.length = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('length'))
+            element = geometryElement.getElementsByTagName('cylinder')[0]
+            collision.geometry.cylinder.radius = float(element.getAttribute('radius'))
+            collision.geometry.cylinder.length = float(element.getAttribute('length'))
             link.collision.append(collision)
         elif hasElement(geometryElement, 'sphere'):
             collision.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
@@ -833,8 +843,10 @@ def parseGazeboElement(element, parentLink, linkList):
                         camera.width = int(imageElement.getElementsByTagName('width')[0].firstChild.nodeValue)
                     if hasElement(imageElement, 'height'):
                         camera.height = int(imageElement.getElementsByTagName('height')[0].firstChild.nodeValue)
-                    if hasElement(imageElement, 'format') and imageElement.getElementsByTagName('format')[0].firstChild.nodeValue != 'R8G8B8A8':
-                        print('Unsupported "%s" image format, using "R8G8B8A8" instead.' % str(imageElement.getElementsByTagName('format')[0].firstChild.nodeValue))
+                    if hasElement(imageElement, 'format') \
+                       and imageElement.getElementsByTagName('format')[0].firstChild.nodeValue != 'R8G8B8A8':
+                        print('Unsupported "%s" image format, using "R8G8B8A8" instead.' %
+                              str(imageElement.getElementsByTagName('format')[0].firstChild.nodeValue))
             if hasElement(sensorElement, 'noise'):
                 noiseElement = sensorElement.getElementsByTagName('noise')[0]
                 if hasElement(noiseElement, 'stddev'):
@@ -853,7 +865,8 @@ def parseGazeboElement(element, parentLink, linkList):
                     if hasElement(scanElement, 'horizontal'):
                         horizontalElement = scanElement.getElementsByTagName('horizontal')[0]
                         if hasElement(horizontalElement, 'samples'):
-                            lidar.horizontalResolution = int(float(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue))
+                            lidar.horizontalResolution = \
+                              int(float(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue))
                         if hasElement(horizontalElement, 'min_angle') and hasElement(horizontalElement, 'max_angle'):
                             minAngle = float(horizontalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
                             maxAngle = float(horizontalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
@@ -861,7 +874,8 @@ def parseGazeboElement(element, parentLink, linkList):
                     if hasElement(scanElement, 'vertical'):
                         horizontalElement = scanElement.getElementsByTagName('horizontal')[0]
                         if hasElement(horizontalElement, 'samples'):
-                            lidar.numberOfLayers = int(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
+                            lidar.numberOfLayers = \
+                              int(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
                         if hasElement(horizontalElement, 'min_angle') and hasElement(horizontalElement, 'max_angle'):
                             minAngle = float(horizontalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
                             maxAngle = float(horizontalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)

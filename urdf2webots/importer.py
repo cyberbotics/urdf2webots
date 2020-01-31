@@ -83,7 +83,8 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disable
                     elif child.localName == 'joint':
                         jointElementList.append(child)
                     elif child.localName == 'material':
-                        if not child.hasAttribute('name') or child.getAttribute('name') not in urdf2webots.parserURDF.Material.namedMaterial:
+                        if not child.hasAttribute('name') \
+                           or child.getAttribute('name') not in urdf2webots.parserURDF.Material.namedMaterial:
                             material = urdf2webots.parserURDF.Material()
                             material.parseFromMaterialNode(child)
 
@@ -129,7 +130,9 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disable
                     if child.localName == 'gazebo':
                         urdf2webots.parserURDF.parseGazeboElement(child, rootLink.name, linkList)
 
-                sensorList = urdf2webots.parserURDF.IMU.list + urdf2webots.parserURDF.Camera.list + urdf2webots.parserURDF.Lidar.list
+                sensorList = (urdf2webots.parserURDF.IMU.list +
+                              urdf2webots.parserURDF.Camera.list +
+                              urdf2webots.parserURDF.Lidar.list)
                 print('There are %d links, %d joints and %d sensors' % (len(linkList), len(jointList), len(sensorList)))
 
                 urdf2webots.writeProto.declaration(protoFile, robotName)
@@ -145,10 +148,13 @@ if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
     optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
     optParser.add_option('--output', dest='outFile', default='', help='Specifies the name of the resulting PROTO file.')
-    optParser.add_option('--normal', dest='normal', action='store_true', default=False, help='If set, the normals are exported if present in the URDF definition.')
-    optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False, help='If set, the bounding objects are approximated using boxes.')
+    optParser.add_option('--normal', dest='normal', action='store_true', default=False,
+                         help='If set, the normals are exported if present in the URDF definition.')
+    optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
+                         help='If set, the bounding objects are approximated using boxes.')
     optParser.add_option('--disable-mesh-optimization', dest='disableMeshOptimization', action='store_true', default=False,
-                         help='If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the conversion).')
+                         help='If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the '
+                         'conversion).')
     options, args = optParser.parse_args()
 
     convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization)
