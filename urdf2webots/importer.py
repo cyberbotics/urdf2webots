@@ -58,8 +58,8 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disable
                 directory = rospack.get_path(packageName)
             except rospkg.common.ResourceNotFound:
                 sys.stderr.write('Package "%s" not found.\n' % packageName)
-            while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
-                directory = os.path.dirname(directory)
+            # while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
+            #     directory = os.path.dirname(directory)
             if os.path.split(directory)[1]:
                 packagePath = os.path.split(directory)[0]
                 content = content.replace('package:/', packagePath)
