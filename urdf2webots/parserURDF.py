@@ -867,13 +867,9 @@ def getJoint(node):
 
 def isRootLink(link, childList):
     """Check if a link is root link."""
-    # return link in childList
-
     for child in childList:
         if link == child:
             return False
-
-    print(str([link]), " not found in ", str(childList))
     return True
 
 
