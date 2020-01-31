@@ -48,6 +48,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disable
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
 
     with open(inFile, 'r') as file:
+        inPath = os.path.dirname(os.path.abspath(inFile))
         content = file.read()
 
         packages = re.findall('"package://(.*)"', content)
@@ -96,12 +97,12 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disable
 
                 for joint in jointElementList:
                     jointList.append(urdf2webots.parserURDF.getJoint(joint))
-                    parentList.append(jointList[-1].parent.encode('ascii'))
-                    childList.append(jointList[-1].child.encode('ascii'))
+                    parentList.append(jointList[-1].parent)
+                    childList.append(jointList[-1].child)
                 parentList.sort()
                 childList.sort()
                 for link in linkElementList:
-                    linkList.append(urdf2webots.parserURDF.getLink(link))
+                    linkList.append(urdf2webots.parserURDF.getLink(link, inPath))
                 for link in linkList:
                     if urdf2webots.parserURDF.isRootLink(link.name, childList):
                         rootLink = link

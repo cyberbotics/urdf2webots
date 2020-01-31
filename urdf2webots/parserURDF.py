@@ -416,6 +416,51 @@ def getSTLMesh(filename, node):
     return node
 
 
+def getOBJMesh(filename, node):
+    """read obj file."""
+    print('Parsing Mesh: ' + filename)
+    with open(filename, 'r') as file:
+        trimesh = node.geometry.trimesh
+        for line in file:
+            (header, body) = line.split(maxsplit=1)
+            if header == '#':
+                continue
+            elif header == 'f':  # face
+                vertices = body.split()
+                coordIndex = []
+                texCoordIndex = []
+                normalIndex = []
+                for vertex in vertices:
+                    indices = vertex.split('/')
+                    coordIndex.append(int(indices[0]) - 1)  # vertex coordinates
+                    length = len(indices)
+                    if length > 1 and indices[1]:  # texture coordinates
+                        texCoordIndex.append(int(indices[1]) - 1)
+                    if length > 2 and indices[2]:  # normal coordinates
+                        normalIndex.append(int(indices[2]) - 1)
+                trimesh.coordIndex.append(coordIndex)
+                if texCoordIndex:
+                    trimesh.texCoordIndex.append(texCoordIndex)
+                if normalIndex:
+                    trimesh.normalIndex.append(normalIndex)
+            elif header == 'l':  # line, ignored
+                continue
+            elif header == 'o':  # object name, ignored
+                continue
+            elif header == 'v':  # vertex
+                (x, y, z) = body.split()
+                trimesh.coord.append([float(x), float(y), float(z)])
+            elif header == 'vn':  # normals
+                (x, y, z) = body.split()
+                trimesh.normal.append([float(x), float(y), float(z)])
+            elif header == 'vp':  # parameters, ignored
+                continue
+            elif header == 'vt':  # texture coordinate, ignored
+                continue
+
+    return node
+
+
 def getColladaMesh(filename, node, link):
     """Read collada file."""
     print('Parsing Mesh: ' + filename)
@@ -552,7 +597,7 @@ def getInertia(node):
     return inertia
 
 
-def getVisual(link, node):
+def getVisual(link, node, path):
     """Parse visual data of a link."""
     for index in range(0, len(node.getElementsByTagName('visual'))):
         visual = Visual()
@@ -630,7 +675,8 @@ def getVisual(link, node):
             visual.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
             link.visual.append(visual)
         elif hasElement(geometryElement, 'mesh'):
-            meshfile = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
+            meshfile = os.path.normpath(os.path.join(path,
+                                                     geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')))
             # hack for gazebo mesh database
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
@@ -640,20 +686,26 @@ def getVisual(link, node):
                 visual.geometry.scale[0] = float(meshScale[0])
                 visual.geometry.scale[1] = float(meshScale[1])
                 visual.geometry.scale[2] = float(meshScale[2])
-            if os.path.splitext(meshfile)[1].lower() == '.dae':
+            extension = os.path.splitext(meshfile)[1].lower()
+            if extension == '.dae':
                 getColladaMesh(meshfile, visual, link)
-            elif os.path.splitext(meshfile)[1].lower() == '.stl':
+            elif extension == '.stl' or extension == '.obj':
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
-                    visual = getSTLMesh(meshfile, visual)
+                    if extension == '.stl':
+                        visual = getSTLMesh(meshfile, visual)
+                    else:  # '.obj'
+                        visual = getOBJMesh(meshfile, visual)
                     visual.geometry.name = name
                     Geometry.reference[name] = visual.geometry
                 link.visual.append(visual)
+            else:
+                print('Unsupported mesh format: \"' + extension + '\"')
 
 
-def getCollision(link, node):
+def getCollision(link, node, path):
     """Parse collision of a link."""
     for index in range(0, len(node.getElementsByTagName('collision'))):
         collision = Collision()
@@ -685,7 +737,8 @@ def getCollision(link, node):
             collision.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
             link.collision.append(collision)
         elif hasElement(geometryElement, 'mesh'):
-            meshfile = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
+            meshfile = os.path.normpath(os.path.join(path,
+                                                     geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')))
             if geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale'):
                 meshScale = geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale').split()
                 collision.geometry.scale[0] = float(meshScale[0])
@@ -695,17 +748,23 @@ def getCollision(link, node):
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
                 meshfile = meshfile[idx0 + len('package://'):]
-            if os.path.splitext(meshfile)[1] == '.dae':
+            extension = os.path.splitext(meshfile)[1]
+            if extension == '.dae':
                 collision.geometry.collada = getColladaMesh(meshfile, collision, link)
-            elif os.path.splitext(meshfile)[1] == '.stl':
+            elif extension == '.stl' or extension == '.obj':
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
                 else:
-                    collision.geometry.stl = getSTLMesh(meshfile, collision)
+                    if extension == '.stl':
+                        collision.geometry.stl = getSTLMesh(meshfile, collision)
+                    else:  # '.obj'
+                        collision.geometry.stl = getOBJMesh(meshfile, collision)
                     collision.geometry.name = name
                     Geometry.reference[name] = collision.geometry
                 link.collision.append(collision)
+            else:
+                print('Unsupported mesh format for collision: \"' + extension + '\"')
 
 
 def getAxis(node):
@@ -768,16 +827,16 @@ def getSafety(node):
     return safety
 
 
-def getLink(node):
+def getLink(node, path):
     """Parse a link."""
     link = Link()
     link.name = node.getAttribute('name')
     if hasElement(node, 'inertial'):
         link.inertia = getInertia(node)
     if hasElement(node, 'visual'):
-        getVisual(link, node)
+        getVisual(link, node, path)
     if hasElement(node, 'collision'):
-        getCollision(link, node)
+        getCollision(link, node, path)
     return link
 
 
@@ -808,9 +867,13 @@ def getJoint(node):
 
 def isRootLink(link, childList):
     """Check if a link is root link."""
+    # return link in childList
+
     for child in childList:
         if link == child:
             return False
+
+    print(str([link]), " not found in ", str(childList))
     return True
 
 
