@@ -246,7 +246,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
 
 
 def computeDefName(name):
-    """Compute a VRML compliant DEF name from an arbitrary string"""
+    """Compute a VRML compliant DEF name from an arbitrary string."""
     return name.replace(' ', '_').replace('.', '_')
 
 
