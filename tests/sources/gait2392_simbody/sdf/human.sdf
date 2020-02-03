@@ -1,0 +1,1032 @@
+<?xml version="1.0"?>
+<!-- created with Phobos 0.7 -->
+<sdf version="1.5">
+  <model name="human">
+    <link name="calcn_l">
+      <pose>-0.1239698529 0.0914200023 -0.9338706732 0 0 0</pose>
+      <inertial>
+        <mass>1.25</mass>
+        <inertia>
+          <ixx>0.0014</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0038999999</iyy>
+          <iyz>0</iyz>
+          <izz>0.0041</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="calcn_l_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Calcn L.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="calcn_l_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Calcn L.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="calcn_r">
+      <pose>-0.1239698529 -0.0914200023 -0.9338706732 0 0 0</pose>
+      <inertial>
+        <mass>1.25</mass>
+        <inertia>
+          <ixx>0.0014</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0038999999</iyy>
+          <iyz>0</iyz>
+          <izz>0.0041</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="calcn_r_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Calcn R.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="calcn_r_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Calcn R.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="femur_l">
+      <pose>-0.0706999972 0.0834999979 -0.0661000013 0 0 0</pose>
+      <inertial>
+        <mass>9.3014</mass>
+        <inertia>
+          <ixx>0.1339000016</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0351000018</iyy>
+          <iyz>0</iyz>
+          <izz>0.141200006</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="femur_l_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Femur L.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="femur_l_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Femur L.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="femur_r">
+      <pose>-0.0706999972 -0.0834999979 -0.0661000013 0 0 0</pose>
+      <inertial>
+        <mass>9.3014</mass>
+        <inertia>
+          <ixx>0.1339000016</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0351000018</iyy>
+          <iyz>0</iyz>
+          <izz>0.141200006</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="femur_r_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Femur R.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="femur_r_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Femur R.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="hand_l">
+      <pose>-0.0999249965 0.200097993 -0.0821209997 0 0 0</pose>
+      <inertial>
+        <mass>0.4575</mass>
+        <inertia>
+          <ixx>0.000892</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000547</iyy>
+          <iyz>0</iyz>
+          <izz>0.00134</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="hand_l_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Hand L.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="hand_l_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Hand L.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="hand_r">
+      <pose>-0.0999249965 -0.200097993 -0.0821209997 0 0 0</pose>
+      <inertial>
+        <mass>0.4575</mass>
+        <inertia>
+          <ixx>0.000892</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000547</iyy>
+          <iyz>0</iyz>
+          <izz>0.00134</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="hand_r_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Hand R.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="hand_r_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Hand R.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="humerus_l">
+      <pose>-0.0975449979 0.1700000018 0.4530000091 0 0 0</pose>
+      <inertial>
+        <mass>2.0325</mass>
+        <inertia>
+          <ixx>0.0119460002</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0041209999</iyy>
+          <iyz>0</iyz>
+          <izz>0.0134089999</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="humerus_l_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Humerus L.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="humerus_l_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Humerus L.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="humerus_r">
+      <pose>-0.0975449979 -0.1700000018 0.4530000091 0 0 0</pose>
+      <inertial>
+        <mass>2.0325</mass>
+        <inertia>
+          <ixx>0.0119460002</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0041209999</iyy>
+          <iyz>0</iyz>
+          <izz>0.0134089999</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="humerus_r_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Humerus R.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="humerus_r_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Humerus R.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="pelvis">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>11.777</mass>
+        <inertia>
+          <ixx>0.1027999967</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0870999992</iyy>
+          <iyz>0</iyz>
+          <izz>0.0579000004</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="pelvis_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Pelvis.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="pelvis_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Pelvis.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="radius_l">
+      <pose>-0.0911279991 0.1864880025 0.1537200063 0 0 0</pose>
+      <inertial>
+        <mass>0.6075</mass>
+        <inertia>
+          <ixx>0.002962</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000618</iyy>
+          <iyz>0</iyz>
+          <izz>0.003213</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="radius_l_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Radius L.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="radius_l_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Radius L.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="radius_r">
+      <pose>-0.0911279991 -0.1864880025 0.1537200063 0 0 0</pose>
+      <inertial>
+        <mass>0.6075</mass>
+        <inertia>
+          <ixx>0.002962</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000618</iyy>
+          <iyz>0</iyz>
+          <izz>0.003213</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="radius_r_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Radius R.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="radius_r_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Radius R.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="talus_l">
+      <pose>-0.0751998574 0.0834999979 -0.8919206858 0 0 0</pose>
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="talus_l_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Talus L.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="talus_l_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Talus L.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="talus_r">
+      <pose>-0.0751998574 -0.0834999979 -0.8919206858 0 0 0</pose>
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="talus_r_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Talus R.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="talus_r_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Talus R.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="tibia_l">
+      <pose>-0.0751998574 0.0834999979 -0.4619207084 0 0 0</pose>
+      <inertial>
+        <mass>3.7075</mass>
+        <inertia>
+          <ixx>0.0504000001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0051000002</iyy>
+          <iyz>0</iyz>
+          <izz>0.0511000007</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="tibia_l_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Tibia L.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="tibia_l_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Tibia L.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="tibia_r">
+      <pose>-0.0751998574 -0.0834999979 -0.4619207084 0 0 0</pose>
+      <inertial>
+        <mass>3.7075</mass>
+        <inertia>
+          <ixx>0.0504000001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0051000002</iyy>
+          <iyz>0</iyz>
+          <izz>0.0511000007</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="tibia_r_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Tibia R.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="tibia_r_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Tibia R.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="toes_l">
+      <pose>0.0548301488 0.0925000012 -0.935870707 0 0 0</pose>
+      <inertial>
+        <mass>0.2166</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0002</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="toes_l_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Toes L.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="toes_l_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Toes L.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="toes_r">
+      <pose>0.0548301488 -0.0925000012 -0.935870707 0 0 0</pose>
+      <inertial>
+        <mass>0.2166</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0002</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="toes_r_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Toes R.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="toes_r_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Toes R.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="torso">
+      <pose>-0.1006999984 0 0.0815000013 0 0 0</pose>
+      <inertial>
+        <mass>26.8266</mass>
+        <inertia>
+          <ixx>1.4744999409</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.7555000186</iyy>
+          <iyz>0</iyz>
+          <izz>1.4313999414</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="torso_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Torso.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="torso_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Torso.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="ulna_l">
+      <pose>-0.0844009966 0.1604049951 0.1667270064 0 0 0</pose>
+      <inertial>
+        <mass>0.6075</mass>
+        <inertia>
+          <ixx>0.002962</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000618</iyy>
+          <iyz>0</iyz>
+          <izz>0.003213</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="ulna_l_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Ulna L.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="ulna_l_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Ulna L.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="ulna_r">
+      <pose>-0.0844009966 -0.1604049951 0.1667270064 0 0 0</pose>
+      <inertial>
+        <mass>0.6075</mass>
+        <inertia>
+          <ixx>0.002962</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000618</iyy>
+          <iyz>0</iyz>
+          <izz>0.003213</izz>
+        </inertia>
+        <pose>0 0 0 0 0 0</pose>
+      </inertial>
+      <collision name="ulna_r_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Ulna R.001.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="ulna_r_visual">
+        <pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+        <material>
+          <ambient>1.0 1.0 1.0 0</ambient>
+          <diffuse>1.0 1.0 1.0 0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+        <geometry>
+          <mesh>
+            <uri>../meshes/obj/Ulna R.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name="joint_calcn_l" type="revolute">
+      <parent>talus_l</parent>
+      <child>calcn_l</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_calcn_r" type="revolute">
+      <parent>talus_r</parent>
+      <child>calcn_r</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 -1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_femur_l" type="revolute">
+      <parent>pelvis</parent>
+      <child>femur_l</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_femur_r" type="revolute">
+      <parent>pelvis</parent>
+      <child>femur_r</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>1.0 0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_hand_l" type="revolute">
+      <parent>radius_l</parent>
+      <child>hand_l</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_hand_r" type="revolute">
+      <parent>radius_r</parent>
+      <child>hand_r</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 -1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_humerus_l" type="revolute">
+      <parent>torso</parent>
+      <child>humerus_l</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_humerus_r" type="revolute">
+      <parent>torso</parent>
+      <child>humerus_r</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 -1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_radius_l" type="revolute">
+      <parent>ulna_l</parent>
+      <child>radius_l</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_radius_r" type="revolute">
+      <parent>ulna_r</parent>
+      <child>radius_r</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 -1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_talus_l" type="revolute">
+      <parent>tibia_l</parent>
+      <child>talus_l</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_talus_r" type="revolute">
+      <parent>tibia_r</parent>
+      <child>talus_r</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 -1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_tibia_l" type="revolute">
+      <parent>femur_l</parent>
+      <child>tibia_l</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_tibia_r" type="revolute">
+      <parent>femur_r</parent>
+      <child>tibia_r</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 -1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_toes_l" type="revolute">
+      <parent>calcn_l</parent>
+      <child>toes_l</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_toes_r" type="revolute">
+      <parent>calcn_r</parent>
+      <child>toes_r</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 -1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_torso" type="revolute">
+      <parent>pelvis</parent>
+      <child>torso</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_ulna_l" type="revolute">
+      <parent>humerus_l</parent>
+      <child>ulna_l</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="joint_ulna_r" type="revolute">
+      <parent>humerus_r</parent>
+      <child>ulna_r</child>
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <axis>
+        <xyz>0 -1.0 0</xyz>
+        <limit>
+          <lower>-3.141592741</lower>
+          <upper>3.141592741</upper>
+          <effort>10000000000.0</effort>
+          <velocity>628.318530718</velocity>
+        </limit>
+      </axis>
+    </joint>
+  </model>
+</sdf>
