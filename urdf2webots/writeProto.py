@@ -201,7 +201,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                 proto.write(initialIndent + 'USE %s\n' % boundingObject.geometry.defName)
             else:
                 if boundingObject.geometry.name is not None:
-                    boundingObject.geometry.defName = defName(boundingObject.geometry.name)
+                    boundingObject.geometry.defName = computeDefName(boundingObject.geometry.name)
                     proto.write(initialIndent + 'DEF %s IndexedFaceSet {\n' % boundingObject.geometry.defName)
                 else:
                     proto.write(initialIndent + 'IndexedFaceSet {\n')
@@ -245,7 +245,8 @@ def URDFBoundingObject(proto, link, level, boxCollision):
         proto.write(level * indent + '}\n')
 
 
-def defName(name):
+def computeDefName(name):
+    """Compute a VRML compliant DEF name from an arbitrary string"""
     return name.replace(' ', '_').replace('.', '_')
 
 
@@ -274,7 +275,7 @@ def URDFShape(proto, link, level, normal=False):
             proto.write((shapeLevel + 1) * indent + 'appearance USE %s\n' % visualNode.material.defName)
         else:
             if visualNode.material.name is not None:
-                visualNode.material.defName = defName(visualNode.material.name)
+                visualNode.material.defName = computeDefName(visualNode.material.name)
                 proto.write((shapeLevel + 1) * indent + 'appearance DEF %s PBRAppearance {\n' % visualNode.material.defName)
             else:
                 proto.write((shapeLevel + 1) * indent + 'appearance PBRAppearance {\n')
@@ -325,7 +326,7 @@ def URDFShape(proto, link, level, normal=False):
                 proto.write((shapeLevel + 1) * indent + 'geometry USE %s\n' % visualNode.geometry.defName)
             else:
                 if visualNode.geometry.name is not None:
-                    visualNode.geometry.defName = defName(visualNode.geometry.name)
+                    visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
                     proto.write((shapeLevel + 1) * indent + 'geometry DEF %s IndexedFaceSet {\n' % visualNode.geometry.defName)
                 else:
                     proto.write((shapeLevel + 1) * indent + 'geometry IndexedFaceSet {\n')
