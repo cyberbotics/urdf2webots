@@ -681,7 +681,7 @@ def getVisual(link, node, path):
         elif hasElement(geometryElement, 'mesh'):
             meshPath = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
             if not os.path.isabs(meshPath):
-                meshfile = os.path.normpath(os.path.join(path, meshPath)
+                meshfile = os.path.normpath(os.path.join(path, meshPath))
             # hack for gazebo mesh database
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
