@@ -47,12 +47,13 @@ Outputs: someRobot_textures (folder), someRobot.proto.
 Use in Webots: put the outputs in the protos folder of your Webots project.
 
 ## Notes
-This tool have been tested with ur5, pr2, motoman and kinova using Webots R2019a on Ubuntu16.04.  
-You can find the sources of these URDF files here:  
+This tool have been tested using Webots R2019a on Ubuntu16.04 and R2020a on Windows.  
+You can find the sources of the URDF test files here:  
   - universal robot: https://github.com/ros-industrial/universal_robot/tree/kinetic-devel/ur_description  
   - pr2 robot: https://github.com/PR2/pr2_common/tree/kinetic-devel/pr2_description  
   - motoman robot: https://github.com/ros-industrial/motoman/tree/kinetic-devel/motoman_sia20d_support
   - kinova robot: https://github.com/Kinovarobotics/kinova-ros/tree/kinetic/kinova_description
+  - gait2392 human skeleton: https://github.com/cyberbotics/urdf2webots/files/4148338/gait2392_simbody.zip
 
 ## Acknowledgement
 
