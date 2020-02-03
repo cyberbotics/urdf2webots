@@ -30,8 +30,8 @@ def fileCompare(file1, file2):
                 # This line may differ.
                 continue
             elif line1 != line2:
-                return False
-    return True
+                return line1 + " != " + line2
+    return ''
 
 
 class TestScript(unittest.TestCase):
@@ -47,5 +47,6 @@ class TestScript(unittest.TestCase):
             command = 'python %s --input=%s --output=%s' % (urdf2webotsPath, paths['input'], paths['output'])
             retcode = os.system(command)
             self.assertEqual(retcode, 0, msg='Error when exporting "%s"' % (paths['input']))
-            self.assertTrue(fileCompare(paths['output'], paths['expected']),
-                            msg='Expected result mismatch when exporting "%s"' % (paths['input']))
+            compare = fileCompare(paths['output'], paths['expected'])
+            self.assertTrue(compare != '',
+                            msg='Expected result mismatch when exporting "%s" --- %s' % (paths['input'], compare))
