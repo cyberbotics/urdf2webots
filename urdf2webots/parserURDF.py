@@ -422,7 +422,7 @@ def getOBJMesh(filename, node):
     with open(filename, 'r') as file:
         trimesh = node.geometry.trimesh
         for line in file:
-            (header, body) = line.split(maxsplit=1)
+            header, body = line.split(maxsplit=1)
             if header == '#':
                 continue
             elif header == 'f':  # face
@@ -448,16 +448,20 @@ def getOBJMesh(filename, node):
             elif header == 'o':  # object name, ignored
                 continue
             elif header == 'v':  # vertex
-                (x, y, z) = body.split()
+                x, y, z = body.split()
                 trimesh.coord.append([float(x), float(y), float(z)])
             elif header == 'vn':  # normals
-                (x, y, z) = body.split()
+                x, y, z = body.split()
                 trimesh.normal.append([float(x), float(y), float(z)])
             elif header == 'vp':  # parameters, ignored
                 continue
-            elif header == 'vt':  # texture coordinate, ignored
+            elif header == 'vt':  # texture coordinate
+                texCoord = body.split()
+                lenght = len(texCoord)
+                if length < 1:  # v argument is optional and defaults to 0
+                    texCoord.append('0')
+                trimesh.texCoord.append([float(texCoord[0]), float(texCoord[1])])
                 continue
-
     return node
 
 
