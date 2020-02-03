@@ -679,9 +679,9 @@ def getVisual(link, node, path):
             visual.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
             link.visual.append(visual)
         elif hasElement(geometryElement, 'mesh'):
-            meshPath = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
-            if not os.path.isabs(meshPath):
-                meshfile = os.path.normpath(os.path.join(path, meshPath))
+            meshfile = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
+            if not os.path.isabs(meshfile):
+                meshfile = os.path.normpath(os.path.join(path, meshfile))
             # hack for gazebo mesh database
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
