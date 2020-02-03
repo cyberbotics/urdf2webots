@@ -47,7 +47,7 @@ Outputs: someRobot_textures (folder), someRobot.proto.
 Use in Webots: put the outputs in the protos folder of your Webots project.
 
 ## Notes
-This tool have been tested using Webots R2019a on Ubuntu16.04 and Webots R2020a on Windows.  
+This tool have been tested using Webots R2020a on Ubuntu16.04 and Windows.  
 You can find the sources of these URDF files here:  
   - universal robot: https://github.com/ros-industrial/universal_robot/tree/kinetic-devel/ur_description  
   - pr2 robot: https://github.com/PR2/pr2_common/tree/kinetic-devel/pr2_description  
