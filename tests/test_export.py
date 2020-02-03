@@ -48,5 +48,5 @@ class TestScript(unittest.TestCase):
             retcode = os.system(command)
             self.assertEqual(retcode, 0, msg='Error when exporting "%s"' % (paths['input']))
             compare = fileCompare(paths['output'], paths['expected'])
-            self.assertTrue(compare != '',
+            self.assertTrue(compare == '',
                             msg='Expected result mismatch when exporting "%s" --- %s' % (paths['input'], compare))
