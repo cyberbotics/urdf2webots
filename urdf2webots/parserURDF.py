@@ -422,7 +422,7 @@ def getOBJMesh(filename, node):
     with open(filename, 'r') as file:
         trimesh = node.geometry.trimesh
         for line in file:
-            header, body = line.split(maxsplit=1)
+            header, body = line.split(' ', 1)
             if header == '#':
                 continue
             elif header == 'f':  # face
