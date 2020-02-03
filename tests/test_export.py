@@ -14,6 +14,11 @@ modelPaths = [
         'input': os.path.join(sourceDirectory, 'motoman/motoman_sia20d_support/urdf/sia20d.urdf'),
         'output': os.path.join(resultDirectory, 'MotomanSia20d.proto'),
         'expected': os.path.join(expectedDirectory, 'MotomanSia20d.proto')
+    },
+    {
+        'input': os.path.join(sourceDirectory, 'gait2392_simbody/urdf/human.urdf'),
+        'output': os.path.join(resultDirectory, 'Human.proto'),
+        'expected': os.path.join(expectedDirectory, 'Human.proto')
     }
 ]
 
@@ -42,4 +47,5 @@ class TestScript(unittest.TestCase):
             command = 'python %s --input=%s --output=%s' % (urdf2webotsPath, paths['input'], paths['output'])
             retcode = os.system(command)
             self.assertEqual(retcode, 0, msg='Error when exporting "%s"' % (paths['input']))
-            self.assertTrue(fileCompare(paths['output'], paths['expected']), msg='Expected result mismatch when exporting "%s"' % (paths['input']))
+            self.assertTrue(fileCompare(paths['output'], paths['expected']),
+                            msg='Expected result mismatch when exporting "%s"' % (paths['input']))
