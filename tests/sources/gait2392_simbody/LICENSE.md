@@ -21,6 +21,7 @@ Check license details at http://creativecommons.org/licenses/by/3.0/
 - Yamaguchi G.T., Zajac F.E.: A planar model of the knee joint to characterize the knee extensor mechanism." J . Biomecl7. vol. 21. pp. 1-10. 1989.
 - Anderson F.C., Pandy M.G.: A dynamic optimization solution for vertical jumping in three dimensions. Computer Methods in Biomechanics and Biomedical Engineering 2:201-231, 1999.
 - Anderson F.C., Pandy M.G.: Dynamic optimization of human walking. Journal of Biomechanical Engineering 123:381-390, 2001.
+- Hamner, SR, Seth, A, and Delp, SL, Muscle contributions to propulsion and support during running. Journal of Biomechanics, doi:10.1016/j.jbiomech.2010.06.025 (2010)
 
 ## More Information:
 http://simtk-confluence.stanford.edu:8080/display/OpenSim/Gait+2392+and+2354+Models
