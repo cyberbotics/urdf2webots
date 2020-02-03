@@ -29,7 +29,7 @@ def fileCompare(file1, file2):
             if line1.startswith('# Extracted from:') and line2.startswith('# Extracted from:'):
                 # This line may differ.
                 continue
-            elif line1 != line2:
+            elif line1.strip() != line2.strip():
                 return False
     return True
 
