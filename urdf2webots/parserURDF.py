@@ -422,7 +422,7 @@ def getOBJMesh(filename, node):
     with open(filename, 'r') as file:
         trimesh = node.geometry.trimesh
         for line in file:
-            header, body = line.split(maxsplit=1)
+            header, body = line.split(' ', 1)
             if header == '#':
                 continue
             elif header == 'f':  # face
@@ -457,8 +457,7 @@ def getOBJMesh(filename, node):
                 continue
             elif header == 'vt':  # texture coordinate
                 texCoord = body.split()
-                lenght = len(texCoord)
-                if length < 1:  # v argument is optional and defaults to 0
+                if len(texCoord) < 1:  # v argument is optional and defaults to 0
                     texCoord.append('0')
                 trimesh.texCoord.append([float(texCoord[0]), float(texCoord[1])])
                 continue
