@@ -457,8 +457,7 @@ def getOBJMesh(filename, node):
                 continue
             elif header == 'vt':  # texture coordinate
                 texCoord = body.split()
-                length = len(texCoord)
-                if length < 1:  # v argument is optional and defaults to 0
+                if len(texCoord) < 1:  # v argument is optional and defaults to 0
                     texCoord.append('0')
                 trimesh.texCoord.append([float(texCoord[0]), float(texCoord[1])])
                 continue
