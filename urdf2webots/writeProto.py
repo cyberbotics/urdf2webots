@@ -247,6 +247,9 @@ def URDFBoundingObject(proto, link, level, boxCollision):
 
 def computeDefName(name):
     """Compute a VRML compliant DEF name from an arbitrary string."""
+    defName = name.replace(' ', '_').replace('.', '_')
+    if not defName:  # empty string
+        return None
     return name.replace(' ', '_').replace('.', '_')
 
 
@@ -276,6 +279,7 @@ def URDFShape(proto, link, level, normal=False):
         else:
             if visualNode.material.name is not None:
                 visualNode.material.defName = computeDefName(visualNode.material.name)
+            if visualNode.material.defName is not None:
                 proto.write((shapeLevel + 1) * indent + 'appearance DEF %s PBRAppearance {\n' % visualNode.material.defName)
             else:
                 proto.write((shapeLevel + 1) * indent + 'appearance PBRAppearance {\n')
@@ -327,6 +331,7 @@ def URDFShape(proto, link, level, normal=False):
             else:
                 if visualNode.geometry.name is not None:
                     visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
+                if visualNode.geometry.defName is not None:
                     proto.write((shapeLevel + 1) * indent + 'geometry DEF %s IndexedFaceSet {\n' % visualNode.geometry.defName)
                 else:
                     proto.write((shapeLevel + 1) * indent + 'geometry IndexedFaceSet {\n')
