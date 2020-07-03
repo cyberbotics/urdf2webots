@@ -12,12 +12,16 @@ except ImportError as e:
         sys.stderr.write("pip install pillow\n")
     raise e
 
-from collada import Collada
 import numbers
 
 from urdf2webots.gazebo_materials import materials
 from urdf2webots.math_utils import convertRPYtoEulerAxis
 
+try:
+    from collada import Collada
+    colladaIsAvailable = True
+except ImportError:
+    colladaIsAvailable = False
 
 counter = 0
 
@@ -466,6 +470,11 @@ def getOBJMesh(filename, node):
 
 def getColladaMesh(filename, node, link):
     """Read collada file."""
+    if not colladaIsAvailable:
+        sys.stderr.write('Collada module not found, please install it with:\n')
+        sys.stderr.write('  python -m pip install pycollada\n')
+        sys.stderr.write('Skipping "%s"\n' % filename)
+        return
     print('Parsing Mesh: ' + filename)
     colladaMesh = Collada(filename)
     index = -1
