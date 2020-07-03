@@ -17,11 +17,11 @@ import numbers
 from urdf2webots.gazebo_materials import materials
 from urdf2webots.math_utils import convertRPYtoEulerAxis
 
-colladaIsAvailabe = True
 try:
     from collada import Collada
+    colladaIsAvailable = True
 except ImportError:
-    colladaIsAvailabe = False
+    colladaIsAvailable = False
 
 counter = 0
 
@@ -470,7 +470,7 @@ def getOBJMesh(filename, node):
 
 def getColladaMesh(filename, node, link):
     """Read collada file."""
-    if not colladaIsAvailabe:
+    if not colladaIsAvailable:
         sys.stderr.write('Collada module not found, please install it with:\n')
         sys.stderr.write('  python -m pip install pycollada\n')
         sys.stderr.write('Skipping "%s"\n' % filename)
