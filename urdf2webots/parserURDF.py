@@ -700,14 +700,14 @@ def getVisual(link, node, path):
                 visual.geometry.scale[1] = float(meshScale[1])
                 visual.geometry.scale[2] = float(meshScale[2])
             extension = os.path.splitext(meshfile)[1].lower()
-            if extension.lower() == '.dae':
+            if extension == '.dae':
                 getColladaMesh(meshfile, visual, link)
-            elif extension.lower() == '.stl' or extension.lower() == '.obj':
+            elif extension in ['.stl', '.obj']:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
-                    if extension.lower() == '.stl':
+                    if extension == '.stl':
                         visual = getSTLMesh(meshfile, visual)
                     else:  # '.obj'
                         visual = getOBJMesh(meshfile, visual)
@@ -761,15 +761,15 @@ def getCollision(link, node, path):
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
                 meshfile = meshfile[idx0 + len('package://'):]
-            extension = os.path.splitext(meshfile)[1]
-            if extension.lower() == '.dae':
+            extension = os.path.splitext(meshfile)[1].lower()
+            if extension == '.dae':
                 collision.geometry.collada = getColladaMesh(meshfile, collision, link)
-            elif extension.lower() == '.stl' or extension.lower() == '.obj':
+            elif extension in ['.stl', '.obj']:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
                 else:
-                    if extension.lower() == '.stl':
+                    if extension == '.stl':
                         collision.geometry.stl = getSTLMesh(meshfile, collision)
                     else:  # '.obj'
                         collision.geometry.stl = getOBJMesh(meshfile, collision)
