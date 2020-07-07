@@ -700,14 +700,14 @@ def getVisual(link, node, path):
                 visual.geometry.scale[1] = float(meshScale[1])
                 visual.geometry.scale[2] = float(meshScale[2])
             extension = os.path.splitext(meshfile)[1].lower()
-            if extension == '.dae':
+            if extension.lower() == '.dae':
                 getColladaMesh(meshfile, visual, link)
-            elif extension == '.stl' or extension == '.obj':
+            elif extension.lower() == '.stl' or extension.lower() == '.obj':
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
-                    if extension == '.stl':
+                    if extension.lower() == '.stl':
                         visual = getSTLMesh(meshfile, visual)
                     else:  # '.obj'
                         visual = getOBJMesh(meshfile, visual)
@@ -762,14 +762,14 @@ def getCollision(link, node, path):
                 idx0 = meshfile.find('package://')
                 meshfile = meshfile[idx0 + len('package://'):]
             extension = os.path.splitext(meshfile)[1]
-            if extension == '.dae':
+            if extension.lower() == '.dae':
                 collision.geometry.collada = getColladaMesh(meshfile, collision, link)
-            elif extension == '.stl' or extension == '.obj':
+            elif extension.lower() == '.stl' or extension.lower() == '.obj':
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
                 else:
-                    if extension == '.stl':
+                    if extension.lower() == '.stl':
                         collision.geometry.stl = getSTLMesh(meshfile, collision)
                     else:  # '.obj'
                         collision.geometry.stl = getOBJMesh(meshfile, collision)
