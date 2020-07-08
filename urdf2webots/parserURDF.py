@@ -702,7 +702,7 @@ def getVisual(link, node, path):
             extension = os.path.splitext(meshfile)[1].lower()
             if extension == '.dae':
                 getColladaMesh(meshfile, visual, link)
-            elif extension == '.stl' or extension == '.obj':
+            elif extension in ['.stl', '.obj']:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
@@ -761,10 +761,10 @@ def getCollision(link, node, path):
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
                 meshfile = meshfile[idx0 + len('package://'):]
-            extension = os.path.splitext(meshfile)[1]
+            extension = os.path.splitext(meshfile)[1].lower()
             if extension == '.dae':
                 collision.geometry.collada = getColladaMesh(meshfile, collision, link)
-            elif extension == '.stl' or extension == '.obj':
+            elif extension in ['.stl', '.obj']:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
