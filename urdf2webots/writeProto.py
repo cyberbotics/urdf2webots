@@ -31,7 +31,7 @@ def RGBA2RGB(RGBA_color, RGB_background=RGB()):
 
 def header(proto, srcFile, robotName):
     """Specify VRML file header."""
-    proto.write('#VRML_SIM R2019a utf8\n')
+    proto.write('#VRML_SIM R2020b utf8\n')
     proto.write('# license: Apache License 2.0\n')
     proto.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     proto.write('# This is a proto file for Webots for the ' + robotName + '\n')
