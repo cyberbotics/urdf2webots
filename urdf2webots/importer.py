@@ -46,11 +46,12 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disableMeshOptimization=False):
+def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disableMeshOptimization=False, enableMultiFile=False):
     if not os.path.exists(inFile):
         sys.exit('Input file "%s" does not exists.' % inFile)
 
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
+    urdf2webots.writeProto.enableMultiFile = enableMultiFile
 
     with open(inFile, 'r') as file:
         inPath = os.path.dirname(os.path.abspath(inFile))
@@ -85,6 +86,10 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disable
 
                 urdf2webots.parserURDF.robotName = robotName  # pass robotName
                 mkdirSafe(outputFile.replace('.proto', '') + '_textures')  # make a dir called 'x_textures'
+                
+                if enableMultiFile:
+                    mkdirSafe(outputFile.replace('.proto', '') + '_meshes')  # make a dir called 'x_meshes'
+                    urdf2webots.writeProto.meshFilesPath = outputFile.replace('.proto', '') + '_meshes'
 
                 robot = child
                 protoFile = open(outputFile, 'w')
@@ -159,16 +164,18 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disable
 
 
 if __name__ == '__main__':
-    optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
     optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
     optParser.add_option('--output', dest='outFile', default='', help='Specifies the name of the resulting PROTO file.')
     optParser.add_option('--normal', dest='normal', action='store_true', default=False,
-                         help='If set, the normals are exported if present in the URDF definition.')
+                        help='If set, the normals are exported if present in the URDF definition.')
     optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
-                         help='If set, the bounding objects are approximated using boxes.')
+                        help='If set, the bounding objects are approximated using boxes.')
     optParser.add_option('--disable-mesh-optimization', dest='disableMeshOptimization', action='store_true', default=False,
-                         help='If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the '
-                         'conversion).')
+                        help='If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the '
+                        'conversion).')
+    optParser.add_option('--multi-file', dest='enableMultiFile', action='store_true', default=False,
+                        help='If set, the mesh files are exported as separated PROTO files')
     options, args = optParser.parse_args()
 
-    convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization)
+    convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization, options.enableMultiFile)
+
