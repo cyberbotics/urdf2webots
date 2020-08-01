@@ -417,33 +417,30 @@ def URDFShape(proto, link, level, normal=False):
 
         if enableMultiFile and visualNode.geometry.trimesh.coord:
 
-            if visualNode.geometry.defName is not None:
-                continue
+            
+               
 
             name = visualNode.geometry.defName
             if name is None:
                 if visualNode.geometry.name is not None:
                     name = computeDefName(visualNode.geometry.name)
             
-            filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
-            print('Create meshFile: %s' % filepath)
-            meshProtoFile = open(filepath, 'w')
-            header(meshProtoFile, name, "")
-            meshProtoFile.write('PROTO %sMesh [\n]\n{\n' % name)
-            visualNode.material.defName = None
-            URDFVisual(meshProtoFile,visualNode,1,normal)
-            meshProtoFile.write('}\n')
-            meshProtoFile.close()
-            # visualNode.position
+            if visualNode.geometry.defName is None:
+                print('Create meshFile: %sMesh.proto' % name)
+                filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
+                meshProtoFile = open(filepath, 'w')
+                
+                header(meshProtoFile, name, "")
+                meshProtoFile.write('PROTO %sMesh [\n]\n{\n' % name)
+                visualNode.material.defName = None
+                URDFVisual(meshProtoFile,visualNode,1,normal)
+                meshProtoFile.write('}\n')
+                meshProtoFile.close()
 
             proto.write((shapeLevel + 1) * indent + '%sMesh{\n' % name + (shapeLevel + 1) * indent +'}\n')
-            if transform:
-                proto.write((shapeLevel - 1) * indent + ']\n')
-                proto.write((shapeLevel - 2) * indent + '}\n')
-                shapeLevel -= 2
-            continue
-
-        URDFVisual(proto,visualNode,shapeLevel,normal)
+        
+        else:
+            URDFVisual(proto,visualNode,shapeLevel,normal)
 
         if transform:
             proto.write((shapeLevel - 1) * indent + ']\n')
