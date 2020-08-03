@@ -1,7 +1,7 @@
 #VRML_SIM R2020b utf8
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
-# Extracted from: ./tests/sources/motoman/motoman_sia20d_support/urdf/sia20d.urdf
+# Extracted from: /home/david/urdf2webots/tests/sources/motoman/motoman_sia20d_support/urdf/sia20d.urdf
 
 PROTO MOTOMAN_AXIS_TMesh [
 ]

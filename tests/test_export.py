@@ -29,7 +29,8 @@ modelPaths = [
     {
         'input': os.path.join(sourceDirectory, 'gait2392_simbody/urdf/human.urdf'),
         'output': os.path.join(resultDirectory, 'Human.proto'),
-        'expected': [os.path.join(expectedDirectory, 'Human.proto')]
+        'expected': [os.path.join(expectedDirectory, 'Human.proto')],
+        'arguments': ''
     }
 ]
 
@@ -41,6 +42,7 @@ def fileCompare(file1, file2):
                 # This line may differ.
                 continue
             elif line1 != line2:
+                print([line1, line2])
                 return False
     return True
 
