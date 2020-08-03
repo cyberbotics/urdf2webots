@@ -27,13 +27,13 @@ pip install -r requirements.txt
 ### From pip
 
 ```
-python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization]
+python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file]
 ```
 
 ### From Sources
 
 ```
-python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization]
+python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file]
 ```
 
 ### In your Python Code
@@ -45,7 +45,7 @@ convert2urdf('MY_PATH/MY_URDF.urd')
 
 ### Arguments
 
-Outputs: someRobot_textures (folder), someRobot.proto.  
+Outputs: someRobot_textures (folder), someRobot_meshes (folder), someRobot.proto.  
 Use in Webots: put the outputs in the protos folder of your Webots project.
 
 ## Notes
