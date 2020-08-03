@@ -42,7 +42,6 @@ def fileCompare(file1, file2):
                 # This line may differ.
                 continue
             elif line1 != line2:
-                print([line1, line2])
                 return False
     return True
 
@@ -62,6 +61,5 @@ class TestScript(unittest.TestCase):
             retcode = os.system(command)
             self.assertEqual(retcode, 0, msg='Error when exporting "%s"' % (paths['input']))
             for expected in paths['expected']:
-                print([expected.replace('expected', 'results'), expected])
                 self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected),
                                 msg='Expected result mismatch when exporting "%s"' % paths['input'])
