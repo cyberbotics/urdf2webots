@@ -8,6 +8,7 @@ from urdf2webots.math_utils import rotateVector, matrixFromRotation, multiplyMat
 enableMultiFile = False
 meshFilesPath = None
 
+
 class RGB():
     """RGB color object."""
 
