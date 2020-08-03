@@ -36,7 +36,8 @@ def header(proto, srcFile, robotName):
     proto.write('#VRML_SIM R2020b utf8\n')
     proto.write('# license: Apache License 2.0\n')
     proto.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
-    proto.write('# This is a proto file for Webots for the ' + robotName + '\n')
+    if robotName:
+        proto.write('# This is a proto file for Webots for the ' + robotName + '\n')
     proto.write('# Extracted from: ' + srcFile + '\n\n')
 
 
@@ -254,6 +255,7 @@ def computeDefName(name):
         return None
     return name.replace(' ', '_').replace('.', '_')
 
+
 def URDFVisual(proto, visualNode, level, normal=False):
     """Write a Visual."""
     indent = '  '
@@ -278,14 +280,14 @@ def URDFVisual(proto, visualNode, level, normal=False):
         if visualNode.material.shininess:
             roughness *= (1.0 - 0.5 * visualNode.material.shininess)
         proto.write((shapeLevel + 2) * indent + 'baseColor %lf %lf %lf\n' % (diffuseColor.red,
-                                                                                diffuseColor.green,
-                                                                                diffuseColor.blue))
+                                                                             diffuseColor.green,
+                                                                             diffuseColor.blue))
         proto.write((shapeLevel + 2) * indent + 'transparency %lf\n' % (1.0 - visualNode.material.diffuse.alpha))
         proto.write((shapeLevel + 2) * indent + 'roughness %lf\n' % roughness)
         proto.write((shapeLevel + 2) * indent + 'metalness 0\n')
         proto.write((shapeLevel + 2) * indent + 'emissiveColor %lf %lf %lf\n' % (emissiveColor.red,
-                                                                                    emissiveColor.green,
-                                                                                    emissiveColor.blue))
+                                                                                 emissiveColor.green,
+                                                                                 emissiveColor.blue))
         if visualNode.material.texture != "":
             proto.write((shapeLevel + 2) * indent + 'baseColorMap ImageTexture {\n')
             proto.write((shapeLevel + 3) * indent + 'url [ "' + visualNode.material.texture + '" ]\n')
@@ -325,22 +327,22 @@ def URDFVisual(proto, visualNode, level, normal=False):
             proto.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
             for value in visualNode.geometry.trimesh.coord:
                 proto.write('%lf %lf %lf, ' % (value[0] * visualNode.geometry.scale[0],
-                                                value[1] * visualNode.geometry.scale[1],
-                                                value[2] * visualNode.geometry.scale[2]))
+                                               value[1] * visualNode.geometry.scale[1],
+                                               value[2] * visualNode.geometry.scale[2]))
             proto.write('\n' + (shapeLevel + 3) * indent + ']\n')
             proto.write((shapeLevel + 2) * indent + '}\n')
 
             proto.write((shapeLevel + 2) * indent + 'coordIndex [\n' + (shapeLevel + 3) * indent)
-            if isinstance(visualNode.geometry.trimesh.coordIndex[0], np.ndarray) \
-                or type(visualNode.geometry.trimesh.coordIndex[0]) == list:
+            if (isinstance(visualNode.geometry.trimesh.coordIndex[0], np.ndarray) or
+                    type(visualNode.geometry.trimesh.coordIndex[0]) == list):
                 for value in visualNode.geometry.trimesh.coordIndex:
                     if len(value) == 3:
                         proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
             elif isinstance(visualNode.geometry.trimesh.coordIndex[0], np.int32):
                 for i in range(int(len(visualNode.geometry.trimesh.coordIndex) / 3)):
                     proto.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.coordIndex[3 * i + 0],
-                                                    visualNode.geometry.trimesh.coordIndex[3 * i + 1],
-                                                    visualNode.geometry.trimesh.coordIndex[3 * i + 2]))
+                                                  visualNode.geometry.trimesh.coordIndex[3 * i + 1],
+                                                  visualNode.geometry.trimesh.coordIndex[3 * i + 2]))
             else:
                 print('Unsupported "%s" coordinate type' % type(visualNode.geometry.trimesh.coordIndex[0]))
             proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
@@ -354,16 +356,16 @@ def URDFVisual(proto, visualNode, level, normal=False):
                 proto.write((shapeLevel + 2) * indent + '}\n')
 
                 proto.write((shapeLevel + 2) * indent + 'normalIndex [\n' + (shapeLevel + 3) * indent)
-                if isinstance(visualNode.geometry.trimesh.normalIndex[0], np.ndarray) \
-                    or type(visualNode.geometry.trimesh.normalIndex[0]) == list:
+                if (isinstance(visualNode.geometry.trimesh.normalIndex[0], np.ndarray) or
+                        type(visualNode.geometry.trimesh.normalIndex[0]) == list):
                     for value in visualNode.geometry.trimesh.normalIndex:
                         if len(value) == 3:
                             proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
                 elif isinstance(visualNode.geometry.trimesh.normalIndex[0], np.int32):
                     for i in range(len(visualNode.geometry.trimesh.normalIndex) / 3):
                         proto.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.normalIndex[3 * i + 0],
-                                                        visualNode.geometry.trimesh.normalIndex[3 * i + 1],
-                                                        visualNode.geometry.trimesh.normalIndex[3 * i + 2]))
+                                                      visualNode.geometry.trimesh.normalIndex[3 * i + 1],
+                                                      visualNode.geometry.trimesh.normalIndex[3 * i + 2]))
                 else:
                     print('Unsupported "%s" normal type' % type(visualNode.geometry.trimesh.normalIndex[0]))
                 proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
@@ -377,16 +379,16 @@ def URDFVisual(proto, visualNode, level, normal=False):
                 proto.write((shapeLevel + 2) * indent + '}\n')
 
                 proto.write((shapeLevel + 2) * indent + 'texCoordIndex [\n' + (shapeLevel + 3) * indent)
-                if isinstance(visualNode.geometry.trimesh.texCoordIndex[0], np.ndarray) \
-                    or type(visualNode.geometry.trimesh.texCoordIndex[0]) == list:
+                if (isinstance(visualNode.geometry.trimesh.texCoordIndex[0], np.ndarray) or
+                        type(visualNode.geometry.trimesh.texCoordIndex[0]) == list):
                     for value in visualNode.geometry.trimesh.texCoordIndex:
                         if len(value) == 3:
                             proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
                 elif isinstance(visualNode.geometry.trimesh.texCoordIndex[0], np.int32):
                     for i in range(len(visualNode.geometry.trimesh.texCoordIndex) / 3):
                         proto.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.texCoordIndex[3 * i + 0],
-                                                        visualNode.geometry.trimesh.texCoordIndex[3 * i + 1],
-                                                        visualNode.geometry.trimesh.texCoordIndex[3 * i + 2]))
+                                                      visualNode.geometry.trimesh.texCoordIndex[3 * i + 1],
+                                                      visualNode.geometry.trimesh.texCoordIndex[3 * i + 2]))
                 else:
                     print('Unsupported "%s" coordinate type' % type(visualNode.geometry.trimesh.texCoordIndex[0]))
                 proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
@@ -394,6 +396,7 @@ def URDFVisual(proto, visualNode, level, normal=False):
             proto.write((shapeLevel + 2) * indent + 'creaseAngle 1\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
     proto.write(shapeLevel * indent + '}\n')
+
 
 def URDFShape(proto, link, level, normal=False):
     """Write a Shape."""
@@ -414,34 +417,24 @@ def URDFShape(proto, link, level, normal=False):
             proto.write((shapeLevel + 1) * indent + 'children [\n')
             shapeLevel += 2
             transform = True
-
         if enableMultiFile and visualNode.geometry.trimesh.coord:
-
-            
-               
-
             name = visualNode.geometry.defName
             if name is None:
                 if visualNode.geometry.name is not None:
                     name = computeDefName(visualNode.geometry.name)
-            
             if visualNode.geometry.defName is None:
                 print('Create meshFile: %sMesh.proto' % name)
                 filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
                 meshProtoFile = open(filepath, 'w')
-                
                 header(meshProtoFile, name, "")
                 meshProtoFile.write('PROTO %sMesh [\n]\n{\n' % name)
                 visualNode.material.defName = None
-                URDFVisual(meshProtoFile,visualNode,1,normal)
+                URDFVisual(meshProtoFile, visualNode, 1, normal)
                 meshProtoFile.write('}\n')
                 meshProtoFile.close()
-
-            proto.write((shapeLevel + 1) * indent + '%sMesh{\n' % name + (shapeLevel + 1) * indent +'}\n')
-        
+            proto.write((shapeLevel + 1) * indent + '%sMesh{\n' % name + (shapeLevel + 1) * indent + '}\n')
         else:
-            URDFVisual(proto,visualNode,shapeLevel,normal)
-
+            URDFVisual(proto, visualNode, shapeLevel, normal)
         if transform:
             proto.write((shapeLevel - 1) * indent + ']\n')
             proto.write((shapeLevel - 2) * indent + '}\n')
