@@ -32,14 +32,20 @@ def RGBA2RGB(RGBA_color, RGB_background=RGB()):
     return new_color
 
 
-def header(proto, srcFile, robotName):
+def header(proto, srcFile=None, robotName=''):
     """Specify VRML file header."""
+    if srcFile:
+        header.sourceFile = srcFile
     proto.write('#VRML_SIM R2020b utf8\n')
     proto.write('# license: Apache License 2.0\n')
     proto.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     if robotName:
         proto.write('# This is a proto file for Webots for the ' + robotName + '\n')
-    proto.write('# Extracted from: ' + srcFile + '\n\n')
+    if header.sourceFile is not None:
+        proto.write('# Extracted from: ' + header.sourceFile + '\n\n')
+
+
+header.sourceFile = None
 
 
 def declaration(proto, robotName):
@@ -427,7 +433,7 @@ def URDFShape(proto, link, level, normal=False):
                 print('Create meshFile: %sMesh.proto' % name)
                 filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
                 meshProtoFile = open(filepath, 'w')
-                header(meshProtoFile, name, "")
+                header(meshProtoFile)
                 meshProtoFile.write('PROTO %sMesh [\n]\n{\n' % name)
                 visualNode.material.defName = None
                 URDFVisual(meshProtoFile, visualNode, 1, normal)
