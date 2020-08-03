@@ -13,12 +13,23 @@ modelPaths = [
     {
         'input': os.path.join(sourceDirectory, 'motoman/motoman_sia20d_support/urdf/sia20d.urdf'),
         'output': os.path.join(resultDirectory, 'MotomanSia20d.proto'),
-        'expected': os.path.join(expectedDirectory, 'MotomanSia20d.proto')
+        'expected': [
+            os.path.join(expectedDirectory, 'MotomanSia20d.proto'),
+            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MOTOMAN_AXIS_BMesh.proto'),
+            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MOTOMAN_AXIS_EMesh.proto'),
+            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MOTOMAN_AXIS_LMesh.proto'),
+            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MOTOMAN_AXIS_RMesh.proto'),
+            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MOTOMAN_AXIS_SMesh.proto'),
+            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MOTOMAN_AXIS_TMesh.proto'),
+            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MOTOMAN_AXIS_UMesh.proto'),
+            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MOTOMAN_BASEMesh.proto'),
+        ],
+        'arguments': '--multi-file'
     },
     {
         'input': os.path.join(sourceDirectory, 'gait2392_simbody/urdf/human.urdf'),
         'output': os.path.join(resultDirectory, 'Human.proto'),
-        'expected': os.path.join(expectedDirectory, 'Human.proto')
+        'expected': [os.path.join(expectedDirectory, 'Human.proto')]
     }
 ]
 
@@ -44,8 +55,11 @@ class TestScript(unittest.TestCase):
     def test_script_produces_the_correct_result(self):
         """Test that urdf2webots produces an expected result."""
         for paths in modelPaths:
-            command = 'python %s --input=%s --output=%s' % (urdf2webotsPath, paths['input'], paths['output'])
+            command = ('python %s --input=%s --output=%s %s' %
+                       (urdf2webotsPath, paths['input'], paths['output'], paths['arguments']))
             retcode = os.system(command)
             self.assertEqual(retcode, 0, msg='Error when exporting "%s"' % (paths['input']))
-            self.assertTrue(fileCompare(paths['output'], paths['expected']),
-                            msg='Expected result mismatch when exporting "%s"' % paths['input'])
+            for expected in paths['expected']:
+                print([expected.replace('expected', 'results'), expected])
+                self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected),
+                                msg='Expected result mismatch when exporting "%s"' % paths['input'])
