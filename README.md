@@ -27,14 +27,25 @@ pip install -r requirements.txt
 ### From pip
 
 ```
-python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file]
+python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--help]
 ```
 
 ### From Sources
 
 ```
-python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file]
+python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--help]
 ```
+
+### Arguments
+
+The script accepts the following arguments:
+  - **-h, --help**: Show the help message and exit
+  - **--input=INFILE**: Specifies the urdf file to convert.
+  - **--output=OUTFILE**: Specifies the name of the resulting PROTO file.
+  - **--normal**: If set, the normals are exported if present in the URDF definition.
+  - **--box-collision**: If set, the bounding objects are approximated using boxes.
+  - **--disable-mesh-optimization**: If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the conversion).
+  - **--multi-file**: If set, the mesh files are exported as separated PROTO files.
 
 ### In your Python Code
 
