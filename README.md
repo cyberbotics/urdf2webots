@@ -39,7 +39,7 @@ python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [-
 ### Arguments
 
 The script accepts the following arguments:
-  - **-h, --help**: Show the help message and exit
+  - **-h, --help**: Show the help message and exit.
   - **--input=INFILE**: Specifies the urdf file to convert.
   - **--output=OUTFILE**: Specifies the name of the resulting PROTO file.
   - **--normal**: If set, the normals are exported if present in the URDF definition.
