@@ -54,11 +54,6 @@ from urdf2webots.importer import convert2urdf
 convert2urdf('MY_PATH/MY_URDF.urd')
 ```
 
-### Arguments
-
-Outputs: someRobot_textures (folder), someRobot_meshes (folder), someRobot.proto.  
-Use in Webots: put the outputs in the protos folder of your Webots project.
-
 ## Notes
 This tool have been tested using Webots R2020b on Ubuntu16.04 and Windows.  
 You can find the sources of these URDF files here:  
