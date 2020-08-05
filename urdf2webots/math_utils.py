@@ -122,7 +122,7 @@ def rotateVector(vector, rotation):
     # multiply matrix by vector
     matrix = matrixFromRotation(rotation)
     v = []
-    v.append(vector[0] * matrix[0] + vector[1] * matrix[3] + vector[2] * matrix[6])
-    v.append(vector[0] * matrix[1] + vector[1] * matrix[4] + vector[2] * matrix[7])
-    v.append(vector[0] * matrix[2] + vector[1] * matrix[5] + vector[2] * matrix[8])
+    v.append(vector[0] * matrix[0] + vector[1] * matrix[1] + vector[2] * matrix[2])
+    v.append(vector[0] * matrix[3] + vector[1] * matrix[4] + vector[2] * matrix[5])
+    v.append(vector[0] * matrix[6] + vector[1] * matrix[7] + vector[2] * matrix[8])
     return v
