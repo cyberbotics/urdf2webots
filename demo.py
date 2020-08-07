@@ -25,4 +25,5 @@ optParser.add_option('--tool-slot', dest='toolSlot', default=None,
                      help='Specify the link that you want to add a tool slot to (exact link name from urdf)')
 options, args = optParser.parse_args()
 
-convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization, options.enableMultiFile, options.staticBase, options.toolSlot)
+convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
+             options.enableMultiFile, options.staticBase, options.toolSlot)
