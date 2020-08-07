@@ -5,15 +5,25 @@
 # Extracted from: /home/david/urdf2webots/tests/sources/motoman/motoman_sia20d_support/urdf/sia20d.urdf
 
 PROTO MotomanSia20d [
-  field  SFVec3f     translation  0 0 0
-  field  SFRotation  rotation     0 1 0 0
-  field  SFString    controller   "void"
+  field  SFVec3f     translation     0 0 0
+  field  SFRotation  rotation        0 1 0 0
+  field  SFString    controller      "void" # Is `Robot.controller`.
+  field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""     # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE  # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.
 ]
 {
   Robot {
     translation IS translation
     rotation IS rotation
     controller IS controller
+    controllerArgs IS controllerArgs
+    customData IS customData
+    supervisor IS supervisor
+    synchronization IS synchronization
+    selfCollision IS selfCollision
     children [
         MOTOMAN_BASEMesh{
         }
