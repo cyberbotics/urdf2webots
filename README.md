@@ -27,13 +27,13 @@ pip install -r requirements.txt
 ### From pip
 
 ```
-python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--help]
+python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--static-base] [--tool-slot=linkName] [--help]
 ```
 
 ### From Sources
 
 ```
-python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--help]
+python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--static-base] [--tool-slot=linkName] [--help]
 ```
 
 ### Arguments
