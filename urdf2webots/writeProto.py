@@ -62,11 +62,12 @@ def declaration(proto, robotName):
     proto.write('  field  SFString    customData      ""     # Is `Robot.customData`.\n')
     proto.write('  field  SFBool      supervisor      FALSE  # Is `Robot.supervisor`.\n')
     proto.write('  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.\n')
-    proto.write('  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.\n')    
+    proto.write('  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.\n')
     if staticBase:
-        proto.write('  field  SFBool      staticBase      FALSE  # Defines if the robot base should be pinned to the static environment.\n') 
+        proto.write('  field  SFBool      staticBase      FALSE  # Defines if the robot base should ' +
+                    'be pinned to the static environment.\n')
     if toolSlot:
-        proto.write('  field  MFNode      toolSlot        []                # Extend the robot with new nodes at the end of the arm.\n')    
+        proto.write('  field  MFNode      toolSlot        []     # Extend the robot with new nodes at the end of the arm.\n')
     proto.write(']\n')
     proto.write('{\n')
 
@@ -123,12 +124,9 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             if not haveChild:
                 haveChild = True
                 proto.write((level + 1) * indent + 'children [\n')
-            proto.write((level + 2) * indent + 'Transform {\n')
-            proto.write((level + 3) * indent + 'translation 0 0 0\n')
-            proto.write((level + 3)* indent + 'rotation 0 1 0 0\n' )
+            proto.write((level + 2) * indent + 'Group {\n')
             proto.write((level + 3) * indent + 'children IS toolSlot\n')
             proto.write((level + 2) * indent + '}\n')
-                
 
         if haveChild:
             proto.write((level + 1) * indent + ']\n')

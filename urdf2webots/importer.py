@@ -46,8 +46,8 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, 
-    disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None):
+def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
+                 disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None):
     if not os.path.exists(inFile):
         sys.exit('Input file "%s" does not exists.' % inFile)
 
@@ -180,9 +180,10 @@ if __name__ == '__main__':
     optParser.add_option('--multi-file', dest='enableMultiFile', action='store_true', default=False,
                          help='If set, the mesh files are exported as separated PROTO files')
     optParser.add_option('--static-base', dest='staticBase', action='store_true', default=False,
-                        help='If set, the base link will have the option to be static (disable physics)')
+                         help='If set, the base link will have the option to be static (disable physics)')
     optParser.add_option('--tool-slot', dest='toolSlot', default=None,
-                        help='Specify the link that you want to add a tool slot too (exact link name from urdf)')
+                         help='Specify the link that you want to add a tool slot too (exact link name from urdf)')
     options, args = optParser.parse_args()
 
-    convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization, options.enableMultiFile, options.staticBase, options.toolSlot)
+    convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
+                 options.enableMultiFile, options.staticBase, options.toolSlot)
