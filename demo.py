@@ -19,6 +19,8 @@ optParser.add_option('--disable-mesh-optimization', dest='disableMeshOptimizatio
                      'conversion).')
 optParser.add_option('--multi-file', dest='enableMultiFile', action='store_true', default=False,
                      help='If set, the mesh files are exported as separated PROTO files')
+optParser.add_option('--static-base', dest='staticBase', action='store_true', default=False,
+                     help='If set, the base link will have the option to be static (disable physics)')
 options, args = optParser.parse_args()
 
-convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization, options.enableMultiFile)
+convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization, options.enableMultiFile, options.staticBase)
