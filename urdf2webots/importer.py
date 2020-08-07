@@ -46,12 +46,15 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disableMeshOptimization=False, enableMultiFile=False):
+def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
+                 disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None):
     if not os.path.exists(inFile):
         sys.exit('Input file "%s" does not exists.' % inFile)
 
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
     urdf2webots.writeProto.enableMultiFile = enableMultiFile
+    urdf2webots.writeProto.staticBase = staticBase
+    urdf2webots.writeProto.toolSlot = toolSlot
 
     with open(inFile, 'r') as file:
         inPath = os.path.dirname(os.path.abspath(inFile))
@@ -176,7 +179,11 @@ if __name__ == '__main__':
                          'conversion).')
     optParser.add_option('--multi-file', dest='enableMultiFile', action='store_true', default=False,
                          help='If set, the mesh files are exported as separated PROTO files')
+    optParser.add_option('--static-base', dest='staticBase', action='store_true', default=False,
+                         help='If set, the base link will have the option to be static (disable physics)')
+    optParser.add_option('--tool-slot', dest='toolSlot', default=None,
+                         help='Specify the link that you want to add a tool slot too (exact link name from urdf)')
     options, args = optParser.parse_args()
 
-    convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision,
-                 options.disableMeshOptimization, options.enableMultiFile)
+    convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
+                 options.enableMultiFile, options.staticBase, options.toolSlot)

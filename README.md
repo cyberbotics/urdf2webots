@@ -27,13 +27,13 @@ pip install -r requirements.txt
 ### From pip
 
 ```
-python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--help]
+python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--static-base] [--tool-slot=linkName] [--help]
 ```
 
 ### From Sources
 
 ```
-python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--help]
+python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--static-base] [--tool-slot=linkName] [--help]
 ```
 
 ### Arguments
@@ -46,6 +46,8 @@ The script accepts the following arguments:
   - **--box-collision**: If set, the bounding objects are approximated using boxes.
   - **--disable-mesh-optimization**: If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the conversion).
   - **--multi-file**: If set, the mesh files are exported as separated PROTO files.
+  - **--static-base**: If set, the base link will have the option to be static (disable physics)
+  - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from urdf).
 
 ### In your Python Code
 

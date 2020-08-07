@@ -13,6 +13,8 @@ PROTO MotomanSia20d [
   field  SFBool      supervisor      FALSE  # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.
   field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.
+  field  SFBool      staticBase      FALSE  # Defines if the robot base should be pinned to the static environment.
+  field  MFNode      toolSlot        []     # Extend the robot with new nodes at the end of the arm.
 ]
 {
   Robot {
@@ -229,6 +231,11 @@ PROTO MotomanSia20d [
                                                 Solid {
                                                   translation 0.000000 0.000000 0.000000
                                                   rotation 0.000000 -0.000000 -1.000000 3.141600
+                                                  children [
+                                                    Group {
+                                                      children IS toolSlot
+                                                    }
+                                                  ]
                                                   name "tool0"
                                                   physics Physics {
                                                     density -1
@@ -343,10 +350,12 @@ PROTO MotomanSia20d [
     ]
     name "base_link"
     boundingObject USE MOTOMAN_BASE
+    %{ if fields.staticBase.value == false then }%
     physics Physics {
       density -1
       mass 1.000000
       centerOfMass [ 0.000000 0.000000 0.000000 ]
     }
+    %{ end }%
   }
 }
