@@ -40,7 +40,7 @@ def header(proto, srcFile=None, robotName='', tags=[]):
     proto.write('# license: Apache License 2.0\n')
     proto.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     if tags:
-        proto.write('# tags: %s' % ','.join(tags))
+        proto.write('# tags: %s\n' % ','.join(tags))
     if robotName:
         proto.write('# This is a proto file for Webots for the ' + robotName + '\n')
     if header.sourceFile is not None:
