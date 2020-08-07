@@ -53,9 +53,14 @@ header.sourceFile = None
 def declaration(proto, robotName):
     """Prototype declaration."""
     proto.write('PROTO ' + robotName + ' [\n')
-    proto.write('  field  SFVec3f     translation  0 0 0\n')
-    proto.write('  field  SFRotation  rotation     0 1 0 0\n')
-    proto.write('  field  SFString    controller   "void"\n')
+    proto.write('  field  SFVec3f     translation     0 0 0\n')
+    proto.write('  field  SFRotation  rotation        0 1 0 0\n')
+    proto.write('  field  SFString    controller      "void" # Is `Robot.controller`.\n')
+    proto.write('  field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.\n')
+    proto.write('  field  SFString    customData      ""     # Is `Robot.customData`.\n')
+    proto.write('  field  SFBool      supervisor      FALSE  # Is `Robot.supervisor`.\n')
+    proto.write('  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.\n')
+    proto.write('  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.\n')
     proto.write(']\n')
     proto.write('{\n')
 
@@ -71,6 +76,11 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
         proto.write((level + 1) * indent + 'translation IS translation\n')
         proto.write((level + 1) * indent + 'rotation IS rotation\n')
         proto.write((level + 1) * indent + 'controller IS controller\n')
+        proto.write((level + 1) * indent + 'controllerArgs IS controllerArgs\n')
+        proto.write((level + 1) * indent + 'customData IS customData\n')
+        proto.write((level + 1) * indent + 'supervisor IS supervisor\n')
+        proto.write((level + 1) * indent + 'synchronization IS synchronization\n')
+        proto.write((level + 1) * indent + 'selfCollision IS selfCollision\n')
     else:
         proto.write((' ' if endpoint else level * indent) + 'Solid {\n')
         proto.write((level + 1) * indent + 'translation %lf %lf %lf\n' % (jointPosition[0],
