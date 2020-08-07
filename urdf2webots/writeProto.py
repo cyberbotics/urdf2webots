@@ -40,7 +40,7 @@ def header(proto, srcFile=None, robotName='', tags=[]):
     proto.write('# license: Apache License 2.0\n')
     proto.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     if tags:
-        proto.write('# tags: %s' % ','.joint(tags))
+        proto.write('# tags: %s' % ','.join(tags))
     if robotName:
         proto.write('# This is a proto file for Webots for the ' + robotName + '\n')
     if header.sourceFile is not None:
@@ -435,7 +435,7 @@ def URDFShape(proto, link, level, normal=False):
                 print('Create meshFile: %sMesh.proto' % name)
                 filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
                 meshProtoFile = open(filepath, 'w')
-                header(meshProtoFile, tag=['hidden'])
+                header(meshProtoFile, tags=['hidden'])
                 meshProtoFile.write('PROTO %sMesh [\n]\n{\n' % name)
                 visualNode.material.defName = None
                 URDFVisual(meshProtoFile, visualNode, 1, normal)
