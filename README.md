@@ -46,6 +46,7 @@ The script accepts the following arguments:
   - **--box-collision**: If set, the bounding objects are approximated using boxes.
   - **--disable-mesh-optimization**: If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the conversion).
   - **--multi-file**: If set, the mesh files are exported as separated PROTO files.
+  - **--static-base**: If set, the base link will have the option to be static (disable physics)
 
 ### In your Python Code
 
