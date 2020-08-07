@@ -441,7 +441,7 @@ def URDFShape(proto, link, level, normal=False):
                 URDFVisual(meshProtoFile, visualNode, 1, normal)
                 meshProtoFile.write('}\n')
                 meshProtoFile.close()
-            proto.write((shapeLevel + 1) * indent + '%sMesh{\n' % name + (shapeLevel + 1) * indent + '}\n')
+            proto.write(shapeLevel * indent + '%sMesh {\n' % name + shapeLevel * indent + '}\n')
         else:
             URDFVisual(proto, visualNode, shapeLevel, normal)
         if transform:

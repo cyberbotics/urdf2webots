@@ -15,8 +15,8 @@ PROTO MotomanSia20d [
     rotation IS rotation
     controller IS controller
     children [
-        MOTOMAN_BASEMesh{
-        }
+      MOTOMAN_BASEMesh {
+      }
       HingeJoint {
         jointParameters HingeJointParameters {
           axis 0.000000 0.000000 1.000000
@@ -44,8 +44,8 @@ PROTO MotomanSia20d [
               translation 0.000000 0.000000 0.000000
               rotation -0.000000 0.000000 1.000000 3.141600
               children [
-                  MOTOMAN_AXIS_SMesh{
-                  }
+                MOTOMAN_AXIS_SMesh {
+                }
               ]
             }
             HingeJoint {
@@ -75,8 +75,8 @@ PROTO MotomanSia20d [
                     translation 0.000000 0.000000 0.000000
                     rotation -1.000000 -0.000007 -0.000000 1.571593
                     children [
-                        MOTOMAN_AXIS_LMesh{
-                        }
+                      MOTOMAN_AXIS_LMesh {
+                      }
                     ]
                   }
                   HingeJoint {
@@ -102,8 +102,8 @@ PROTO MotomanSia20d [
                       translation 0.000000 0.000000 0.490000
                       rotation 0.000000 1.000000 0.000000 0.000000
                       children [
-                          MOTOMAN_AXIS_EMesh{
-                          }
+                        MOTOMAN_AXIS_EMesh {
+                        }
                         HingeJoint {
                           jointParameters HingeJointParameters {
                             axis 0.000000 -1.000000 0.000000
@@ -131,8 +131,8 @@ PROTO MotomanSia20d [
                                 translation 0.000000 0.000000 0.000000
                                 rotation 1.000000 0.000050 0.000043 4.711593
                                 children [
-                                    MOTOMAN_AXIS_UMesh{
-                                    }
+                                  MOTOMAN_AXIS_UMesh {
+                                  }
                                 ]
                               }
                               HingeJoint {
@@ -158,8 +158,8 @@ PROTO MotomanSia20d [
                                   translation 0.000000 0.000000 0.420000
                                   rotation 0.000000 1.000000 0.000000 0.000000
                                   children [
-                                      MOTOMAN_AXIS_RMesh{
-                                      }
+                                    MOTOMAN_AXIS_RMesh {
+                                    }
                                     HingeJoint {
                                       jointParameters HingeJointParameters {
                                         axis 0.000000 -1.000000 0.000000
@@ -187,8 +187,8 @@ PROTO MotomanSia20d [
                                             translation 0.000000 0.000000 0.000000
                                             rotation -1.000000 0.000000 0.000000 1.570000
                                             children [
-                                                MOTOMAN_AXIS_BMesh{
-                                                }
+                                              MOTOMAN_AXIS_BMesh {
+                                              }
                                             ]
                                           }
                                           HingeJoint {
@@ -214,8 +214,8 @@ PROTO MotomanSia20d [
                                               translation 0.000000 0.000000 0.180000
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [
-                                                  MOTOMAN_AXIS_TMesh{
-                                                  }
+                                                MOTOMAN_AXIS_TMesh {
+                                                }
                                                 Solid {
                                                   translation 0.000000 0.000000 0.000000
                                                   rotation 0.000000 -0.000000 -1.000000 3.141600
