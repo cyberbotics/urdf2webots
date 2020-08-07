@@ -5,6 +5,7 @@ import numpy as np
 
 from urdf2webots.math_utils import rotateVector, matrixFromRotation, multiplyMatrix, rotationFromMatrix
 
+staticBase = False
 enableMultiFile = False
 meshFilesPath = None
 
@@ -61,6 +62,9 @@ def declaration(proto, robotName):
     proto.write('  field  SFBool      supervisor      FALSE  # Is `Robot.supervisor`.\n')
     proto.write('  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.\n')
     proto.write('  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.\n')
+    
+    if staticBase:
+        proto.write('  field  SFBool      staticBase   FALSE  # Defines if the robot base should be pinned to the static environment.\n')    
     proto.write(']\n')
     proto.write('{\n')
 
@@ -120,7 +124,8 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
 
         if link.collision:
             URDFBoundingObject(proto, link, level + 1, boxCollision)
-
+        if level == 1 and staticBase:
+            proto.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
         proto.write((level + 1) * indent + 'physics Physics {\n')
         proto.write((level + 2) * indent + 'density -1\n')
         proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
@@ -129,7 +134,8 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                                                                                    link.inertia.position[1],
                                                                                    link.inertia.position[2]))
         proto.write((level + 1) * indent + '}\n')
-
+        if level == 1 and staticBase:
+            proto.write((level + 1) * indent + '%{ end }%\n')
         if link.inertia.rotation[-1] != 0.0:  # this should not happend
             print('Warning: inertia of %s has a non-zero rotation [axis-angle] = "%lf %lf %lf %lf" '
                   'but it will not be imported in proto!' % (link.name, link.inertia.rotation[0], link.inertia.rotation[1],

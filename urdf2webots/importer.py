@@ -46,12 +46,13 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disableMeshOptimization=False, enableMultiFile=False):
+def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False, disableMeshOptimization=False, enableMultiFile=False, staticBase=False):
     if not os.path.exists(inFile):
         sys.exit('Input file "%s" does not exists.' % inFile)
 
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
     urdf2webots.writeProto.enableMultiFile = enableMultiFile
+    urdf2webots.writeProto.staticBase = staticBase
 
     with open(inFile, 'r') as file:
         inPath = os.path.dirname(os.path.abspath(inFile))
