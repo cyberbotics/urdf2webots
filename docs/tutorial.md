@@ -57,7 +57,7 @@ python -m urdf2webots.importer --input=model.urdf --box-collision --multi-file -
 
 ### The script accepts the following arguments:
   - **-h, --help**: Show the help message and exit.
-  - **--input=INFILE**: Specifies the urdf file to convert.
+  - **--input=INFILE**: Specifies the URDF file to convert.
   - **--output=OUTFILE**: Specifies the name of the resulting PROTO file.
   - **--normal**: If set, the normals are exported if present in the URDF definition.
   - **--box-collision**: If set, the bounding objects are approximated using boxes.
