@@ -19,7 +19,7 @@ https://github.com/ros-industrial/kuka_experimental
 cd catkin_ws/src
 git clone https://github.com/ros-industrial/kuka_experimental
 cd ..
-catkin_make  # or catkin build  depending on what you use
+catkin_make  # or catkin build depending on what you use
 source devel/setup.bash
 ```
 **Note:** If you want to convert this exact same robot, you will have to replace the file at
