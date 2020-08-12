@@ -113,7 +113,7 @@ In order to change the default orientation of our model, we have to change the `
 to
 `field  SFRotation  rotation     1 0 0 -1.5708`
 
-If these are not the correct values, you can manually adjust the values of your robot node in the scene tree (left side), until the robot is positioned correctly. Then simply copy paste the values into the `PROTO source`. 
+If these are not the correct values, you can manually adjust the values of your robot node in the scene tree (left side), until the robot is positioned correctly. Then simply copy and paste the values into the `PROTO source`. 
 
 Finally, to change the default of the `staticBase` field to `TRUE`, simply change the corresponding line in the `PROTO source` header.
 
