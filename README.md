@@ -56,6 +56,13 @@ from urdf2webots.importer import convert2urdf
 convert2urdf('MY_PATH/MY_URDF.urd')
 ```
 
+### In-Depth Tutorial
+Check out [this Tutorial](./docs/tutorial.md) for a more in-depth, step by step instruction, on how to: 
+- Generate a urdf file from a ROS repository
+- Convert your urdf file to a proto file
+- Load your converted model into Webots and make final adjustments
+
+
 ## Notes
 This tool have been tested using Webots R2020b on Ubuntu16.04 and Windows.  
 You can find the sources of these URDF files here:  
