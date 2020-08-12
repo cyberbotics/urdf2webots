@@ -107,7 +107,7 @@ The fields in the header correspond to the fields (parameters) we see in the Sce
 
 ![add model](./images/kuka_scene_tree.png)
 
-In order to change the default orientation of our model, we have to change the `rotation` field in the proto file. Most urdf models use the z-axis as `up`, while Webots, by default, uses the y-axis as `up`. In this specific case, change the line:
+In order to change the default orientation of our model, we have to change the `rotation` field in the PROTO file. Most URDF models use the z-axis as `up`, while Webots, by default, uses the y-axis as `up`. In this specific case, change the line:
 
 `field  SFRotation  rotation        0 1 0 0`
 to
