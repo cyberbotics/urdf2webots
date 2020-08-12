@@ -45,7 +45,7 @@ This will compile the URDF from the XACRO file and save it as model.urdf in the 
 ## Converting the URDF to a PROTO file
 
 Convert the model.urdf with the following command. I recommend the 2 added parameters:
-**--box-collision** simplifies objects. This can greatly improve the simulation of object interactions, especially grasping.
+**--box-collision**: simplifies objects. This can greatly improve the simulation of object interactions, especially grasping.
 
 **--multi-file**: puts the mesh data in a separate file. If not set, the proto file becomes huge and very slow and sluggish in all editors / IDEs I tried.
 
