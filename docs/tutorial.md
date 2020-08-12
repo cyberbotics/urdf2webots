@@ -80,6 +80,7 @@ cp -r KukaLbrIiwa14R820* ~/my_simulation/protos/
 ```
 
 <br /> 
+
 ## Loading converted model in WEBOTS
 
 Launch Webots and your project world. Click on the plus sign to add your model.
