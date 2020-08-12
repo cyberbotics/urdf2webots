@@ -24,7 +24,7 @@ source devel/setup.bash
 ```
 **Note:** If you want to convert this exact same robot, you will have to replace the file at
 `kuka_experimental/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae`
-With this:
+with this:
 [base_link.dae](https://drive.google.com/file/d/1J0dVuDOW7k3wa6Gj0vpjKzlNMzQHOAfD/view?usp=sharing)
 <br /> 
 
