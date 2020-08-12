@@ -71,7 +71,7 @@ After your file has been converted, you should have something like this:
 
 ![converted files](./images/converted_files.png)
 
-Move these files to to your project’s proto directory (Of course you can do this step by using your OS's GUI)
+Copy these files to your project’s `protos` directory (of course you can do this step by using your OS's GUI):
 
 ```
 cp -r KukaLbrIiwa14R820* ~/my_simulation/protos/
