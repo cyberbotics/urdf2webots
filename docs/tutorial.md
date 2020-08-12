@@ -103,7 +103,7 @@ This should open the PROTO file in Webot’s text editor and should look somethi
 ![add model](./images/kuka_proto.png)
 
 
-The fields in the header correspond to the fields (options) we see in the Scene Tree (compare image above and below)
+The fields in the header correspond to the fields (parameters) we see in the Scene Tree (compare image above and below)
 
 ![add model](./images/kuka_scene_tree.png)
 
