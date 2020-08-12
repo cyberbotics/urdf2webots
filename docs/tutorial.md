@@ -12,7 +12,7 @@ Alternatively, if you want to install from source, follow the instructions in th
 <br /> 
 ## Creating the URDF from git repo (optional if urdf already available)
 
-Example using this KUKA ros repo:
+Example using this Kuka ROS repo:
 https://github.com/ros-industrial/kuka_experimental
 
 ```
