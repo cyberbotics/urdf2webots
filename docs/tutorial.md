@@ -9,6 +9,8 @@ pip install --no-cache-dir --upgrade urdf2webots
 
 Alternatively, if you want to install from source, follow the instructions in the [main README](../README.md)
 
+<br /> 
+<br /> 
 
 ## Get a URDF from a GitHub repository (optional if you already have a URDF)
 
@@ -41,6 +43,9 @@ cd src/kuka_experimental/kuka_lbr_iiwa_support/urdf
 rosrun xacro xacro --inorder -o model.urdf lbr_iiwa_14_r820.xacro
 ```
 This will compile the URDF from the XACRO file and save it as model.urdf in the same directory. If your launch file added parameters to the XACRO calls, you need to add them here too.
+
+<br /> 
+<br /> 
 
 ## Converting the URDF to a PROTO file
 
