@@ -92,7 +92,7 @@ Select it and click `Add`
 
 ![add model](./images/webots_gui_2.png)
 
-It should look something like this:
+It should look similar to this:
 
 ![add model](./images/webots_robot_sideways.png)
 
