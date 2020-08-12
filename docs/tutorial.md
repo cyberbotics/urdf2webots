@@ -59,7 +59,7 @@ Convert the model.urdf with the following command. I recommend the 2 added param
 python -m urdf2webots.importer --input=model.urdf --box-collision --multi-file --static-base --tool-slot=tool0
 ```
 
-The script accepts the following arguments:
+### The script accepts the following arguments:
   - **-h, --help**: Show the help message and exit.
   - **--input=INFILE**: Specifies the urdf file to convert.
   - **--output=OUTFILE**: Specifies the name of the resulting PROTO file.
@@ -74,6 +74,7 @@ The script accepts the following arguments:
 Now you should have something like that:
 
 ![converted files](./images/converted_files.png)
+
 Move these files to to your project’s proto directory (Of course you can do this step by using your OS's GUI)
 
 ```
@@ -82,13 +83,37 @@ cp -r KukaLbrIiwa14R820* ~/my_simulation/protos/
 ## Loading converted model in WEBOTS
 
 Launch webots and your project world. Click on the plus sign to add your model.
+
 ![add node](./images/webots_gui_1.png)
 
-Then you should see your newly converted model under `PROTO nodes (Current Project)`.
+You should see your newly converted model under `PROTO nodes (Current Project)`.
 Select it and click `Add`
 
 ![add model](./images/webots_gui_2.png)
 
-Now it should look something like this:
+It should look something like this:
 
 ![add model](./images/webots_robot_sideways.png)
+
+
+As you can see, there are a few things we need to fix. We want it to stand upright and perhaps have a fixed base by default. To make these changes, right-click on the robot in the Scene Tree and select ‘View PROTO Source’ 
+This should open the PROTO file in Webot’s text editor and should look something like this:
+
+![add model](./images/kuka_proto.png)
+
+
+The fields in the header correspond to the fields (options) we see in the Scene Tree (compare image above and below)
+
+![add model](./images/kuka_scene_tree.png)
+
+In order to change the default orientation of our model, we have to change the `rotation` field in the proto file. Most urdf models use the z-axis as 'up', while Webots uses the y-axis as up by default. In this specific case, change the line:
+
+`field  SFRotation  rotation        0 1 0 0`
+to
+`field  SFRotation  rotation     1 0 0 -1.5708`
+
+If these are not the correct values, you can manually adjust the values of your robot node in the scene tree (left side), until the robot is positioned correctly. Then simply copy paste the values in the `PROTO source`. 
+
+Finally to change the default of the `staticBase` field to `TRUE`, simply change the corresponding line in the `PROTO source` header.
+
+Dont forget to save the file and either save your world and reload it, or delete the robot and add it again, in order to see the changes to your proto file in action.
