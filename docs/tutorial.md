@@ -10,7 +10,7 @@ pip install --no-cache-dir --upgrade urdf2webots
 Alternatively, if you want to install from source, follow the instructions in the [main README](../README.md)
 
 
-## Creating the URDF from git repo (optional if urdf already available)
+## Get a URDF from a GitHub repository (optional if you already have a URDF)
 
 Example using this Kuka ROS repo:
 https://github.com/ros-industrial/kuka_experimental
