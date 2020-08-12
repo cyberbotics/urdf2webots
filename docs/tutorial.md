@@ -34,7 +34,7 @@ Opening the launch file we look for the line, uploading the robot_description pa
 
 `<param name="robot_description" command="$(find xacro)/xacro.py '$(find kuka_lbr_iiwa_support)/urdf/lbr_iiwa_14_r820.xacro'" />`
 
-This tells you which xacro file and with what parameters we need to generate our urdf from.
+This tells us which xacro file and with what parameters we need to generate our URDF from.
 Next in your Terminal, navigate to the urdf folder specified in the launch file and enter following command:
 
 ```
