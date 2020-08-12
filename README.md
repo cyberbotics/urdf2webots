@@ -58,7 +58,7 @@ convert2urdf('MY_PATH/MY_URDF.urd')
 
 ### In-Depth Tutorial
 Check out [this tutorial](./docs/tutorial.md) for a more in-depth, step by step instruction, on how to: 
-- Generate a urdf file from a ROS repository
+- Generate a URDF file from a ROS repository.
 - Convert your urdf file to a proto file
 - Load your converted model into Webots and make final adjustments
 
