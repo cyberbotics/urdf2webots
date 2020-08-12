@@ -24,7 +24,7 @@ source devel/setup.bash
 ```
 **Note:** If you want to convert this exact same robot, you will have to replace the file at
 `kuka_experimental/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae`
-with this:
+with this (original file is corrupted):
 [base_link.dae](https://drive.google.com/file/d/1J0dVuDOW7k3wa6Gj0vpjKzlNMzQHOAfD/view?usp=sharing)
 
 Navigate to the launch folder and open the launch file that launches your robot or displays it in Rviz. For this tutorial we chose the KUKA lbr iiwa robot. The launch file is:
@@ -115,4 +115,4 @@ If these are not the correct values, you can manually adjust the values of your 
 
 Finally, to change the default of the `staticBase` field to `TRUE`, simply change the corresponding line in the `PROTO source` header.
 
-Dont forget to save the file (ctrl + s). In order to see the changes to your proto file in action, either save your world and reload it, or delete the robot and add it again.
+Dont forget to save the file (<kbd>ctrl</kbd> + <kbd>s</kbd>). In order to see the changes to your PROTO file in action, either save your world and reload it, or delete the robot and add it again.
