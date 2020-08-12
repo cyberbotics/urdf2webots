@@ -1,0 +1,106 @@
+# urdf2webots Tutorial
+
+[![Build Status](https://travis-ci.com/cyberbotics/urdf2webots.svg?branch=master)](https://travis-ci.com/cyberbotics/urdf2webots)
+
+This tool converts URDF files into Webots PROTO files.
+
+## Prerequisites:
+Make sure you have the newest version of urdf2webots installed. If you have an older version installed via pip, use this command:
+
+```
+pip install --no-cache-dir --upgrade urdf2webots
+```
+
+Alternatively, if you want to install from source, follow the instructions in the [Main README](../README.md)
+
+## Creating the URDF from git repo (optional if urdf already available)
+
+Example using this KUKA ros repo:
+https://github.com/ros-industrial/kuka_experimental
+
+```
+cd catkin_ws/src
+git clone https://github.com/ros-industrial/kuka_experimental
+cd ..
+catkin_make  # or catkin build  depending on what you use
+source devel/setup.bash
+```
+Note: If you want to convert this exact same robot, you will have to replace the file at
+kuka_experimental/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae
+With this:
+[base_link.dae](https://drive.google.com/file/d/1J0dVuDOW7k3wa6Gj0vpjKzlNMzQHOAfD/view?usp=sharing)
+
+
+Navigate to the launch folder and open the launch file that launches your robot or displays it in Rviz. For this tutorial we chose the KUKA lbr iiwa robot. The launch file is:
+
+/kuka_experimental/kuka_lbr_iiwa_support/launch/load_lbr_iiwa_14_r820.launch
+
+Opening the launch file we look for the line, uploading the robot_description parameter, here it is this line:
+
+<param name="robot_description" command="$(find xacro)/xacro.py '$(find kuka_lbr_iiwa_support)/urdf/lbr_iiwa_14_r820.xacro'" />
+
+This tells you which xacro file and with what parameters we need to generate our urdf from.
+Next in your Terminal, navigate to the urdf folder specified in the launch file and enter following command:
+
+```
+cd src/kuka_experimental/kuka_lbr_iiwa_support/urdf
+rosrun xacro xacro --inorder -o model.urdf lbr_iiwa_14_r820.xacro
+```
+This will compile the urdf from the xacro file and save it as model.urdf in the same directory. If your launch file added parameters to the xacro calls, you need to add them here too.
+
+## Converting the URDF to a PROTO file
+
+Convert the model.urdf with the following command. I recommend the 2 added parameters:
+**--box-collision** simplifies objects. This can greatly improve the simulation of object interactions, especially grasping.
+**--multi-file*: puts the mesh data in a separate file. If not set, the proto file becomes huge and very slow and sluggish in all editors / IDEs I tried.
+**--static-base** and **--tool-slot=tool0** are more specific for robotic arms. Have a look at all options and explanations below. To figure out, what the **--tool-slot=LinkName** is called for your robotic arm, you will have to open the model.urdf and figure out what the link is called (or in whichever urdf file you are using) .
+
+```
+python -m urdf2webots.importer --input=model.urdf --box-collision --multi-file --static-base --tool-slot=tool0
+```
+
+The script accepts the following arguments:
+  - **-h, --help**: Show the help message and exit.
+  - **--input=INFILE**: Specifies the urdf file to convert.
+  - **--output=OUTFILE**: Specifies the name of the resulting PROTO file.
+  - **--normal**: If set, the normals are exported if present in the URDF definition.
+  - **--box-collision**: If set, the bounding objects are approximated using boxes.
+  - **--disable-mesh-optimization**: If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the conversion).
+  - **--multi-file**: If set, the mesh files are exported as separated PROTO files.
+  - **--static-base**: If set, the base link will have the option to be static (disable physics)
+  - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from urdf).
+
+
+Now you should have something like that:
+
+![converted files](./images/converted_files.png)
+Move these files to to your project’s proto directory (Of course you can do this step by using your OS's GUI)
+
+```
+cp -r KukaLbrIiwa14R820* ~/my_simulation/protos/
+```
+
+## Notes
+This tool have been tested using Webots R2020b on Ubuntu16.04 and Windows.  
+You can find the sources of these URDF files here:  
+  - universal robot: https://github.com/ros-industrial/universal_robot/tree/kinetic-devel/ur_description  
+  - pr2 robot: https://github.com/PR2/pr2_common/tree/kinetic-devel/pr2_description  
+  - motoman robot: https://github.com/ros-industrial/motoman/tree/kinetic-devel/motoman_sia20d_support
+  - kinova robot: https://github.com/Kinovarobotics/kinova-ros/tree/kinetic/kinova_description
+  - gait2392 human skeleton: https://github.com/cyberbotics/urdf2webots/tree/master/tests/sources/gait2392_simbody
+
+## Acknowledgement
+
+<a href="http://rosin-project.eu">
+  <img src="http://rosin-project.eu/wp-content/uploads/rosin_ack_logo_wide.png"
+       alt="rosin_logo" height="60" >
+</a></br>
+
+Supported by ROSIN - ROS-Industrial Quality-Assured Robot Software Components.  
+More information: <a href="http://rosin-project.eu">rosin-project.eu</a>
+
+<img src="http://rosin-project.eu/wp-content/uploads/rosin_eu_flag.jpg"
+     alt="eu_flag" height="45" align="left" >  
+
+This project has received funding from the European Union’s Horizon 2020  
+research and innovation programme under grant agreement no. 732287.
