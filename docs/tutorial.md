@@ -40,7 +40,7 @@ Next in your Terminal, navigate to the urdf folder specified in the launch file 
 cd src/kuka_experimental/kuka_lbr_iiwa_support/urdf
 rosrun xacro xacro --inorder -o model.urdf lbr_iiwa_14_r820.xacro
 ```
-This will compile the urdf from the xacro file and save it as model.urdf in the same directory. If your launch file added parameters to the xacro calls, you need to add them here too.
+This will compile the URDF from the XACRO file and save it as model.urdf in the same directory. If your launch file added parameters to the XACRO calls, you need to add them here too.
 <br /> 
 
 ## Converting the URDF to a PROTO file
