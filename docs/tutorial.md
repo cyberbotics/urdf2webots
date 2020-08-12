@@ -79,28 +79,16 @@ Move these files to to your project’s proto directory (Of course you can do th
 ```
 cp -r KukaLbrIiwa14R820* ~/my_simulation/protos/
 ```
+## Loading converted model in WEBOTS
 
-## Notes
-This tool have been tested using Webots R2020b on Ubuntu16.04 and Windows.  
-You can find the sources of these URDF files here:  
-  - universal robot: https://github.com/ros-industrial/universal_robot/tree/kinetic-devel/ur_description  
-  - pr2 robot: https://github.com/PR2/pr2_common/tree/kinetic-devel/pr2_description  
-  - motoman robot: https://github.com/ros-industrial/motoman/tree/kinetic-devel/motoman_sia20d_support
-  - kinova robot: https://github.com/Kinovarobotics/kinova-ros/tree/kinetic/kinova_description
-  - gait2392 human skeleton: https://github.com/cyberbotics/urdf2webots/tree/master/tests/sources/gait2392_simbody
+Launch webots and your project world. Click on the plus sign to add your model.
+![add node](./images/webots_gui_1.png)
 
-## Acknowledgement
+Then you should see your newly converted model under `PROTO nodes (Current Project)`.
+Select it and click `Add`
 
-<a href="http://rosin-project.eu">
-  <img src="http://rosin-project.eu/wp-content/uploads/rosin_ack_logo_wide.png"
-       alt="rosin_logo" height="60" >
-</a></br>
+![add model](./images/webots_gui_2.png)
 
-Supported by ROSIN - ROS-Industrial Quality-Assured Robot Software Components.  
-More information: <a href="http://rosin-project.eu">rosin-project.eu</a>
+Now it should look something like this:
 
-<img src="http://rosin-project.eu/wp-content/uploads/rosin_eu_flag.jpg"
-     alt="eu_flag" height="45" align="left" >  
-
-This project has received funding from the European Union’s Horizon 2020  
-research and innovation programme under grant agreement no. 732287.
+![add model](./images/webots_robot_sideways.png)
