@@ -851,7 +851,7 @@ def getLink(node, path):
     if hasElement(node, 'collision'):
         getCollision(link, node, path)
     if not any([hasElement(node, 'inertial'), hasElement(node, 'visual'), hasElement(node, 'collision')]):
-        link.inertia.mass = -1
+        link.inertia.mass = None
     return link
 
 

@@ -135,7 +135,7 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
 
         if link.collision:
             URDFBoundingObject(proto, link, level + 1, boxCollision)
-        if link.inertia.mass != -1:
+        if link.inertia.mass is not None:
             if level == 1 and staticBase:
                 proto.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
             proto.write((level + 1) * indent + 'physics Physics {\n')
@@ -143,8 +143,8 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
             if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
                 proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
-                                                                                    link.inertia.position[1],
-                                                                                    link.inertia.position[2]))
+                                                                                       link.inertia.position[1],
+                                                                                       link.inertia.position[2]))
             proto.write((level + 1) * indent + '}\n')
             if level == 1 and staticBase:
                 proto.write((level + 1) * indent + '%{ end }%\n')
