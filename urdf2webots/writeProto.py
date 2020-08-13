@@ -549,8 +549,6 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         proto.write((level + 3) * indent + 'minPosition ' + str(joint.limit.lower) + '\n')
     if joint.limit.upper != 0.0:
         proto.write((level + 3) * indent + 'maxPosition ' + str(joint.limit.upper) + '\n')
-    if joint.limit.effort == 0.0:
-        joint.limit.effort = 10000
     if joint.type == 'prismatic':
         proto.write((level + 3) * indent + 'maxForce ' + str(joint.limit.effort) + '\n')
     else:

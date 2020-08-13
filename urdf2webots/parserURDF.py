@@ -193,7 +193,7 @@ class Limit():
         """Initializatization."""
         self.lower = 0.0
         self.upper = 0.0
-        self.effort = 0.0
+        self.effort = 10000  # by if not specified in the URDF, there is no limit
         self.velocity = 0.0
 
 
@@ -852,7 +852,7 @@ def getLink(node, path):
         getCollision(link, node, path)
     if not any([hasElement(node, 'inertial'), hasElement(node, 'visual'), hasElement(node, 'inecollisionrtial')]):
         link.inertia.mass = -1
-    return link 
+    return link
 
 
 def getJoint(node):
