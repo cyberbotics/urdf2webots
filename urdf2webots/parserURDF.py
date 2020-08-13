@@ -193,7 +193,7 @@ class Limit():
         """Initializatization."""
         self.lower = 0.0
         self.upper = 0.0
-        self.effort = 10000  # by if not specified in the URDF, there is no limit
+        self.effort = 10000  # if not specified in the URDF, there is no limit
         self.velocity = 0.0
 
 
