@@ -9,7 +9,7 @@ toolSlot = None
 staticBase = False
 enableMultiFile = False
 meshFilesPath = None
-
+robotNameMain = ''
 
 class RGB():
     """RGB color object."""
@@ -64,7 +64,7 @@ def declaration(proto, robotName):
     proto.write('  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.\n')
     proto.write('  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.\n')
     if staticBase:
-        proto.write('  field  SFBool      staticBase      FALSE  # Defines if the robot base should ' +
+        proto.write('  field  SFBool      staticBase      TRUE  # Defines if the robot base should ' +
                     'be pinned to the static environment.\n')
     if toolSlot:
         proto.write('  field  MFNode      toolSlot        []     # Extend the robot with new nodes at the end of the arm.\n')
@@ -434,7 +434,7 @@ def URDFVisual(proto, visualNode, level, normal=False):
     proto.write(shapeLevel * indent + '}\n')
 
 
-def URDFShape(proto, link, level, normal=False):
+def URDFShape(proto, link, level, normal=False, robotName=''):
     """Write a Shape."""
     indent = '  '
     shapeLevel = level
@@ -459,6 +459,7 @@ def URDFShape(proto, link, level, normal=False):
                 if visualNode.geometry.name is not None:
                     name = computeDefName(visualNode.geometry.name)
             if visualNode.geometry.defName is None:
+                name = robotNameMain + '_' + name
                 print('Create meshFile: %sMesh.proto' % name)
                 filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
                 meshProtoFile = open(filepath, 'w')
