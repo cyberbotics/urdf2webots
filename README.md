@@ -48,6 +48,7 @@ The script accepts the following arguments:
   - **--multi-file**: If set, the mesh files are exported as separated PROTO files.
   - **--static-base**: If set, the base link will have the option to be static (disable physics)
   - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from urdf).
+  - **--rotation=="0 1 0 0"**: Set the rotation field of your PROTO file. If your URDF file uses the z-axis as 'up', use `--rotation="1 0 0 -1.5708"`.
 
 ### In your Python Code
 
