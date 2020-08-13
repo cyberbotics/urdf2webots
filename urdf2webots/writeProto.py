@@ -64,7 +64,7 @@ def declaration(proto, robotName):
     proto.write('  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.\n')
     proto.write('  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.\n')
     if staticBase:
-        proto.write('  field  SFBool      staticBase      TRUE   # Defines if the robot base should ' +
+        proto.write('  field  SFBool      staticBase      TRUE  # Defines if the robot base should ' +
                     'be pinned to the static environment.\n')
     if toolSlot:
         proto.write('  field  MFNode      toolSlot        []     # Extend the robot with new nodes at the end of the arm.\n')
@@ -548,11 +548,12 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         proto.write((level + 3) * indent + 'minPosition ' + str(joint.limit.lower) + '\n')
     if joint.limit.upper != 0.0:
         proto.write((level + 3) * indent + 'maxPosition ' + str(joint.limit.upper) + '\n')
-    if joint.limit.effort != 0.0:
-        if joint.type == 'prismatic':
-            proto.write((level + 3) * indent + 'maxForce ' + str(joint.limit.effort) + '\n')
-        else:
-            proto.write((level + 3) * indent + 'maxTorque ' + str(joint.limit.effort) + '\n')
+    if joint.limit.effort == 0.0:
+        joint.limit.effort = 10000
+    if joint.type == 'prismatic':
+        proto.write((level + 3) * indent + 'maxForce ' + str(joint.limit.effort) + '\n')
+    else:
+        proto.write((level + 3) * indent + 'maxTorque ' + str(joint.limit.effort) + '\n')
     proto.write((level + 2) * indent + '}\n')
     proto.write((level + 2) * indent + 'PositionSensor {\n')
     proto.write((level + 3) * indent + 'name "' + joint.name + '_sensor"\n')
