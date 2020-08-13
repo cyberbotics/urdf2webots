@@ -57,8 +57,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
     urdf2webots.writeProto.enableMultiFile = enableMultiFile
     urdf2webots.writeProto.staticBase = staticBase
     urdf2webots.writeProto.toolSlot = toolSlot
-    urdf2webots.writeProto.initRotation = initRotation
-
+    
     with open(inFile, 'r') as file:
         inPath = os.path.dirname(os.path.abspath(inFile))
         content = file.read()
@@ -161,7 +160,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
                               urdf2webots.parserURDF.Lidar.list)
                 print('There are %d links, %d joints and %d sensors' % (len(linkList), len(jointList), len(sensorList)))
 
-                urdf2webots.writeProto.declaration(protoFile, robotName)
+                urdf2webots.writeProto.declaration(protoFile, robotName, initRotation)
                 urdf2webots.writeProto.URDFLink(protoFile, rootLink, 1, parentList, childList, linkList, jointList,
                                                 sensorList, boxCollision=boxCollision, normal=normal, robot=True)
                 protoFile.write('}\n')
