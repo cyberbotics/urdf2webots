@@ -24,7 +24,7 @@ optParser.add_option('--static-base', dest='staticBase', action='store_true', de
 optParser.add_option('--tool-slot', dest='toolSlot', default=None,
                      help='Specify the link that you want to add a tool slot to (exact link name from urdf)')
 optParser.add_option('--rotation', dest='itiRotation', default='0 1 0 0',
-                        help='Set the rotation field of your PROTO file.)')
+                     help='Set the rotation field of your PROTO file.)')
 options, args = optParser.parse_args()
 
 convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
