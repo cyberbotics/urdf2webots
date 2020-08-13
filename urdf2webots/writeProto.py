@@ -135,18 +135,19 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
 
         if link.collision:
             URDFBoundingObject(proto, link, level + 1, boxCollision)
-        if level == 1 and staticBase:
-            proto.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
-        proto.write((level + 1) * indent + 'physics Physics {\n')
-        proto.write((level + 2) * indent + 'density -1\n')
-        proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
-        if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
-            proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
-                                                                                   link.inertia.position[1],
-                                                                                   link.inertia.position[2]))
-        proto.write((level + 1) * indent + '}\n')
-        if level == 1 and staticBase:
-            proto.write((level + 1) * indent + '%{ end }%\n')
+        if link.inertia.mass != -1: 
+            if level == 1 and staticBase:
+                proto.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')    
+            proto.write((level + 1) * indent + 'physics Physics {\n')
+            proto.write((level + 2) * indent + 'density -1\n')
+            proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
+            if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
+                proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
+                                                                                    link.inertia.position[1],
+                                                                                    link.inertia.position[2]))
+            proto.write((level + 1) * indent + '}\n')
+            if level == 1 and staticBase:
+                proto.write((level + 1) * indent + '%{ end }%\n')
         if link.inertia.rotation[-1] != 0.0:  # this should not happend
             print('Warning: inertia of %s has a non-zero rotation [axis-angle] = "%lf %lf %lf %lf" '
                   'but it will not be imported in proto!' % (link.name, link.inertia.rotation[0], link.inertia.rotation[1],
