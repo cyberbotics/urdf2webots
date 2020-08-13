@@ -9,7 +9,7 @@ toolSlot = None
 staticBase = False
 enableMultiFile = False
 meshFilesPath = None
-
+robotNameMain = ''
 
 class RGB():
     """RGB color object."""
@@ -64,7 +64,7 @@ def declaration(proto, robotName):
     proto.write('  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.\n')
     proto.write('  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.\n')
     if staticBase:
-        proto.write('  field  SFBool      staticBase      FALSE  # Defines if the robot base should ' +
+        proto.write('  field  SFBool      staticBase      TRUE   # Defines if the robot base should ' +
                     'be pinned to the static environment.\n')
     if toolSlot:
         proto.write('  field  MFNode      toolSlot        []     # Extend the robot with new nodes at the end of the arm.\n')
@@ -135,18 +135,19 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
 
         if link.collision:
             URDFBoundingObject(proto, link, level + 1, boxCollision)
-        if level == 1 and staticBase:
-            proto.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
-        proto.write((level + 1) * indent + 'physics Physics {\n')
-        proto.write((level + 2) * indent + 'density -1\n')
-        proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
-        if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
-            proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
-                                                                                   link.inertia.position[1],
-                                                                                   link.inertia.position[2]))
-        proto.write((level + 1) * indent + '}\n')
-        if level == 1 and staticBase:
-            proto.write((level + 1) * indent + '%{ end }%\n')
+        if link.inertia.mass is not None:
+            if level == 1 and staticBase:
+                proto.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
+            proto.write((level + 1) * indent + 'physics Physics {\n')
+            proto.write((level + 2) * indent + 'density -1\n')
+            proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
+            if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
+                proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
+                                                                                       link.inertia.position[1],
+                                                                                       link.inertia.position[2]))
+            proto.write((level + 1) * indent + '}\n')
+            if level == 1 and staticBase:
+                proto.write((level + 1) * indent + '%{ end }%\n')
         if link.inertia.rotation[-1] != 0.0:  # this should not happend
             print('Warning: inertia of %s has a non-zero rotation [axis-angle] = "%lf %lf %lf %lf" '
                   'but it will not be imported in proto!' % (link.name, link.inertia.rotation[0], link.inertia.rotation[1],
@@ -459,6 +460,7 @@ def URDFShape(proto, link, level, normal=False):
                 if visualNode.geometry.name is not None:
                     name = computeDefName(visualNode.geometry.name)
             if visualNode.geometry.defName is None:
+                name = robotNameMain + '_' + name if robotNameMain else name
                 print('Create meshFile: %sMesh.proto' % name)
                 filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
                 meshProtoFile = open(filepath, 'w')

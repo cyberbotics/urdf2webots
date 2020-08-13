@@ -85,6 +85,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
         for child in domFile.childNodes:
             if child.localName == 'robot':
                 robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize
+                urdf2webots.writeProto.robotNameMain = robotName
                 outputFile = outFile if outFile else robotName + '.proto'
 
                 urdf2webots.parserURDF.robotName = robotName  # pass robotName

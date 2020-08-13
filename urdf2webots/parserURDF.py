@@ -193,7 +193,7 @@ class Limit():
         """Initializatization."""
         self.lower = 0.0
         self.upper = 0.0
-        self.effort = 0.0
+        self.effort = 10000  # if not specified in the URDF, there is no limit
         self.velocity = 0.0
 
 
@@ -822,7 +822,8 @@ def getLimit(node):
         limit.lower = float(limitElement.getAttribute('lower'))
     if limitElement.getAttribute('upper'):
         limit.upper = float(limitElement.getAttribute('upper'))
-    limit.effort = float(limitElement.getAttribute('effort'))
+    if float(limitElement.getAttribute('effort')) != 0:
+        limit.effort = float(limitElement.getAttribute('effort'))
     limit.velocity = float(limitElement.getAttribute('velocity'))
     return limit
 
@@ -850,6 +851,8 @@ def getLink(node, path):
         getVisual(link, node, path)
     if hasElement(node, 'collision'):
         getCollision(link, node, path)
+    if not any([hasElement(node, 'inertial'), hasElement(node, 'visual'), hasElement(node, 'collision')]):
+        link.inertia.mass = None
     return link
 
 

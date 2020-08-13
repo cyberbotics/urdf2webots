@@ -13,7 +13,7 @@ PROTO MotomanSia20d [
   field  SFBool      supervisor      FALSE  # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.
   field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.
-  field  SFBool      staticBase      FALSE  # Defines if the robot base should be pinned to the static environment.
+  field  SFBool      staticBase      TRUE   # Defines if the robot base should be pinned to the static environment.
   field  MFNode      toolSlot        []     # Extend the robot with new nodes at the end of the arm.
 ]
 {
@@ -27,7 +27,7 @@ PROTO MotomanSia20d [
     synchronization IS synchronization
     selfCollision IS selfCollision
     children [
-      MOTOMAN_BASEMesh {
+      MotomanSia20d_MOTOMAN_BASEMesh {
       }
       HingeJoint {
         jointParameters HingeJointParameters {
@@ -56,7 +56,7 @@ PROTO MotomanSia20d [
               translation 0.000000 0.000000 0.000000
               rotation -0.000000 0.000000 1.000000 3.141600
               children [
-                MOTOMAN_AXIS_SMesh {
+                MotomanSia20d_MOTOMAN_AXIS_SMesh {
                 }
               ]
             }
@@ -87,7 +87,7 @@ PROTO MotomanSia20d [
                     translation 0.000000 0.000000 0.000000
                     rotation -1.000000 -0.000007 -0.000000 1.571593
                     children [
-                      MOTOMAN_AXIS_LMesh {
+                      MotomanSia20d_MOTOMAN_AXIS_LMesh {
                       }
                     ]
                   }
@@ -114,7 +114,7 @@ PROTO MotomanSia20d [
                       translation 0.000000 0.000000 0.490000
                       rotation 0.000000 1.000000 0.000000 0.000000
                       children [
-                        MOTOMAN_AXIS_EMesh {
+                        MotomanSia20d_MOTOMAN_AXIS_EMesh {
                         }
                         HingeJoint {
                           jointParameters HingeJointParameters {
@@ -143,7 +143,7 @@ PROTO MotomanSia20d [
                                 translation 0.000000 0.000000 0.000000
                                 rotation 1.000000 0.000050 0.000043 4.711593
                                 children [
-                                  MOTOMAN_AXIS_UMesh {
+                                  MotomanSia20d_MOTOMAN_AXIS_UMesh {
                                   }
                                 ]
                               }
@@ -170,7 +170,7 @@ PROTO MotomanSia20d [
                                   translation 0.000000 0.000000 0.420000
                                   rotation 0.000000 1.000000 0.000000 0.000000
                                   children [
-                                    MOTOMAN_AXIS_RMesh {
+                                    MotomanSia20d_MOTOMAN_AXIS_RMesh {
                                     }
                                     HingeJoint {
                                       jointParameters HingeJointParameters {
@@ -199,7 +199,7 @@ PROTO MotomanSia20d [
                                             translation 0.000000 0.000000 0.000000
                                             rotation -1.000000 0.000000 0.000000 1.570000
                                             children [
-                                              MOTOMAN_AXIS_BMesh {
+                                              MotomanSia20d_MOTOMAN_AXIS_BMesh {
                                               }
                                             ]
                                           }
@@ -226,7 +226,7 @@ PROTO MotomanSia20d [
                                               translation 0.000000 0.000000 0.180000
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [
-                                                MOTOMAN_AXIS_TMesh {
+                                                MotomanSia20d_MOTOMAN_AXIS_TMesh {
                                                 }
                                                 Solid {
                                                   translation 0.000000 0.000000 0.000000
@@ -237,11 +237,6 @@ PROTO MotomanSia20d [
                                                     }
                                                   ]
                                                   name "tool0"
-                                                  physics Physics {
-                                                    density -1
-                                                    mass 1.000000
-                                                    centerOfMass [ 0.000000 0.000000 0.000000 ]
-                                                  }
                                                 }
                                               ]
                                               name "link_t"
@@ -341,11 +336,6 @@ PROTO MotomanSia20d [
         translation 0.000000 0.000000 0.410000
         rotation 0.000000 1.000000 0.000000 0.000000
         name "base"
-        physics Physics {
-          density -1
-          mass 1.000000
-          centerOfMass [ 0.000000 0.000000 0.000000 ]
-        }
       }
     ]
     name "base_link"
