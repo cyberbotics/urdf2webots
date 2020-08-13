@@ -10,7 +10,6 @@ staticBase = False
 enableMultiFile = False
 meshFilesPath = None
 robotNameMain = ''
-initRotation='0 1 0 0'
 
 class RGB():
     """RGB color object."""
@@ -53,7 +52,7 @@ def header(proto, srcFile=None, robotName='', tags=[]):
 header.sourceFile = None
 
 
-def declaration(proto, robotName):
+def declaration(proto, robotName, initRotation):
     """Prototype declaration."""
     proto.write('PROTO ' + robotName + ' [\n')
     proto.write('  field  SFVec3f     translation     0 0 0\n')
