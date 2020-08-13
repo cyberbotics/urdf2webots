@@ -64,7 +64,7 @@ def declaration(proto, robotName):
     proto.write('  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.\n')
     proto.write('  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.\n')
     if staticBase:
-        proto.write('  field  SFBool      staticBase      TRUE  # Defines if the robot base should ' +
+        proto.write('  field  SFBool      staticBase      TRUE   # Defines if the robot base should ' +
                     'be pinned to the static environment.\n')
     if toolSlot:
         proto.write('  field  MFNode      toolSlot        []     # Extend the robot with new nodes at the end of the arm.\n')
@@ -135,9 +135,9 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
 
         if link.collision:
             URDFBoundingObject(proto, link, level + 1, boxCollision)
-        if link.inertia.mass != -1: 
+        if link.inertia.mass != -1:
             if level == 1 and staticBase:
-                proto.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')    
+                proto.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
             proto.write((level + 1) * indent + 'physics Physics {\n')
             proto.write((level + 2) * indent + 'density -1\n')
             proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
