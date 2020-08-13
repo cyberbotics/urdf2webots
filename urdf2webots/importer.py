@@ -57,7 +57,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
     urdf2webots.writeProto.enableMultiFile = enableMultiFile
     urdf2webots.writeProto.staticBase = staticBase
     urdf2webots.writeProto.toolSlot = toolSlot
-    
+
     with open(inFile, 'r') as file:
         inPath = os.path.dirname(os.path.abspath(inFile))
         content = file.read()
