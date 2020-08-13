@@ -460,7 +460,7 @@ def URDFShape(proto, link, level, normal=False):
                 if visualNode.geometry.name is not None:
                     name = computeDefName(visualNode.geometry.name)
             if visualNode.geometry.defName is None:
-                name = robotNameMain + '_' + name
+                name = robotNameMain + '_' + name if robotNameMain else name
                 print('Create meshFile: %sMesh.proto' % name)
                 filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
                 meshProtoFile = open(filepath, 'w')
