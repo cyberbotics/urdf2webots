@@ -822,7 +822,8 @@ def getLimit(node):
         limit.lower = float(limitElement.getAttribute('lower'))
     if limitElement.getAttribute('upper'):
         limit.upper = float(limitElement.getAttribute('upper'))
-    limit.effort = float(limitElement.getAttribute('effort'))
+    if float(limitElement.getAttribute('effort')) != 0:
+        limit.effort = float(limitElement.getAttribute('effort'))
     limit.velocity = float(limitElement.getAttribute('velocity'))
     return limit
 
