@@ -6,7 +6,7 @@
 
 PROTO MotomanSia20d [
   field  SFVec3f     translation     0 0 0
-  field  SFRotation  rotation        0 1 0 0
+  field  SFRotation  rotation        1 0 0 0
   field  SFString    controller      "void" # Is `Robot.controller`.
   field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.
   field  SFString    customData      ""     # Is `Robot.customData`.

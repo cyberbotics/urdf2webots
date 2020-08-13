@@ -52,11 +52,11 @@ def header(proto, srcFile=None, robotName='', tags=[]):
 header.sourceFile = None
 
 
-def declaration(proto, robotName):
+def declaration(proto, robotName, initRotation):
     """Prototype declaration."""
     proto.write('PROTO ' + robotName + ' [\n')
     proto.write('  field  SFVec3f     translation     0 0 0\n')
-    proto.write('  field  SFRotation  rotation        0 1 0 0\n')
+    proto.write('  field  SFRotation  rotation        ' + initRotation + '\n')
     proto.write('  field  SFString    controller      "void" # Is `Robot.controller`.\n')
     proto.write('  field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.\n')
     proto.write('  field  SFString    customData      ""     # Is `Robot.customData`.\n')

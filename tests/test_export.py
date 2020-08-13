@@ -24,7 +24,7 @@ modelPaths = [
             os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MotomanSia20d_MOTOMAN_AXIS_UMesh.proto'),
             os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MotomanSia20d_MOTOMAN_BASEMesh.proto'),
         ],
-        'arguments': '--multi-file --static-base --tool-slot=tool0'
+        'arguments': '--multi-file --static-base --tool-slot=tool0 --rotation="1 0 0 0"'
     },
     {
         'input': os.path.join(sourceDirectory, 'gait2392_simbody/urdf/human.urdf'),

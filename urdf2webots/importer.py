@@ -47,9 +47,11 @@ def mkdirSafe(directory):
 
 
 def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
-                 disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None):
+                 disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None, initRotation='0 1 0 0'):
     if not os.path.exists(inFile):
         sys.exit('Input file "%s" does not exists.' % inFile)
+    if not type(initRotation) == str or len(initRotation.split()) != 4:
+        sys.exit('--rotation argument is not valid. Has to be of Type = str and contain 4 values.')
 
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
     urdf2webots.writeProto.enableMultiFile = enableMultiFile
@@ -158,7 +160,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
                               urdf2webots.parserURDF.Lidar.list)
                 print('There are %d links, %d joints and %d sensors' % (len(linkList), len(jointList), len(sensorList)))
 
-                urdf2webots.writeProto.declaration(protoFile, robotName)
+                urdf2webots.writeProto.declaration(protoFile, robotName, initRotation)
                 urdf2webots.writeProto.URDFLink(protoFile, rootLink, 1, parentList, childList, linkList, jointList,
                                                 sensorList, boxCollision=boxCollision, normal=normal, robot=True)
                 protoFile.write('}\n')
@@ -184,7 +186,9 @@ if __name__ == '__main__':
                          help='If set, the base link will have the option to be static (disable physics)')
     optParser.add_option('--tool-slot', dest='toolSlot', default=None,
                          help='Specify the link that you want to add a tool slot too (exact link name from urdf)')
+    optParser.add_option('--rotation', dest='initRotation', default='0 1 0 0',
+                         help='Set the rotation field of your PROTO file.')
     options, args = optParser.parse_args()
 
     convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
-                 options.enableMultiFile, options.staticBase, options.toolSlot)
+                 options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation)
