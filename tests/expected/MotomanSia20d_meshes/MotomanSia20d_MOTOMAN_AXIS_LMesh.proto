@@ -4,7 +4,7 @@
 # tags: hidden
 # Extracted from: /home/david/urdf2webots/tests/sources/motoman/motoman_sia20d_support/urdf/sia20d.urdf
 
-PROTO MOTOMAN_AXIS_LMesh [
+PROTO MotomanSia20d_MOTOMAN_AXIS_LMesh [
 ]
 {
   Shape {
