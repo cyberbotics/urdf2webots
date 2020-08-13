@@ -50,7 +50,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
                  disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None, initRotation='0 1 0 0'):
     if not os.path.exists(inFile):
         sys.exit('Input file "%s" does not exists.' % inFile)
-    if not type(initRotation)==str or len(initRotation.split())!=4:
+    if not type(initRotation) == str or len(initRotation.split()) != 4:
         sys.exit('--rotation argument is not valid. Has to be of Type = str and contain 4 values.')
 
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
