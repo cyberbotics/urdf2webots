@@ -119,4 +119,4 @@ If these are not the correct values, you can manually adjust the values of your 
 
 Finally, to change the default of the `staticBase` field to `TRUE`, simply change the corresponding line in the `PROTO source` header.
 
-Dont forget to save the file (<kbd>ctrl</kbd> + <kbd>s</kbd>). In order to see the changes to your PROTO file in action, either save your world and reload it, or delete the robot and add it again.
+Dont forget to save the file (<kbd>Ctrl</kbd> + <kbd>S</kbd>). In order to see the changes to your PROTO file in action, either save your world and reload it, or delete the robot and add it again.
