@@ -186,9 +186,9 @@ if __name__ == '__main__':
                          help='If set, the base link will have the option to be static (disable physics)')
     optParser.add_option('--tool-slot', dest='toolSlot', default=None,
                          help='Specify the link that you want to add a tool slot too (exact link name from urdf)')
-    optParser.add_option('--rotation', dest='itiRotation', default='0 1 0 0',
+    optParser.add_option('--rotation', dest='initRotation', default='0 1 0 0',
                          help='Set the rotation field of your PROTO file.')
     options, args = optParser.parse_args()
 
     convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
-                 options.enableMultiFile, options.staticBase, options.toolSlot, options.itiRotation)
+                 options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation)
