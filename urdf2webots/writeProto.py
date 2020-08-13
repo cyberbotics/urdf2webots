@@ -434,7 +434,7 @@ def URDFVisual(proto, visualNode, level, normal=False):
     proto.write(shapeLevel * indent + '}\n')
 
 
-def URDFShape(proto, link, level, normal=False, robotName=''):
+def URDFShape(proto, link, level, normal=False):
     """Write a Shape."""
     indent = '  '
     shapeLevel = level
