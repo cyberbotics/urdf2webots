@@ -9,8 +9,8 @@ pip install --no-cache-dir --upgrade urdf2webots
 
 Alternatively, if you want to install from source, follow the instructions in the [main README](../README.md)
 
-<br /> 
-<br /> 
+
+
 
 ## Get a URDF from a GitHub repository (optional if you already have a URDF)
 
