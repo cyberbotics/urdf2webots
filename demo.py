@@ -28,4 +28,4 @@ optParser.add_option('--rotation', dest='itiRotation', default='0 1 0 0',
 options, args = optParser.parse_args()
 
 convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
-                options.enableMultiFile, options.staticBase, options.toolSlot, options.itiRotation)
+             options.enableMultiFile, options.staticBase, options.toolSlot, options.itiRotation)
