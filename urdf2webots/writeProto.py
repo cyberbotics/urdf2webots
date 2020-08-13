@@ -64,7 +64,7 @@ def declaration(proto, robotName):
     proto.write('  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.\n')
     proto.write('  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.\n')
     if staticBase:
-        proto.write('  field  SFBool      staticBase      TRUE  # Defines if the robot base should ' +
+        proto.write('  field  SFBool      staticBase      TRUE   # Defines if the robot base should ' +
                     'be pinned to the static environment.\n')
     if toolSlot:
         proto.write('  field  MFNode      toolSlot        []     # Extend the robot with new nodes at the end of the arm.\n')
