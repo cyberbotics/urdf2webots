@@ -48,7 +48,7 @@ The script accepts the following arguments:
   - **--multi-file**: If set, the mesh files are exported as separated PROTO files.
   - **--static-base**: If set, the base link will have the option to be static (disable physics)
   - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from urdf).
-  - **--rotation=="0 1 0 0"**: Set the rotation field of your PROTO file. If your URDF file uses the z-axis as 'up', use `--rotation="1 0 0 -1.5708"`.
+  - **--rotation="0 1 0 0"**: Set the rotation field of your PROTO file. If your URDF file uses the z-axis as 'up', use `--rotation="1 0 0 -1.5708"`.
 
 ### In your Python Code
 
@@ -58,7 +58,7 @@ convert2urdf('MY_PATH/MY_URDF.urd')
 ```
 
 ### In-Depth Tutorial
-Check out [this tutorial](./docs/tutorial.md) for a more in-depth, step by step instruction, on how to: 
+Check out [this tutorial](./docs/tutorial.md) for a more in-depth, step by step instruction, on how to:
 - Generate a URDF file from a ROS repository.
 - Convert your URDF file to a Webots PROTO file.
 - Load your converted model into Webots and make final adjustments.
