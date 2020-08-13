@@ -82,7 +82,6 @@ Copy these files to your project’s `protos` directory (of course you can do th
 cp -r KukaLbrIiwa14R820* ~/my_simulation/protos/
 ```
 
-<br /> 
 
 ## Loading converted model in WEBOTS
 
