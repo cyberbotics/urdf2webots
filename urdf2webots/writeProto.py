@@ -57,6 +57,7 @@ def declaration(proto, robotName, initRotation):
     proto.write('PROTO ' + robotName + ' [\n')
     proto.write('  field  SFVec3f     translation     0 0 0\n')
     proto.write('  field  SFRotation  rotation        ' + initRotation + '\n')
+    proto.write('  field  SFString    name      ' + robotName + '  # Name of robot base node. Has to be unique when using multiple robots.\n')
     proto.write('  field  SFString    controller      "void" # Is `Robot.controller`.\n')
     proto.write('  field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.\n')
     proto.write('  field  SFString    customData      ""     # Is `Robot.customData`.\n')
@@ -121,16 +122,27 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                           linkList, jointList, sensorList, boxCollision, normal)
         # 4: export ToolSlot if specified
         if link.name == toolSlot:
+            # add dummy physics and bounding object, so tools don't fall off
+            if link.inertia.mass is None:
+                proto.write((level + 1) * indent + 'physics Physics {\n')    
+                proto.write((level + 2) * indent + 'centerOfMass [ 0 0 0 ]\n')
+                proto.write((level + 1) * indent + '}\n')
+
+                proto.write((level + 1) * indent + 'boundingObject Box {\n')    
+                proto.write((level + 2) * indent + 'size 0.01 0.01 0.01\n')
+                proto.write((level + 1) * indent + '}\n')
             if not haveChild:
                 haveChild = True
                 proto.write((level + 1) * indent + 'children [\n')
             proto.write((level + 2) * indent + 'Group {\n')
             proto.write((level + 3) * indent + 'children IS toolSlot\n')
-            proto.write((level + 2) * indent + '}\n')
+            proto.write((level + 2) * indent + '}\n')            
+
 
         if haveChild:
             proto.write((level + 1) * indent + ']\n')
-
+        if level == 1:
+            link.name = robotNameMain
         proto.write((level + 1) * indent + 'name "' + link.name + '"\n')
 
         if link.collision:

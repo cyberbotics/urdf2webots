@@ -638,7 +638,10 @@ def getVisual(link, node, path):
                 visual.material.diffuse.blue = float(colorElement[2])
                 visual.material.diffuse.alpha = float(colorElement[3])
                 if material.hasAttribute('name'):
-                    visual.material.name = material.getAttribute('name')
+                    if material.getAttribute('name') != '':
+                        visual.material.name = material.getAttribute('name')
+                    else:
+                        visual.material.name = node.getAttribute('name') + '_material'    
                     Material.namedMaterial[visual.material.name] = visual.material
             elif material.firstChild and material.firstChild.nodeValue in materials:
                 materialName = material.firstChild.nodeValue

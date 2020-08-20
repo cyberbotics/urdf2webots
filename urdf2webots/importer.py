@@ -46,7 +46,7 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
+def convert2urdf(inFile, robotName=None, outPath=None, normal=False, boxCollision=False,
                  disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None, initRotation='0 1 0 0'):
     if not os.path.exists(inFile):
         sys.exit('Input file "%s" does not exists.' % inFile)
@@ -86,9 +86,10 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
 
         for child in domFile.childNodes:
             if child.localName == 'robot':
-                robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize
+                if not robotName:
+                    robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize
                 urdf2webots.writeProto.robotNameMain = robotName
-                outputFile = outFile if outFile else robotName + '.proto'
+                outputFile = outPath + robotName + '.proto'
 
                 urdf2webots.parserURDF.robotName = robotName  # pass robotName
                 mkdirSafe(outputFile.replace('.proto', '') + '_textures')  # make a dir called 'x_textures'
@@ -172,7 +173,8 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
 if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
     optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
-    optParser.add_option('--output', dest='outFile', default='', help='Specifies the name of the resulting PROTO file.')
+    optParser.add_option('--nane', dest='robotName', default=None, help='The exact name of the webots model and filename.')
+    optParser.add_option('--output', dest='outPath', default='', help='Specifies where the .proto file will be generated. Path has to end with "/"')
     optParser.add_option('--normal', dest='normal', action='store_true', default=False,
                          help='If set, the normals are exported if present in the URDF definition.')
     optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
@@ -190,5 +192,5 @@ if __name__ == '__main__':
                          help='Set the rotation field of your PROTO file.')
     options, args = optParser.parse_args()
 
-    convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
+    convert2urdf(options.inFile, options.robotName, options.outPath, options.normal, options.boxCollision, options.disableMeshOptimization,
                  options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation)
