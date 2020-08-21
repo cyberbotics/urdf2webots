@@ -57,7 +57,7 @@ def declaration(proto, robotName, initRotation):
     proto.write('PROTO ' + robotName + ' [\n')
     proto.write('  field  SFVec3f     translation     0 0 0\n')
     proto.write('  field  SFRotation  rotation        ' + initRotation + '\n')
-    proto.write('  field  SFString    name      "' + robotName + '"  # Name of robot base node. Has to be unique when using multiple robots.\n')
+    proto.write('  field  SFString    name            "' + robotName + '"  # Name of robot base node. Has to be unique when using multiple robots.\n')
     proto.write('  field  SFString    controller      "void" # Is `Robot.controller`.\n')
     proto.write('  field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.\n')
     proto.write('  field  SFString    customData      ""     # Is `Robot.customData`.\n')
