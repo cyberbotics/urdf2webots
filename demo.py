@@ -11,7 +11,7 @@ if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
     optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
     optParser.add_option('--output', dest='outFile', default='', help='Specifies the path and, if ending in ".proto", name of the resulting PROTO file.'
-                        ' The filename minus the .proto extension will be the robot name.')
+                         ' The filename minus the .proto extension will be the robot name.')
     optParser.add_option('--normal', dest='normal', action='store_true', default=False,
                          help='If set, the normals are exported if present in the URDF definition.')
     optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
