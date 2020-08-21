@@ -7,14 +7,15 @@
 PROTO MotomanSia20d [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        1 0 0 0
-  field  SFString    controller      "void" # Is `Robot.controller`.
-  field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.
-  field  SFString    customData      ""     # Is `Robot.customData`.
-  field  SFBool      supervisor      FALSE  # Is `Robot.supervisor`.
-  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.
-  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.
-  field  SFBool      staticBase      TRUE   # Defines if the robot base should be pinned to the static environment.
-  field  MFNode      toolSlot        []     # Extend the robot with new nodes at the end of the arm.
+  field  SFString    name            "MotomanSia20d"  # Is `Robot.name`.
+  field  SFString    controller      "void"           # Is `Robot.controller`.
+  field  MFString    controllerArgs  []               # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""               # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE            # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE             # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE            # Is `Robot.selfCollision`.
+  field  SFBool      staticBase      TRUE             # Defines if the robot base should be pinned to the static environment.
+  field  MFNode      toolSlot        []               # Extend the robot with new nodes at the end of the arm.
 ]
 {
   Robot {
@@ -231,6 +232,11 @@ PROTO MotomanSia20d [
                                                 Solid {
                                                   translation 0.000000 0.000000 0.000000
                                                   rotation 0.000000 -0.000000 -1.000000 3.141600
+                                                  physics Physics {
+                                                  }
+                                                  boundingObject Box {
+                                                    size 0.01 0.01 0.01
+                                                  }
                                                   children [
                                                     Group {
                                                       children IS toolSlot
@@ -338,7 +344,7 @@ PROTO MotomanSia20d [
         name "base"
       }
     ]
-    name "base_link"
+    name IS name 
     boundingObject USE MOTOMAN_BASE
     %{ if fields.staticBase.value == false then }%
     physics Physics {

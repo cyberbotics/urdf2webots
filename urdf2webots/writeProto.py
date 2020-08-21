@@ -54,20 +54,23 @@ header.sourceFile = None
 
 def declaration(proto, robotName, initRotation):
     """Prototype declaration."""
+    spaces = ' ' * max(1, len(robotName) - 2)
     proto.write('PROTO ' + robotName + ' [\n')
     proto.write('  field  SFVec3f     translation     0 0 0\n')
     proto.write('  field  SFRotation  rotation        ' + initRotation + '\n')
-    proto.write('  field  SFString    controller      "void" # Is `Robot.controller`.\n')
-    proto.write('  field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.\n')
-    proto.write('  field  SFString    customData      ""     # Is `Robot.customData`.\n')
-    proto.write('  field  SFBool      supervisor      FALSE  # Is `Robot.supervisor`.\n')
-    proto.write('  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.\n')
-    proto.write('  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.\n')
+    proto.write('  field  SFString    name            "' + robotName + '"  # Is `Robot.name`.\n')
+    proto.write('  field  SFString    controller      "void"' + spaces + '# Is `Robot.controller`.\n')
+    proto.write('  field  MFString    controllerArgs  []    ' + spaces + '# Is `Robot.controllerArgs`.\n')
+    proto.write('  field  SFString    customData      ""    ' + spaces + '# Is `Robot.customData`.\n')
+    proto.write('  field  SFBool      supervisor      FALSE ' + spaces + '# Is `Robot.supervisor`.\n')
+    proto.write('  field  SFBool      synchronization TRUE  ' + spaces + '# Is `Robot.synchronization`.\n')
+    proto.write('  field  SFBool      selfCollision   FALSE ' + spaces + '# Is `Robot.selfCollision`.\n')
     if staticBase:
-        proto.write('  field  SFBool      staticBase      TRUE   # Defines if the robot base should ' +
+        proto.write('  field  SFBool      staticBase      TRUE  ' + spaces + '# Defines if the robot base should ' +
                     'be pinned to the static environment.\n')
     if toolSlot:
-        proto.write('  field  MFNode      toolSlot        []     # Extend the robot with new nodes at the end of the arm.\n')
+        proto.write('  field  MFNode      toolSlot        []    ' + spaces +
+                    '# Extend the robot with new nodes at the end of the arm.\n')
     proto.write(']\n')
     proto.write('{\n')
 
@@ -121,6 +124,14 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                           linkList, jointList, sensorList, boxCollision, normal)
         # 4: export ToolSlot if specified
         if link.name == toolSlot:
+            # add dummy physics and bounding object, so tools don't fall off
+            if link.inertia.mass is None:
+                proto.write((level + 1) * indent + 'physics Physics {\n')
+                proto.write((level + 1) * indent + '}\n')
+
+                proto.write((level + 1) * indent + 'boundingObject Box {\n')
+                proto.write((level + 2) * indent + 'size 0.01 0.01 0.01\n')
+                proto.write((level + 1) * indent + '}\n')
             if not haveChild:
                 haveChild = True
                 proto.write((level + 1) * indent + 'children [\n')
@@ -128,10 +139,13 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             proto.write((level + 3) * indent + 'children IS toolSlot\n')
             proto.write((level + 2) * indent + '}\n')
 
+
         if haveChild:
             proto.write((level + 1) * indent + ']\n')
-
-        proto.write((level + 1) * indent + 'name "' + link.name + '"\n')
+        if level == 1:
+            proto.write((level + 1) * indent + 'name IS name \n')
+        else:
+            proto.write((level + 1) * indent + 'name "' + link.name + '"\n')
 
         if link.collision:
             URDFBoundingObject(proto, link, level + 1, boxCollision)

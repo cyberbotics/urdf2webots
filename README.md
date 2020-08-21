@@ -41,7 +41,7 @@ python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [-
 The script accepts the following arguments:
   - **-h, --help**: Show the help message and exit.
   - **--input=INFILE**: Specifies the urdf file to convert.
-  - **--output=OUTFILE**: Specifies the name of the resulting PROTO file.
+  - **--output=OUTFILE**: If set, specifies the path and, if ending in ".proto", name of the resulting PROTO file. The filename minus the .proto extension will be the robot name.
   - **--normal**: If set, the normals are exported if present in the URDF definition.
   - **--box-collision**: If set, the bounding objects are approximated using boxes.
   - **--disable-mesh-optimization**: If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the conversion).
