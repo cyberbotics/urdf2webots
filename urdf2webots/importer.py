@@ -92,7 +92,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
                         outputFile = outFile
                     else:
                         # treat outFile as directory and construct filename
-                        robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize    
+                        robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize
                         outputFile = os.path.join(outFile, robotName + '.proto')
                 else:
                     robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize
