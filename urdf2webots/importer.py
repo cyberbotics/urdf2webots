@@ -87,8 +87,13 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
         for child in domFile.childNodes:
             if child.localName == 'robot':
                 if outFile:
-                    robotName = os.path.splitext(os.path.basename(outFile))[0]
-                    outputFile = outFile
+                    if os.path.splitext(os.path.basename(outFile))[1] == '.proto':
+                        robotName = os.path.splitext(os.path.basename(outFile))[0]
+                        outputFile = outFile
+                    else:
+                        # treat outFile as directory and construct filename
+                        robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize    
+                        outputFile = outFile + '/' + robotName + '.proto'                    
                 else:
                     robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize
                     outputFile = outFile if outFile else robotName + '.proto'
@@ -177,7 +182,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
 if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
     optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
-    optParser.add_option('--output', dest='outFile', default='', help='Specifies the path and name of the resulting PROTO file.'
+    optParser.add_option('--output', dest='outFile', default='', help='Specifies the path and, if ending in ".proto", name of the resulting PROTO file.'
                         ' The filename minus the .proto extension will be the robot name.')
     optParser.add_option('--normal', dest='normal', action='store_true', default=False,
                          help='If set, the normals are exported if present in the URDF definition.')
