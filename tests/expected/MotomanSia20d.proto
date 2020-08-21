@@ -233,7 +233,6 @@ PROTO MotomanSia20d [
                                                   translation 0.000000 0.000000 0.000000
                                                   rotation 0.000000 -0.000000 -1.000000 3.141600
                                                   physics Physics {
-                                                    centerOfMass [ 0 0 0 ]
                                                   }
                                                   boundingObject Box {
                                                     size 0.01 0.01 0.01
