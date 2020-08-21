@@ -142,8 +142,9 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
         if haveChild:
             proto.write((level + 1) * indent + ']\n')
         if level == 1:
-            link.name = robotNameMain
-        proto.write((level + 1) * indent + 'name "' + link.name + '"\n')
+            proto.write((level + 1) * indent + 'name IS name \n')
+        else:
+            proto.write((level + 1) * indent + 'name "' + link.name + '"\n')
 
         if link.collision:
             URDFBoundingObject(proto, link, level + 1, boxCollision)
