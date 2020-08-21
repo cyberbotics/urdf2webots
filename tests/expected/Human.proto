@@ -7,13 +7,13 @@
 PROTO Human [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 1 0 0
-  field  SFString    name            "Human"  # Name of robot base node. Has to be unique when using multiple robots.
-  field  SFString    controller      "void" # Is `Robot.controller`.
-  field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.
-  field  SFString    customData      ""     # Is `Robot.customData`.
-  field  SFBool      supervisor      FALSE  # Is `Robot.supervisor`.
-  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.
-  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.
+  field  SFString    name            "Human"  # Is `Robot.name`.
+  field  SFString    controller      "void"   # Is `Robot.controller`.
+  field  MFString    controllerArgs  []       # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""       # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE    # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE     # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE    # Is `Robot.selfCollision`.
 ]
 {
   Robot {

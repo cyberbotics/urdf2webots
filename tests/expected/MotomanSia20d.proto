@@ -7,15 +7,15 @@
 PROTO MotomanSia20d [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        1 0 0 0
-  field  SFString    name            "MotomanSia20d"  # Name of robot base node. Has to be unique when using multiple robots.
-  field  SFString    controller      "void" # Is `Robot.controller`.
-  field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.
-  field  SFString    customData      ""     # Is `Robot.customData`.
-  field  SFBool      supervisor      FALSE  # Is `Robot.supervisor`.
-  field  SFBool      synchronization TRUE   # Is `Robot.synchronization`.
-  field  SFBool      selfCollision   FALSE  # Is `Robot.selfCollision`.
-  field  SFBool      staticBase      TRUE   # Defines if the robot base should be pinned to the static environment.
-  field  MFNode      toolSlot        []     # Extend the robot with new nodes at the end of the arm.
+  field  SFString    name            "MotomanSia20d"  # Is `Robot.name`.
+  field  SFString    controller      "void"           # Is `Robot.controller`.
+  field  MFString    controllerArgs  []               # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""               # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE            # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE             # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE            # Is `Robot.selfCollision`.
+  field  SFBool      staticBase      TRUE             # Defines if the robot base should be pinned to the static environment.
+  field  MFNode      toolSlot        []               # Extend the robot with new nodes at the end of the arm.
 ]
 {
   Robot {
