@@ -7,6 +7,7 @@
 PROTO MotomanSia20d [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        1 0 0 0
+  field  SFString    name            "MotomanSia20d"  # Name of robot base node. Has to be unique when using multiple robots.
   field  SFString    controller      "void" # Is `Robot.controller`.
   field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.
   field  SFString    customData      ""     # Is `Robot.customData`.
@@ -231,6 +232,12 @@ PROTO MotomanSia20d [
                                                 Solid {
                                                   translation 0.000000 0.000000 0.000000
                                                   rotation 0.000000 -0.000000 -1.000000 3.141600
+                                                  physics Physics {
+                                                    centerOfMass [ 0 0 0 ]
+                                                  }
+                                                  boundingObject Box {
+                                                    size 0.01 0.01 0.01
+                                                  }
                                                   children [
                                                     Group {
                                                       children IS toolSlot
@@ -338,7 +345,7 @@ PROTO MotomanSia20d [
         name "base"
       }
     ]
-    name "base_link"
+    name IS name 
     boundingObject USE MOTOMAN_BASE
     %{ if fields.staticBase.value == false then }%
     physics Physics {

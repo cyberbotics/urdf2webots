@@ -7,6 +7,7 @@
 PROTO Human [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 1 0 0
+  field  SFString    name            "Human"  # Name of robot base node. Has to be unique when using multiple robots.
   field  SFString    controller      "void" # Is `Robot.controller`.
   field  MFString    controllerArgs  []     # Is `Robot.controllerArgs`.
   field  SFString    customData      ""     # Is `Robot.customData`.
@@ -1224,7 +1225,7 @@ PROTO Human [
         }
       }
     ]
-    name "pelvis"
+    name IS name 
     boundingObject DEF Pelvis_001 IndexedFaceSet {
       coord Coordinate {
         point [
