@@ -10,8 +10,13 @@ from urdf2webots.importer import convert2urdf
 if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
     optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
+<<<<<<< HEAD
     optParser.add_option('--output', dest='outFile', default='', help='Specifies the path and name of the resulting PROTO file.'
                         ' The filename minus the .proto extension will be the robot name.')
+=======
+    optParser.add_option('--name', dest='robotName', default=None, help='The exact name of the webots model and filename.')
+    optParser.add_option('--output', dest='outPath', default='', help='Specifies where the .proto file will be generated. Path has to end with "/"')
+>>>>>>> 0dfcc9a25516bcf9535c1a33f234271c2cd3dca3
     optParser.add_option('--normal', dest='normal', action='store_true', default=False,
                          help='If set, the normals are exported if present in the URDF definition.')
     optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
