@@ -127,7 +127,6 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             # add dummy physics and bounding object, so tools don't fall off
             if link.inertia.mass is None:
                 proto.write((level + 1) * indent + 'physics Physics {\n')
-                proto.write((level + 2) * indent + 'centerOfMass [ 0 0 0 ]\n')
                 proto.write((level + 1) * indent + '}\n')
 
                 proto.write((level + 1) * indent + 'boundingObject Box {\n')
