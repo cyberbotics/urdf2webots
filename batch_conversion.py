@@ -108,20 +108,18 @@ def check_all_configs():
     print('Checking config files...')
     print('---------------------------------------')
     for i in range(len(urdf_files)):
-        configFile = os.path.splitext(urdf_files[i])[0] + '.json'   
-        print('---------------------------------------') 
-        print(configFile)
+        configFile = os.path.splitext(urdf_files[i])[0] + '.json'          
         try:
             with open(configFile) as json_file:
                 config  = json.load(json_file)
             if config.keys() != default_config.keys():                
-                print('Config out of date. Updating... (old settings will be carried over)')
+                print('Updating config (old settings will be carried over) - ', configFile)
                 EndReportMessage['updateConfigs'].append(configFile)
                 update_config(configFile, config)  
             else:
-                print('Config file is up do date')              
+                print('Config up to date - ', configFile)              
         except:
-            print('No config file found for "' + os.path.splitext(urdf_files[i])[0] + '". Generating new default config in same directory as the URDF file.')
+            print('Generating new config for - ' + os.path.splitext(urdf_files[i])[0])
             EndReportMessage['newConfigs'].append(configFile)
             update_config(configFile)
 
@@ -185,7 +183,19 @@ def print_end_report():
             print(urdf)
 
 if __name__ == '__main__':
-    #cvrt.check_all_configs()
-    update_and_convert()
-    #cvrt.create_proto_dir()
-    replace_ExtraProjectPath()
+    optParser = optparse.OptionParser(usage='usage: %prog  [options]')
+    optParser.add_option('--force-mesh-optimization', dest='forceMesh', action='store_true', default=False, help='Set if mesh-optimization should be turned on for all conversions. This will take much longer!')
+    optParser.add_option('--no-project-override', dest='extraProj', action='store_true', default=False, help='Set if new conversions should NOT replace existing ones in "automatic_conversion/ExtraProjectTest".')
+    optParser.add_option('--update-cfg', dest='cfgUpdate', action='store_true', default=False, help='No conversion. Only updates or creates .json config for every URDF file in "automatic_conversion/urdf".')
+    
+    options, args = optParser.parse_args()
+    
+    Override = options.forceMesh
+    if options.cfgUpdate:
+        check_all_configs()
+    else:
+        update_and_convert()
+        if not options.extraProj:
+            replace_ExtraProjectPath()
+            
+
