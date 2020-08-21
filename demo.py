@@ -10,8 +10,8 @@ from urdf2webots.importer import convert2urdf
 if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
     optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
-    optParser.add_option('--nane', dest='robotName', default=None, help='The exact name of the webots model and filename.')
-    optParser.add_option('--output', dest='outPath', default='', help='Specifies where the .proto file will be generated. Path has to end with "/"')
+    optParser.add_option('--output', dest='outFile', default='', help='Specifies the path and name of the resulting PROTO file.'
+                        ' The filename minus the .proto extension will be the robot name.')
     optParser.add_option('--normal', dest='normal', action='store_true', default=False,
                          help='If set, the normals are exported if present in the URDF definition.')
     optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
@@ -29,5 +29,5 @@ if __name__ == '__main__':
                          help='Set the rotation field of your PROTO file.')
     options, args = optParser.parse_args()
 
-    convert2urdf(options.inFile, options.robotName, options.outPath, options.normal, options.boxCollision, options.disableMeshOptimization,
+    convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
                  options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation)
