@@ -3,12 +3,11 @@
 """URDF files to Webots PROTO converter."""
 
 import optparse
-import time, datetime, os
-from urdf2webots.importer import convert2urdf
-import os
-import json
+import time, datetime, os, shutil, json, math
+#from urdf2webots.importer import convert2urdf
+import urdf2webots.importer as importer
+import urdf2webots.parserURDF
 from copy import deepcopy
-import shutil  
 
 # Set Override = True  if you want to override ALL config settings with the value in the OverrideCfg.
 # This can be usefull for testing functionality quickly, and then doing a slow optimized conversion
@@ -46,7 +45,8 @@ while os.path.exists(protoTargetDir):
     protoTargetDir = protoTargetDir + '_Nr-' + str(n)
 
 # Find all the urdf files, and create the corresponding proto filePaths
-os.chdir('automatic_conversion/urdf')
+urdf_root_dir = 'automatic_conversion/urdf'#/robots/kuka/lbr_iiwa/protos'
+os.chdir(urdf_root_dir)
 # Walk the tree.
 urdf_files = []  # List which will store all of the full filepaths.
 protosPaths = []
@@ -56,7 +56,7 @@ for root, directories, files in os.walk('./'):
         if filename.endswith(".urdf"):
             filepath = os.path.join(root, filename)
             filepath = filepath[1:]
-            urdf_files.append('automatic_conversion/urdf' + filepath)  
+            urdf_files.append(urdf_root_dir + filepath)  
             protosPaths.append(protoTargetDir + os.path.dirname(filepath) + '/')
 os.chdir(urdf2webots_path)
 
@@ -130,8 +130,11 @@ def convert_all_urdfs():
     print('Converting URDF to PROTO...')
     print('---------------------------------------')
     print('---------------------------------------')
-
+    
     for i in range(len(urdf_files)):
+        # clears any previous Geometry and Material references, so there is no conflict
+        importer.urdf2webots.parserURDF.Geometry.reference = {}
+        importer.urdf2webots.parserURDF.Material.namedMaterial = {}
         configFile = os.path.splitext(urdf_files[i])[0] + '.json'   
         print('---------------------------------------') 
         print('Converting: ', urdf_files[i]) 
@@ -139,7 +142,7 @@ def convert_all_urdfs():
         try:
             with open(configFile) as json_file:
                 config  = json.load(json_file)
-            convert2urdf(
+            importer.convert2urdf(
                 inFile = urdf_files[i], 
                 outFile = protosPaths[i]  if not config['robotName'] else protosPaths[i] + config['robotName'] + '.proto',
                 normal = config['normal'], 
@@ -150,7 +153,6 @@ def convert_all_urdfs():
                 toolSlot = config['toolSlot'], 
                 initRotation = config['initRotation'])
             EndReportMessage['converted'].append(urdf_files[i])
-            print(dict())
         except Exception as e:         
             print(e)
             EndReportMessage['failed'].append(urdf_files[i])
@@ -182,6 +184,54 @@ def print_end_report():
         for urdf in EndReportMessage['failed']:
             print(urdf)
 
+
+def create_test_world(spacing = 3):
+    #os.chdir(protoTargetDir)
+    n_models = len(urdf_files)
+    n_row = math.ceil(n_models ** 0.5) # round up the sqrt of the number of models
+    grid_size = spacing * (n_row +1)
+    worldFile = open('automatic_conversion/ExtraProjectTest/TestAllRobots.wbt', 'w')
+    worldFile.write('#VRML_SIM R2020b utf8\n')
+    worldFile.write('\n')
+    worldFile.write('WorldInfo {\n')
+    worldFile.write('  basicTimeStep 16\n')
+    worldFile.write('  coordinateSystem "NUE"\n')
+    worldFile.write('}\n')
+    worldFile.write('Viewpoint {\n')
+    worldFile.write('  orientation 0.7180951961816571 -0.6372947429425837 -0.27963315225232777 5.235063704863283\n')
+    worldFile.write('  position 1.9410928989638234 2.447392518518642 1.7311802992777219\n')
+    worldFile.write('}\n')
+    worldFile.write('TexturedBackground {\n')
+    worldFile.write('}\n')
+    worldFile.write('TexturedBackgroundLight {\n')
+    worldFile.write('}\n')
+    worldFile.write('RectangleArena {\n')
+    worldFile.write('  floorSize ' + str(grid_size) + ' ' + str(grid_size) + '\n')
+    worldFile.write('  floorTileSize 0.25 0.25\n')
+    worldFile.write('  wallHeight 0.05\n')
+    worldFile.write('}\n')
+    filenames = []  # List which will store all of the full filepaths.
+    row = 0
+    column = 1
+    for root, directories, files in os.walk('automatic_conversion/ExtraProjectTest'):
+        for filename in files:
+            # Join the two strings in order to form the full filepath.
+            if filename.endswith(".proto"):
+                filepath = os.path.join(root, filename)
+                if os.path.dirname(filepath).split('_')[-1] != 'meshes':
+                    name = os.path.splitext(os.path.basename(filename))[0]
+                    if row == n_row:
+                        column += 1
+                        row = 0
+                    row += 1                
+                    # add the model to the world file with translation to be spaced in a grid
+                    worldFile.write(name + '  {\n')
+                    worldFile.write('  translation ' + str(column * spacing - grid_size/2) + ' 0 ' + str(row * spacing - grid_size/2) + '\n')
+                    worldFile.write('}\n')
+    worldFile.close()
+    os.chdir(urdf2webots_path)
+    
+
 if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog  [options]')
     optParser.add_option('--force-mesh-optimization', dest='forceMesh', action='store_true', default=False, help='Set if mesh-optimization should be turned on for all conversions. This will take much longer!')
@@ -197,5 +247,7 @@ if __name__ == '__main__':
         update_and_convert()
         if not options.extraProj:
             replace_ExtraProjectPath()
+
+    create_test_world()
             
 

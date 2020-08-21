@@ -4,3 +4,5 @@
 /dist
 automatic_conversion/protos/*
 automatic_conversion/ExtraProjectTest/*
+/*.proto
+/*.urdf
