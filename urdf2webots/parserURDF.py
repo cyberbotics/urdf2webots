@@ -641,7 +641,7 @@ def getVisual(link, node, path):
                     if material.getAttribute('name'):
                         visual.material.name = material.getAttribute('name')
                     else:
-                        visual.material.name = node.getAttribute('name') + '_material'    
+                        visual.material.name = node.getAttribute('name') + '_material'
                     Material.namedMaterial[visual.material.name] = visual.material
             elif material.firstChild and material.firstChild.nodeValue in materials:
                 materialName = material.firstChild.nodeValue
