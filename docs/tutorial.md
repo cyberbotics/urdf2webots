@@ -62,7 +62,7 @@ Convert the model.urdf with the following command. I recommend the 2 added param
 python -m urdf2webots.importer --input=model.urdf --box-collision --multi-file --static-base --tool-slot=tool0 --rotation="1 0 0 -1.5708"
 ```
 
-Cehck the [main README](../README.md) for a list of all options.
+Check the [main README](../README.md) for a list of all options.
 
 After your file has been converted, you should have something like this:
 
