@@ -1,0 +1,10 @@
+{
+    "boxCollision": true,
+    "disableMeshOptimization": true,
+    "enableMultiFile": true,
+    "initRotation": "1 0 0 -1.5708",
+    "normal": false,
+    "robotName": "Motoman_csda10f",
+    "staticBase": true,
+    "toolSlot": null
+}

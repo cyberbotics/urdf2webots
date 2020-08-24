@@ -183,7 +183,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
 
     for boundingObject in link.collision:
         initialIndent = boundingLevel * indent if hasGroup else ''
-        if boundingObject.position != [0.0, 0.0, 0.0] or boundingObject.rotation[3] != 0.0:
+        if not boxCollision and boundingObject.position != [0.0, 0.0, 0.0] or boundingObject.rotation[3] != 0.0:
             proto.write(initialIndent + 'Transform {\n')
             proto.write((boundingLevel + 1) * indent + 'translation %lf %lf %lf\n' % (boundingObject.position[0],
                                                                                       boundingObject.position[1],
@@ -237,9 +237,13 @@ def URDFBoundingObject(proto, link, level, boxCollision):
 
             proto.write(initialIndent + 'Transform {\n')
             proto.write((boundingLevel + 1) * indent + 'translation %f %f %f\n' % (
-                        0.5 * (aabb['maximum']['x'] + aabb['minimum']['x']),
-                        0.5 * (aabb['maximum']['y'] + aabb['minimum']['y']),
-                        0.5 * (aabb['maximum']['z'] + aabb['minimum']['z']),))
+                        0.5 * (aabb['maximum']['x'] + aabb['minimum']['x']) + boundingObject.position[0],
+                        0.5 * (aabb['maximum']['y'] + aabb['minimum']['y']) + boundingObject.position[1],
+                        0.5 * (aabb['maximum']['z'] + aabb['minimum']['z']) + boundingObject.position[2],))
+            proto.write((boundingLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (boundingObject.rotation[0],
+                                                                                       boundingObject.rotation[1],
+                                                                                       boundingObject.rotation[2],
+                                                                                       boundingObject.rotation[3]))
             proto.write((boundingLevel + 1) * indent + 'children [\n')
             proto.write((boundingLevel + 2) * indent + 'Box {\n')
             proto.write((boundingLevel + 3) * indent + 'size %f %f %f\n' % (
@@ -473,8 +477,9 @@ def URDFShape(proto, link, level, normal=False):
             if name is None:
                 if visualNode.geometry.name is not None:
                     name = computeDefName(visualNode.geometry.name)
+            name = robotNameMain + '_' + name if robotNameMain else name
             if visualNode.geometry.defName is None:
-                name = robotNameMain + '_' + name if robotNameMain else name
+                
                 print('Create meshFile: %sMesh.proto' % name)
                 filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
                 meshProtoFile = open(filepath, 'w')

@@ -3,7 +3,12 @@
 """URDF files to Webots PROTO converter."""
 
 import optparse
-import time, datetime, os, shutil, json, math
+import time
+import datetime
+import os
+import shutil
+import json
+import math
 #from urdf2webots.importer import convert2urdf
 import urdf2webots.importer as importer
 import urdf2webots.parserURDF
