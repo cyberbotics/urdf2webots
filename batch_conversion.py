@@ -8,7 +8,6 @@ import os
 import shutil
 import json
 import math
-# from urdf2webots.importer import convert2urdf
 import urdf2webots.importer as importer
 from copy import deepcopy
 
@@ -78,7 +77,7 @@ def update_and_convert():
 def create_proto_dir():
     # create a new unique directory for our conversions
     print(protoTargetDir)
-    os.mkdir(protoTargetDir)
+    os.makedirs(protoTargetDir)
 
 
 def replace_ExtraProjectPath():
