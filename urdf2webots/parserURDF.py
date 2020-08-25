@@ -481,7 +481,7 @@ def getColladaMesh(filename, node, link):
     if hasattr(node, 'material') and node.material:
         for geometry in list(colladaMesh.scene.objects('geometry')):
             for data in list(geometry.primitives()):
-                if str(data.original).split()[0][1:] == 'LineSet':
+                if type(data.original) is lineset.LineSet:
                     print('Skipping Collada LineSet.')
                     continue
                 visual = Visual()
