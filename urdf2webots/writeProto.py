@@ -365,15 +365,16 @@ def URDFVisual(proto, visualNode, level, normal=False):
         proto.write((shapeLevel + 1) * indent + '}\n')
 
     elif visualNode.geometry.trimesh.coord:
+        meshType = 'IndexedLineSet' if visualNode.geometry.lineset else 'IndexedFaceSet' 
         if visualNode.geometry.defName is not None:
             proto.write((shapeLevel + 1) * indent + 'geometry USE %s\n' % visualNode.geometry.defName)
         else:
             if visualNode.geometry.name is not None:
                 visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
             if visualNode.geometry.defName is not None:
-                proto.write((shapeLevel + 1) * indent + 'geometry DEF %s IndexedFaceSet {\n' % visualNode.geometry.defName)
+                proto.write((shapeLevel + 1) * indent + 'geometry DEF %s %s {\n' % (visualNode.geometry.defName, meshType))
             else:
-                proto.write((shapeLevel + 1) * indent + 'geometry IndexedFaceSet {\n')
+                proto.write((shapeLevel + 1) * indent + 'geometry %s {\n' %  meshType)
             proto.write((shapeLevel + 2) * indent + 'coord Coordinate {\n')
             proto.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
             for value in visualNode.geometry.trimesh.coord:
@@ -389,6 +390,8 @@ def URDFVisual(proto, visualNode, level, normal=False):
                 for value in visualNode.geometry.trimesh.coordIndex:
                     if len(value) == 3:
                         proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
+                    if len(value) == 2:
+                        proto.write('%d %d -1 ' % (value[0], value[1]))
             elif isinstance(visualNode.geometry.trimesh.coordIndex[0], np.int32):
                 for i in range(int(len(visualNode.geometry.trimesh.coordIndex) / 3)):
                     proto.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.coordIndex[3 * i + 0],
@@ -444,7 +447,8 @@ def URDFVisual(proto, visualNode, level, normal=False):
                     print('Unsupported "%s" coordinate type' % type(visualNode.geometry.trimesh.texCoordIndex[0]))
                 proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
 
-            proto.write((shapeLevel + 2) * indent + 'creaseAngle 1\n')
+            if not visualNode.geometry.lineset:
+                proto.write((shapeLevel + 2) * indent + 'creaseAngle 1\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
     proto.write(shapeLevel * indent + '}\n')
 
