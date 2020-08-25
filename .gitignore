@@ -1,6 +1,0 @@
-*.pyc
-
-/urdf2webots.egg-info
-/dist
-automatic_conversion/protos/*
-automatic_conversion/ExtraProjectTest/*
