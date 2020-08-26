@@ -481,7 +481,7 @@ def getColladaMesh(filename, node, link):
     index = -1
     if hasattr(node, 'material') and node.material:
         for geometry in list(colladaMesh.scene.objects('geometry')):
-            for data in list(geometry.primitives()):                
+            for data in list(geometry.primitives()):
                 visual = Visual()
                 index += 1
                 visual.position = node.position
