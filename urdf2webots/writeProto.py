@@ -155,6 +155,9 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             proto.write((level + 1) * indent + 'physics Physics {\n')
             proto.write((level + 2) * indent + 'density -1\n')
             proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
+            proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
+                                                                                       link.inertia.position[1],
+                                                                                       link.inertia.position[2]))
             if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
                 i = link.inertia
                 inertiaMatrix = [i.ixx, i.ixy, i.ixz, i.ixy, i.iyy, i.iyz, i.ixz, i.iyz, i.izz]
@@ -165,10 +168,7 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                     R_t = np.transpose(R)
                     # calculate the rotated inertiaMatrix with R_t * I * R. For reference, check the link below
                     # https://www.euclideanspace.com/physics/dynamics/inertia/rotation/index.htm
-                    inertiaMatrix = np.dot(np.dot(R_t, I), R).reshape(9)
-                proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
-                                                                                       link.inertia.position[1],
-                                                                                       link.inertia.position[2]))
+                    inertiaMatrix = np.dot(np.dot(R_t, I), R).reshape(9)                
                 if inertiaMatrix[0] != 1.0 or inertiaMatrix[4] != 1.0 or inertiaMatrix[8] != 1.0 or inertiaMatrix[1] != 0.0 or inertiaMatrix[2] != 0.0 or inertiaMatrix[5] != 0.0:
                     proto.write((level + 2) * indent + 'inertiaMatrix [\n')  
                     proto.write((level + 3) * indent + '%lf %lf %lf\n' % (inertiaMatrix[0], inertiaMatrix[4], inertiaMatrix[8]))  # principals moments of inertia (diagonal)  
