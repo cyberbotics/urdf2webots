@@ -390,7 +390,8 @@ def URDFVisual(proto, visualNode, level, normal=False):
                 for value in visualNode.geometry.trimesh.coordIndex:
                     if len(value) == 3:
                         proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
-                    if len(value) == 2:
+                    elif len(value) == 2:
+                        assert visualNode.geometry.lineset
                         proto.write('%d %d -1 ' % (value[0], value[1]))
             elif isinstance(visualNode.geometry.trimesh.coordIndex[0], np.int32):
                 for i in range(int(len(visualNode.geometry.trimesh.coordIndex) / 3)):
