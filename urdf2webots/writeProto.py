@@ -165,7 +165,7 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                     R_t = np.transpose(R)
                     # calculate the rotate inertiaMatrix with R_t + I * R. For reference, check the link below
                     # https://www.euclideanspace.com/physics/dynamics/inertia/rotation/index.htm
-                    inertiaMatrix = np.dot(np.dot(R_t,I), R).reshape(9) 
+                    inertiaMatrix = np.dot(np.dot(R_t, I), R).reshape(9) 
                 proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
                                                                                        link.inertia.position[1],
                                                                                        link.inertia.position[2]))
