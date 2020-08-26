@@ -11,6 +11,7 @@ enableMultiFile = False
 meshFilesPath = None
 robotNameMain = ''
 
+
 class RGB():
     """RGB color object."""
 
@@ -139,7 +140,6 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             proto.write((level + 3) * indent + 'children IS toolSlot\n')
             proto.write((level + 2) * indent + '}\n')
 
-
         if haveChild:
             proto.write((level + 1) * indent + ']\n')
         if level == 1:
@@ -162,25 +162,32 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
                 i = link.inertia
                 inertiaMatrix = [i.ixx, i.ixy, i.ixz, i.ixy, i.iyy, i.iyz, i.ixz, i.iyz, i.izz]
-                if link.inertia.rotation[-1] != 0.0: 
+                if link.inertia.rotation[-1] != 0.0:
                     rotationMatrix = matrixFromRotation(link.inertia.rotation)
                     I = np.array(inertiaMatrix).reshape(3, 3)
                     R = np.array(rotationMatrix).reshape(3, 3)
                     R_t = np.transpose(R)
                     # calculate the rotated inertiaMatrix with R_t * I * R. For reference, check the link below
                     # https://www.euclideanspace.com/physics/dynamics/inertia/rotation/index.htm
-                    inertiaMatrix = np.dot(np.dot(R_t, I), R).reshape(9)                
-                if inertiaMatrix[0] != 1.0 or inertiaMatrix[4] != 1.0 or inertiaMatrix[8] != 1.0 or inertiaMatrix[1] != 0.0 or inertiaMatrix[2] != 0.0 or inertiaMatrix[5] != 0.0:
-                    proto.write((level + 2) * indent + 'inertiaMatrix [\n')  
-                    proto.write((level + 3) * indent + '%lf %lf %lf\n' % (inertiaMatrix[0], inertiaMatrix[4], inertiaMatrix[8]))  # principals moments of inertia (diagonal)  
-                    proto.write((level + 3) * indent + '%lf %lf %lf\n' % (inertiaMatrix[1], inertiaMatrix[2], inertiaMatrix[5]))  # products of inertia
-                    proto.write((level + 2) * indent + ']\n')                                                                                                                                         
+                    inertiaMatrix = np.dot(np.dot(R_t, I), R).reshape(9)
+                if (inertiaMatrix[0] != 1.0 or inertiaMatrix[4] != 1.0 or inertiaMatrix[8] != 1.0 or
+                        inertiaMatrix[1] != 0.0 or inertiaMatrix[2] != 0.0 or inertiaMatrix[5] != 0.0):
+                    proto.write((level + 2) * indent + 'inertiaMatrix [\n')
+                    # principals moments of inertia (diagonal)
+                    proto.write((level + 3) * indent + '%lf %lf %lf\n' % (inertiaMatrix[0], inertiaMatrix[4], inertiaMatrix[8]))
+                    # products of inertia
+                    proto.write((level + 3) * indent + '%lf %lf %lf\n' % (inertiaMatrix[1], inertiaMatrix[2], inertiaMatrix[5]))
+                    proto.write((level + 2) * indent + ']\n')
             proto.write((level + 1) * indent + '}\n')
             if level == 1 and staticBase:
                 proto.write((level + 1) * indent + '%{ end }%\n')
         elif link.collision:
+            if level == 1 and staticBase:
+                proto.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
             proto.write((level + 1) * indent + 'physics Physics {\n')
             proto.write((level + 1) * indent + '}\n')
+            if level == 1 and staticBase:
+                proto.write((level + 1) * indent + '%{ end }%\n')
     proto.write(level * indent + '}\n')
 
 
