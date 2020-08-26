@@ -169,9 +169,9 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                 proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
                                                                                        link.inertia.position[1],
                                                                                        link.inertia.position[2]))
-                proto.write((level + 2) * indent + 'inertiaMatrix [ \n')  
-                proto.write((level + 3) * indent + ' %lf %lf %lf \n' % (inertiaMatrix[0], inertiaMatrix[4], inertiaMatrix[8]))  # principals moments of inertia (diagonal)  
-                proto.write((level + 3) * indent + ' %lf %lf %lf \n' % (inertiaMatrix[1], inertiaMatrix[2], inertiaMatrix[5]))  # products of inertia
+                proto.write((level + 2) * indent + 'inertiaMatrix [\n')  
+                proto.write((level + 3) * indent + '%lf %lf %lf\n' % (inertiaMatrix[0], inertiaMatrix[4], inertiaMatrix[8]))  # principals moments of inertia (diagonal)  
+                proto.write((level + 3) * indent + '%lf %lf %lf\n' % (inertiaMatrix[1], inertiaMatrix[2], inertiaMatrix[5]))  # products of inertia
                 proto.write((level + 2) * indent + ']\n')                                                                                                                                         
             proto.write((level + 1) * indent + '}\n')
             if level == 1 and staticBase:
