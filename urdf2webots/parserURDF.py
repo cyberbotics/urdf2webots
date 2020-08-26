@@ -50,7 +50,7 @@ class Inertia():
         """Initializatization."""
         self.position = [0.0, 0.0, 0.0]
         self.rotation = [1.0, 0.0, 0.0, 0.0]
-        self.mass = 1.0
+        self.mass = None
         self.ixx = 1.0
         self.ixy = 0.0
         self.ixz = 0.0

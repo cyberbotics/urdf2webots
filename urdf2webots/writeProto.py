@@ -177,6 +177,9 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             proto.write((level + 1) * indent + '}\n')
             if level == 1 and staticBase:
                 proto.write((level + 1) * indent + '%{ end }%\n')
+        elif link.collision:
+            proto.write((level + 1) * indent + 'physics Physics {\n')
+            proto.write((level + 1) * indent + '}\n')
     proto.write(level * indent + '}\n')
 
 
