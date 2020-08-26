@@ -325,7 +325,9 @@ PROTO MotomanSia20d [
     ]
     name IS name 
     boundingObject USE MOTOMAN_BASE
+    %{ if fields.staticBase.value == false then }%
     physics Physics {
     }
+    %{ end }%
   }
 }
