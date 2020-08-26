@@ -157,7 +157,7 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
             if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
                 i = link.inertia
-                inertiaMatrix = [i.ixx, i.ixy, i.ixz, 0, i.iyy, i.iyz, 0, 0, i.izz]
+                inertiaMatrix = [i.ixx, i.ixy, i.ixz, i.ixy, i.iyy, i.iyz, i.ixz, i.iyz, i.izz]
                 if link.inertia.rotation[-1] != 0.0: 
                     rotationMatrix = matrixFromRotation(link.inertia.rotation)
                     I = np.array(inertiaMatrix).reshape(3, 3)
