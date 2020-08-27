@@ -11,6 +11,7 @@ enableMultiFile = False
 meshFilesPath = None
 robotNameMain = ''
 
+
 class RGB():
     """RGB color object."""
 
@@ -139,7 +140,6 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             proto.write((level + 3) * indent + 'children IS toolSlot\n')
             proto.write((level + 2) * indent + '}\n')
 
-
         if haveChild:
             proto.write((level + 1) * indent + ']\n')
         if level == 1:
@@ -155,18 +155,39 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             proto.write((level + 1) * indent + 'physics Physics {\n')
             proto.write((level + 2) * indent + 'density -1\n')
             proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
-            if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
-                proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
+            #  if link.inertia.position != [0.0, 0.0, 0.0]:
+            proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
                                                                                        link.inertia.position[1],
                                                                                        link.inertia.position[2]))
+            if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
+                i = link.inertia
+                inertiaMatrix = [i.ixx, i.ixy, i.ixz, i.ixy, i.iyy, i.iyz, i.ixz, i.iyz, i.izz]
+                if link.inertia.rotation[-1] != 0.0:
+                    rotationMatrix = matrixFromRotation(link.inertia.rotation)
+                    I = np.array(inertiaMatrix).reshape(3, 3)
+                    R = np.array(rotationMatrix).reshape(3, 3)
+                    R_t = np.transpose(R)
+                    # calculate the rotated inertiaMatrix with R_t * I * R. For reference, check the link below
+                    # https://www.euclideanspace.com/physics/dynamics/inertia/rotation/index.htm
+                    inertiaMatrix = np.dot(np.dot(R_t, I), R).reshape(9)
+                if (inertiaMatrix[0] != 1.0 or inertiaMatrix[4] != 1.0 or inertiaMatrix[8] != 1.0 or
+                        inertiaMatrix[1] != 0.0 or inertiaMatrix[2] != 0.0 or inertiaMatrix[5] != 0.0):
+                    proto.write((level + 2) * indent + 'inertiaMatrix [\n')
+                    # principals moments of inertia (diagonal)
+                    proto.write((level + 3) * indent + '%lf %lf %lf\n' % (inertiaMatrix[0], inertiaMatrix[4], inertiaMatrix[8]))
+                    # products of inertia
+                    proto.write((level + 3) * indent + '%lf %lf %lf\n' % (inertiaMatrix[1], inertiaMatrix[2], inertiaMatrix[5]))
+                    proto.write((level + 2) * indent + ']\n')
             proto.write((level + 1) * indent + '}\n')
             if level == 1 and staticBase:
                 proto.write((level + 1) * indent + '%{ end }%\n')
-        if link.inertia.rotation[-1] != 0.0:  # this should not happend
-            print('Warning: inertia of %s has a non-zero rotation [axis-angle] = "%lf %lf %lf %lf" '
-                  'but it will not be imported in proto!' % (link.name, link.inertia.rotation[0], link.inertia.rotation[1],
-                                                             link.inertia.rotation[2], link.inertia.rotation[3]))
-
+        elif link.collision:
+            if level == 1 and staticBase:
+                proto.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
+            proto.write((level + 1) * indent + 'physics Physics {\n')
+            proto.write((level + 1) * indent + '}\n')
+            if level == 1 and staticBase:
+                proto.write((level + 1) * indent + '%{ end }%\n')
     proto.write(level * indent + '}\n')
 
 
@@ -369,15 +390,16 @@ def URDFVisual(proto, visualNode, level, normal=False):
         proto.write((shapeLevel + 1) * indent + '}\n')
 
     elif visualNode.geometry.trimesh.coord:
+        meshType = 'IndexedLineSet' if visualNode.geometry.lineset else 'IndexedFaceSet' 
         if visualNode.geometry.defName is not None:
             proto.write((shapeLevel + 1) * indent + 'geometry USE %s\n' % visualNode.geometry.defName)
         else:
             if visualNode.geometry.name is not None:
                 visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
             if visualNode.geometry.defName is not None:
-                proto.write((shapeLevel + 1) * indent + 'geometry DEF %s IndexedFaceSet {\n' % visualNode.geometry.defName)
+                proto.write((shapeLevel + 1) * indent + 'geometry DEF %s %s {\n' % (visualNode.geometry.defName, meshType))
             else:
-                proto.write((shapeLevel + 1) * indent + 'geometry IndexedFaceSet {\n')
+                proto.write((shapeLevel + 1) * indent + 'geometry %s {\n' %  meshType)
             proto.write((shapeLevel + 2) * indent + 'coord Coordinate {\n')
             proto.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
             for value in visualNode.geometry.trimesh.coord:
@@ -393,6 +415,9 @@ def URDFVisual(proto, visualNode, level, normal=False):
                 for value in visualNode.geometry.trimesh.coordIndex:
                     if len(value) == 3:
                         proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
+                    elif len(value) == 2:
+                        assert visualNode.geometry.lineset
+                        proto.write('%d %d -1 ' % (value[0], value[1]))
             elif isinstance(visualNode.geometry.trimesh.coordIndex[0], np.int32):
                 for i in range(int(len(visualNode.geometry.trimesh.coordIndex) / 3)):
                     proto.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.coordIndex[3 * i + 0],
@@ -448,7 +473,8 @@ def URDFVisual(proto, visualNode, level, normal=False):
                     print('Unsupported "%s" coordinate type' % type(visualNode.geometry.trimesh.texCoordIndex[0]))
                 proto.write('\n' + (shapeLevel + 2) * indent + ']\n')
 
-            proto.write((shapeLevel + 2) * indent + 'creaseAngle 1\n')
+            if not visualNode.geometry.lineset:
+                proto.write((shapeLevel + 2) * indent + 'creaseAngle 1\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
     proto.write(shapeLevel * indent + '}\n')
 
@@ -478,8 +504,7 @@ def URDFShape(proto, link, level, normal=False):
                 if visualNode.geometry.name is not None:
                     name = computeDefName(visualNode.geometry.name)
             name = robotNameMain + '_' + name if robotNameMain else name
-            if visualNode.geometry.defName is None:
-                
+            if visualNode.geometry.defName is None:                
                 print('Create meshFile: %sMesh.proto' % name)
                 filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
                 meshProtoFile = open(filepath, 'w')
