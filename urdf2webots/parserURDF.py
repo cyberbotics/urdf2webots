@@ -18,7 +18,7 @@ from urdf2webots.gazebo_materials import materials
 from urdf2webots.math_utils import convertRPYtoEulerAxis
 
 try:
-    from collada import Collada
+    from collada import Collada, lineset
     colladaIsAvailable = True
 except ImportError:
     colladaIsAvailable = False
@@ -50,7 +50,7 @@ class Inertia():
         """Initializatization."""
         self.position = [0.0, 0.0, 0.0]
         self.rotation = [1.0, 0.0, 0.0, 0.0]
-        self.mass = 1.0
+        self.mass = None
         self.ixx = 1.0
         self.ixy = 0.0
         self.ixz = 0.0
@@ -100,6 +100,7 @@ class Geometry():
         self.scale = [1.0, 1.0, 1.0]
         self.name = None
         self.defName = None
+        self.lineset = False
 
 
 class Color():
@@ -481,9 +482,6 @@ def getColladaMesh(filename, node, link):
     if hasattr(node, 'material') and node.material:
         for geometry in list(colladaMesh.scene.objects('geometry')):
             for data in list(geometry.primitives()):
-                if str(data.original).split()[0][1:] == 'LineSet':
-                    print('Skipping Collada LineSet.')
-                    continue
                 visual = Visual()
                 index += 1
                 visual.position = node.position
@@ -494,6 +492,8 @@ def getColladaMesh(filename, node, link):
                 visual.material.diffuse.alpha = node.material.diffuse.alpha
                 visual.material.texture = node.material.texture
                 name = '%s_%d' % (os.path.splitext(os.path.basename(filename))[0], index)
+                if type(data.original) is lineset.LineSet:
+                    visual.geometry.lineset = True
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
