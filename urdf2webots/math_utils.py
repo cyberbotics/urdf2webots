@@ -122,7 +122,8 @@ def rotationFromMatrix(R):
         # squared values of the rotation axis on the diagonal of this matrix.
         # We can still use the original formula to reconstruct the signs of
         # the rotation axis correctly.
-        a[:3] = numpy.sqrt(0.5 * (numpy.diag(R) + 1.0)) * numpy.maximum(numpy.sign(axis_unnormalized),[1, 1, 1])
+        sign = numpy.sign(axis_unnormalized)
+        a[:3] = numpy.sqrt(0.5 * (numpy.diag(R) + 1.0)) * numpy.where(sign == 0, 1, sign)
         # print('test',abs(angle - numpy.pi), numpy.diag(R),numpy.sqrt(0.5 * (numpy.diag(R) + 1.0)),axis_unnormalized )
     else:
         a[:3] = axis_unnormalized
