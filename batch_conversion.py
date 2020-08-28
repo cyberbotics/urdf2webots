@@ -124,7 +124,7 @@ class BatchConversion():
             except:
                 print('Generating new config for - ' + os.path.splitext(self.urdf_files[i])[0])
                 self.EndReportMessage['newConfigs'].append(configFile)
-                update_config(configFile)
+                self.update_config(configFile)
 
     def convert_all_urdfs(self):
         """Converts all URDF files according to their '.json' config files."""
