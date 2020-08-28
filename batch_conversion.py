@@ -36,7 +36,7 @@ default_config = {
 }
 
 
-class batchConversion():
+class BatchConversion():
     def __init__(self, sourcePath, outPath):
         self.urdf2webots_path = os.path.dirname(os.path.abspath(__file__))
         # create a unique path for a new batch-conversion
