@@ -74,7 +74,7 @@ class batchConversion():
         }
 
     def update_and_convert(self):
-        # Make sure all configs exist and are up to date, then convert all URDF files
+        """Make sure all configs exist and are up to date, then convert all URDF files."""
         self.check_all_configs()
         self.convert_all_urdfs()
         self.print_end_report()
