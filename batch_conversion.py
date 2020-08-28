@@ -127,7 +127,7 @@ class batchConversion():
                 update_config(configFile)
 
     def convert_all_urdfs(self):
-        # convertes all URDF files according to their .json config files
+        """Converts all URDF files according to their '.json' config files."""
         self.create_proto_dir()
         print('---------------------------------------')
         print('Converting URDF to PROTO...')
