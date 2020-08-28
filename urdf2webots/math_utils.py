@@ -97,24 +97,44 @@ def matrixFromRotation(rotation):
     return matrix
 
 
-def rotationFromMatrix(matrix):
-    """Get the VRML rotation associated to this 3x3 matrix."""
-    rotation = []
-    cosAngle = 0.5 * (matrix[0] + matrix[4] + matrix[8] - 1.0)
-    absCosAngle = abs(cosAngle)
-    if absCosAngle > 1.0:
-        if (absCosAngle - 1.0) > 0.0000001:
-            return [1.0, 0.0, 0.0, 0.0]
-        if cosAngle < 0.0:
-            cosAngle = -1.0
-        else:
-            cosAngle = 1.0
+def rotationFromMatrix(R):
+    R = numpy.array(R).reshape(3, 3)
+    # code from here (slightly modified):
+    # https://rock-learning.github.io/pytransform3d/_modules/pytransform3d/rotations.html#axis_angle_from_matrix
+    angle = numpy.arccos((numpy.trace(R) - 1.0) / 2.0)
+    epsilon = 1e-4
+    if angle < epsilon:
+        return numpy.array([1.0, 0.0, 0.0, 0.0])
+    a = numpy.empty(4)
 
-    rotation.append(matrix[7] - matrix[5])
-    rotation.append(matrix[2] - matrix[6])
-    rotation.append(matrix[3] - matrix[1])
-    rotation.append(math.acos(cosAngle))
-    return rotation
+    # We can usually determine the rotation axis by inverting Rodrigues'
+    # formula. Subtracting opposing off-diagonal elements gives us
+    # 2 * sin(angle) * e,
+    # where e is the normalized rotation axis.
+    axis_unnormalized = numpy.array(
+        [R[2, 1] - R[1, 2], R[0, 2] - R[2, 0], R[1, 0] - R[0, 1]])
+
+    if numpy.pi - angle < epsilon:
+        # The threshold is a result from this discussion:
+        # https://github.com/rock-learning/pytransform3d/issues/43
+        # The standard formula becomes numerically unstable, however,
+        # Rodrigues' formula reduces to R = I + 2 (ee^T - I), with the
+        # rotation axis e, that is, ee^T = 0.5 * (R + I) and we can find the
+        # squared values of the rotation axis on the diagonal of this matrix.
+        # We can still use the original formula to reconstruct the signs of
+        # the rotation axis correctly.
+        sign = numpy.sign(axis_unnormalized)
+        a[:3] = numpy.sqrt(0.5 * (numpy.diag(R) + 1.0)) * numpy.where(sign == 0, 1, sign)
+        # print('test', abs(angle - numpy.pi), numpy.diag(R), numpy.sqrt(0.5 * (numpy.diag(R) + 1.0)), axis_unnormalized)
+    else:
+        a[:3] = axis_unnormalized
+        # The norm of axis_unnormalized is 2.0 * numpy.sin(angle), that is, we
+        # could normalize with a[:3] = a[:3] / (2.0 * numpy.sin(angle)),
+        # but the following is much more precise for angles close to 0 or pi:
+    a[:3] /= numpy.linalg.norm(a[:3])
+
+    a[3] = angle
+    return a
 
 
 def rotateVector(vector, rotation):
