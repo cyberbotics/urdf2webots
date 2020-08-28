@@ -50,7 +50,7 @@ class batchConversion():
             self.protoTargetDir = self.protoTargetDir + '_Nr-' + str(n)
 
         # Find all the urdf files, and create the corresponding proto filePaths
-        urdf_root_dir = sourcePath  # 'automatic_conversion/urdf'
+        urdf_root_dir = sourcePath
         os.chdir(urdf_root_dir)
         # Walk the tree.
         self.urdf_files = []  # List of the full filepaths.
