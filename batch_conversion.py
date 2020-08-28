@@ -12,17 +12,20 @@ import math
 import urdf2webots.importer as importer
 from copy import deepcopy
 
-# Set Override = True  if you want to override ALL config settings with the value in the OverrideCfg.
-# This can be usefull for testing functionality quickly, and then doing a slow optimized conversion
+# Set Override = True  if you want to override ALL config settings with the
+# value in the OverrideCfg. This can be usefull for testing functionality
+# quickly, and then doing a slow optimized conversion
 Override = False
 OverrideCfg = {
     'disableMeshOptimization': False
 }
 
-# This defines the default config. If a urdf model doesnt have a config, one will created after this.
-# If the importer.py is updated, so should this to add the additional functionality
+# This defines the default config. If a urdf model doesnt have a config, one
+# will created after this. If the importer.py is updated, so should this to
+# add the additional functionality-
 default_config = {
-    'robotName': None,  # outFile will get constructed with protosPath + robotName + '.proto'
+    # outFile will get constructed with protosPath + robotName + '.proto'
+    'robotName': None,
     'normal': False,
     'boxCollision': True,
     'disableMeshOptimization': True,
@@ -31,6 +34,7 @@ default_config = {
     'toolSlot': None,
     'initRotation': "1 0 0 -1.5708"
 }
+
 
 class batchConversion():
     def __init__(self, sourcePath, outPath):
@@ -46,10 +50,10 @@ class batchConversion():
             self.protoTargetDir = self.protoTargetDir + '_Nr-' + str(n)
 
         # Find all the urdf files, and create the corresponding proto filePaths
-        urdf_root_dir = sourcePath  #'automatic_conversion/urdf'
+        urdf_root_dir = sourcePath  # 'automatic_conversion/urdf'
         os.chdir(urdf_root_dir)
         # Walk the tree.
-        self.urdf_files = []  # List which will store all of the full filepaths.
+        self.urdf_files = []  # List of the full filepaths.
         self.protosPaths = []
         for root, directories, files in os.walk('./'):
             for filename in files:
@@ -69,19 +73,16 @@ class batchConversion():
             'failed': []
         }
 
-
     def update_and_convert(self):
         # Make sure all configs exist and are up to date, then convert all URDF files
         self.check_all_configs()
         self.convert_all_urdfs()
         self.print_end_report()
 
-
     def create_proto_dir(self):
         # create a new unique directory for our conversions
         print(self.protoTargetDir)
         os.makedirs(self.protoTargetDir)
-
 
     def replace_ExtraProjectPath(self):
         # this copies the converted files and puts them in the "automatic_conversion/ExtraProjectTest" directory
@@ -94,7 +95,6 @@ class batchConversion():
             shutil.rmtree(destination)  # remove dir and all contains
         shutil.copytree(self.protoTargetDir,  destination)
 
-
     def update_config(self, configFile, config=None):
         # makes sure the existing configs are in the same format as the default. Existing options are conserved
         new_config = deepcopy(default_config)
@@ -105,7 +105,6 @@ class batchConversion():
                 pass
         with open(configFile, 'w') as outfile:
             json.dump(new_config, outfile, indent=4, sort_keys=True)
-
 
     def check_all_configs(self):
         # makes sure ever URDF file has a config and it is up do date
@@ -126,7 +125,6 @@ class batchConversion():
                 print('Generating new config for - ' + os.path.splitext(self.urdf_files[i])[0])
                 self.EndReportMessage['newConfigs'].append(configFile)
                 update_config(configFile)
-
 
     def convert_all_urdfs(self):
         # convertes all URDF files according to their .json config files
@@ -162,7 +160,6 @@ class batchConversion():
                 self.EndReportMessage['failed'].append(self.urdf_files[i])
             print('---------------------------------------')
 
-
     def print_end_report(self):
         # print the Report
         print('---------------------------------------')
@@ -188,7 +185,6 @@ class batchConversion():
             print('---------------------------------------')
             for urdf in self.EndReportMessage['failed']:
                 print(urdf)
-
 
     def create_test_world(self, spacing=3):
         n_models = len(self.urdf_files)
@@ -241,7 +237,7 @@ if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog  [options]')
     optParser.add_option('--input', dest='sourcePath', default='', help='Specifies the urdf file to convert.')
     optParser.add_option('--output', dest='outPath', default='', help='Specifies the path and, if ending in ".proto", name of the resulting PROTO file.'
-                        ' The filename minus the .proto extension will be the robot name.')
+                         ' The filename minus the .proto extension will be the robot name.')
     optParser.add_option('--force-mesh-optimization', dest='forceMesh', action='store_true', default=False, help='Set if mesh-optimization should be turned on for all conversions. This will take much longer!')
     optParser.add_option('--no-project-override', dest='extraProj', action='store_true', default=False, help='Set if new conversions should NOT replace existing ones in "automatic_conversion/ExtraProjectTest".')
     optParser.add_option('--update-cfg', dest='cfgUpdate', action='store_true', default=False, help='No conversion. Only updates or creates .json config for every URDF file in "automatic_conversion/urdf".')
