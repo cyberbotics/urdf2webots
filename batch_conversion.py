@@ -1,6 +1,37 @@
 #!/usr/bin/env python3
 
-"""URDF files to Webots PROTO converter."""
+"""URDF files to Webots PROTO batch-converter.
+------------------------------------------------------------------------
+This script searches for all urdf files in the <input> directory, converts
+them to proto files and saves them in the output directory. It retains
+the folder structure of the input directory while doing so.
+
+The first time a urdf file gets converted, this script creates a config
+.json file next to it. Here you can specify any arguments you want
+to parse to that specific file conversion. The definiton of the default
+config is in the code below and needs to be updated when features get added.
+
+For each batch-conversion, a new (unique) folder is generated inside the
+output folder, where the conversion is being placed in. This way, previous
+conversions are not overridden. In addition, the converted files override
+those in '<output>/ExtraProjectTest'  and the TestAllRobots.wbt world is
+created and placed there, containing all converted models, placed in a grid.
+
+To test the conversions, open webots and change your
+Tools>Prefernces>Extra_projects_path to '<output>/ExtraProjectTest' and
+open the generated TestAllRobots.wbt. From now on, after another conversion,
+you simply have to reload the world.
+
+Example:
+<input>/robots/kuka/protos/kr5.urdf
+gets exportet to
+'<output>/<unique_folder>/robots/kuka/protos/kr5.proto'
+and
+'<output>/ExtraProjectTest/robots/kuka/protos/kr5.proto'
+
+Note: Webots will only automatically find your proto file, if it is inside a
+'protos' folder.
+"""
 
 import optparse
 import datetime
@@ -187,6 +218,9 @@ class BatchConversion():
                 print(urdf)
 
     def create_test_world(self, spacing=3):
+        '''Create a TestWorld (<output>/ExtraProjectTest/TestAllRobots.wbt')
+        where every converted robot or model is placed in a grid, with the
+        spacing representing the grid size'''
         n_models = len(self.urdf_files)
         n_row = math.ceil(n_models ** 0.5)  # round up the sqrt of the number of models
         grid_size = spacing * (n_row + 1)
