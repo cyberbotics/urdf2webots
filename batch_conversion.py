@@ -118,7 +118,7 @@ class BatchConversion():
                 if config.keys() != default_config.keys():
                     print('Updating config (old settings will be carried over) - ', configFile)
                     self.EndReportMessage['updateConfigs'].append(configFile)
-                    update_config(configFile, config)
+                    self.update_config(configFile, config)
                 else:
                     print('Config up to date - ', configFile)
             except:
