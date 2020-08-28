@@ -98,7 +98,7 @@ def matrixFromRotation(rotation):
 
 
 def rotationFromMatrix(R):
-    R = numpy.array(R).reshape(3,3)
+    R = numpy.array(R).reshape(3, 3)
     # code from here (slightly modified):
     # https://rock-learning.github.io/pytransform3d/_modules/pytransform3d/rotations.html#axis_angle_from_matrix
     angle = numpy.arccos((numpy.trace(R) - 1.0) / 2.0)
