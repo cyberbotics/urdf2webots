@@ -36,6 +36,7 @@ modelPaths = [
 
 
 def fileCompare(file1, file2):
+    """Compare content of two files."""
     with open(file1) as f1, open(file2) as f2:
         for line1, line2 in zip(f1, f2):
             if line1.startswith('# Extracted from:') and line2.startswith('# Extracted from:'):

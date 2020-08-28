@@ -155,8 +155,8 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             proto.write((level + 1) * indent + 'physics Physics {\n')
             proto.write((level + 2) * indent + 'density -1\n')
             proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
-            #  if link.inertia.position != [0.0, 0.0, 0.0]:
-            proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
+            if link.inertia.position != [0.0, 0.0, 0.0]:
+                proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
                                                                                        link.inertia.position[1],
                                                                                        link.inertia.position[2]))
             if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
@@ -503,8 +503,8 @@ def URDFShape(proto, link, level, normal=False):
             if name is None:
                 if visualNode.geometry.name is not None:
                     name = computeDefName(visualNode.geometry.name)
-            name = robotNameMain + '_' + name if robotNameMain else name
-            if visualNode.geometry.defName is None:                
+            if visualNode.geometry.defName is None:
+                name = robotNameMain + '_' + name if robotNameMain else name
                 print('Create meshFile: %sMesh.proto' % name)
                 filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
                 meshProtoFile = open(filepath, 'w')
