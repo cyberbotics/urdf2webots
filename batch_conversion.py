@@ -211,7 +211,6 @@ class batchConversion():
         worldFile.write('  floorTileSize 0.25 0.25\n')
         worldFile.write('  wallHeight 0.05\n')
         worldFile.write('}\n')
-        filenames = []  # List which will store all of the full filepaths.
         row = 0
         column = 1
         for root, directories, files in os.walk(os.path.dirname(projectDir)):
