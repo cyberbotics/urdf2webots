@@ -85,7 +85,7 @@ class batchConversion():
         os.makedirs(self.protoTargetDir)
 
     def replace_ExtraProjectPath(self):
-        # this copies the converted files and puts them in the "automatic_conversion/ExtraProjectTest" directory
+        # this copies the converted files and puts them in the "<protoTargetDir>/ExtraProjectTest" directory
         # This path can be added to webots, so we can test each new conversion, without having to adjust the Path
         # every time
         destination = os.path.dirname(self.protoTargetDir) + '/ExtraProjectTest'
