@@ -239,7 +239,7 @@ if __name__ == '__main__':
     optParser.add_option('--output', dest='outPath', default='', help='Specifies the path and, if ending in ".proto", name of the resulting PROTO file.'
                          ' The filename minus the .proto extension will be the robot name.')
     optParser.add_option('--force-mesh-optimization', dest='forceMesh', action='store_true', default=False, help='Set if mesh-optimization should be turned on for all conversions. This will take much longer!')
-    optParser.add_option('--no-project-override', dest='extraProj', action='store_true', default=False, help='Set if new conversions should NOT replace existing ones in "automatic_conversion/ExtraProjectTest".')
+    optParser.add_option('--no-project-override', dest='extraProj', action='store_true', default=False, help='Set if new conversions should NOT replace existing ones in "<input>/ExtraProjectTest".')
     optParser.add_option('--update-cfg', dest='cfgUpdate', action='store_true', default=False, help='No conversion. Only updates or creates .json config for every URDF file in "automatic_conversion/urdf".')
 
     options, args = optParser.parse_args()
