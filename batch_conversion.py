@@ -107,7 +107,7 @@ class batchConversion():
             json.dump(new_config, outfile, indent=4, sort_keys=True)
 
     def check_all_configs(self):
-        # makes sure ever URDF file has a config and it is up do date
+        """Makes sure ever URDF file has a config and it is up to date."""
         print('Checking config files...')
         print('---------------------------------------')
         for i in range(len(self.urdf_files)):
