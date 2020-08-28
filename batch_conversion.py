@@ -161,7 +161,7 @@ class batchConversion():
             print('---------------------------------------')
 
     def print_end_report(self):
-        # print the Report
+        """Print the report."""
         print('---------------------------------------')
         print('------------End Report-----------------')
         print('---------------------------------------')
