@@ -114,7 +114,7 @@ def rotationFromMatrix(R):
     axis_unnormalized = numpy.array(
         [R[2, 1] - R[1, 2], R[0, 2] - R[2, 0], R[1, 0] - R[0, 1]])
 
-    if abs(angle - numpy.pi) < 1e-4:
+    if numpy.pi - angle < epsilon:
         # The threshold is a result from this discussion:
         # https://github.com/rock-learning/pytransform3d/issues/43
         # The standard formula becomes numerically unstable, however,
