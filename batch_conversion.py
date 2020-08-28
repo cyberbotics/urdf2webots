@@ -80,7 +80,7 @@ class batchConversion():
         self.print_end_report()
 
     def create_proto_dir(self):
-        # create a new unique directory for our conversions
+        """Create a new unique directory for our conversions."""
         print(self.protoTargetDir)
         os.makedirs(self.protoTargetDir)
 
