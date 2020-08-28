@@ -125,7 +125,7 @@ def rotationFromMatrix(R):
         # the rotation axis correctly.
         sign = numpy.sign(axis_unnormalized)
         a[:3] = numpy.sqrt(0.5 * (numpy.diag(R) + 1.0)) * numpy.where(sign == 0, 1, sign)
-        # print('test',abs(angle - numpy.pi), numpy.diag(R),numpy.sqrt(0.5 * (numpy.diag(R) + 1.0)),axis_unnormalized )
+        # print('test', abs(angle - numpy.pi), numpy.diag(R), numpy.sqrt(0.5 * (numpy.diag(R) + 1.0)), axis_unnormalized)
     else:
         a[:3] = axis_unnormalized
         # The norm of axis_unnormalized is 2.0 * numpy.sin(angle), that is, we
