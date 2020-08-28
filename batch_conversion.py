@@ -96,7 +96,7 @@ class batchConversion():
         shutil.copytree(self.protoTargetDir,  destination)
 
     def update_config(self, configFile, config=None):
-        # makes sure the existing configs are in the same format as the default. Existing options are conserved
+        """Makes sure the existing configs are in the same format as the default, existing options are conserved."""
         new_config = deepcopy(default_config)
         for key in new_config.keys():
             try:
