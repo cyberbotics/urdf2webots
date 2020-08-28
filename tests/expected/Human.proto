@@ -2,7 +2,7 @@
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # This is a proto file for Webots for the Human
-# Extracted from: /home/travis/urdf2webots/tests/sources/gait2392_simbody/urdf/human.urdf
+# Extracted from: /home/david/urdf2webots/tests/sources/gait2392_simbody/urdf/human.urdf
 
 PROTO Human [
   field  SFVec3f     translation     0 0 0
@@ -276,6 +276,7 @@ PROTO Human [
                                   physics Physics {
                                     density -1
                                     mass 0.216600
+                                    centerOfMass [ 0.000000 0.000000 0.000000 ]
                                     inertiaMatrix [
                                       0.000100 0.000200 0.001000
                                       0.000000 0.000000 0.000000
@@ -298,6 +299,7 @@ PROTO Human [
                             physics Physics {
                               density -1
                               mass 1.250000
+                              centerOfMass [ 0.000000 0.000000 0.000000 ]
                               inertiaMatrix [
                                 0.001400 0.003900 0.004100
                                 0.000000 0.000000 0.000000
@@ -320,6 +322,7 @@ PROTO Human [
                       physics Physics {
                         density -1
                         mass 0.100000
+                        centerOfMass [ 0.000000 0.000000 0.000000 ]
                         inertiaMatrix [
                           0.001000 0.001000 0.001000
                           0.000000 0.000000 0.000000
@@ -342,6 +345,7 @@ PROTO Human [
                 physics Physics {
                   density -1
                   mass 3.707500
+                  centerOfMass [ 0.000000 0.000000 0.000000 ]
                   inertiaMatrix [
                     0.050400 0.005100 0.051100
                     0.000000 0.000000 0.000000
@@ -364,6 +368,7 @@ PROTO Human [
           physics Physics {
             density -1
             mass 9.301400
+            centerOfMass [ 0.000000 0.000000 0.000000 ]
             inertiaMatrix [
               0.133900 0.035100 0.141200
               0.000000 0.000000 0.000000
@@ -601,6 +606,7 @@ PROTO Human [
                                   physics Physics {
                                     density -1
                                     mass 0.216600
+                                    centerOfMass [ 0.000000 0.000000 0.000000 ]
                                     inertiaMatrix [
                                       0.000100 0.000200 0.001000
                                       0.000000 0.000000 0.000000
@@ -623,6 +629,7 @@ PROTO Human [
                             physics Physics {
                               density -1
                               mass 1.250000
+                              centerOfMass [ 0.000000 0.000000 0.000000 ]
                               inertiaMatrix [
                                 0.001400 0.003900 0.004100
                                 0.000000 0.000000 0.000000
@@ -645,6 +652,7 @@ PROTO Human [
                       physics Physics {
                         density -1
                         mass 0.100000
+                        centerOfMass [ 0.000000 0.000000 0.000000 ]
                         inertiaMatrix [
                           0.001000 0.001000 0.001000
                           0.000000 0.000000 0.000000
@@ -667,6 +675,7 @@ PROTO Human [
                 physics Physics {
                   density -1
                   mass 3.707500
+                  centerOfMass [ 0.000000 0.000000 0.000000 ]
                   inertiaMatrix [
                     0.050400 0.005100 0.051100
                     0.000000 0.000000 0.000000
@@ -689,6 +698,7 @@ PROTO Human [
           physics Physics {
             density -1
             mass 9.301400
+            centerOfMass [ 0.000000 0.000000 0.000000 ]
             inertiaMatrix [
               0.133900 0.035100 0.141200
               0.000000 0.000000 0.000000
@@ -926,6 +936,7 @@ PROTO Human [
                                   physics Physics {
                                     density -1
                                     mass 0.457500
+                                    centerOfMass [ 0.000000 0.000000 0.000000 ]
                                     inertiaMatrix [
                                       0.000892 0.000547 0.001340
                                       0.000000 0.000000 0.000000
@@ -948,6 +959,7 @@ PROTO Human [
                             physics Physics {
                               density -1
                               mass 0.607500
+                              centerOfMass [ 0.000000 0.000000 0.000000 ]
                               inertiaMatrix [
                                 0.002962 0.000618 0.003213
                                 0.000000 0.000000 0.000000
@@ -970,6 +982,7 @@ PROTO Human [
                       physics Physics {
                         density -1
                         mass 0.607500
+                        centerOfMass [ 0.000000 0.000000 0.000000 ]
                         inertiaMatrix [
                           0.002962 0.000618 0.003213
                           0.000000 0.000000 0.000000
@@ -992,6 +1005,7 @@ PROTO Human [
                 physics Physics {
                   density -1
                   mass 2.032500
+                  centerOfMass [ 0.000000 0.000000 0.000000 ]
                   inertiaMatrix [
                     0.011946 0.004121 0.013409
                     0.000000 0.000000 0.000000
@@ -1186,6 +1200,7 @@ PROTO Human [
                                   physics Physics {
                                     density -1
                                     mass 0.457500
+                                    centerOfMass [ 0.000000 0.000000 0.000000 ]
                                     inertiaMatrix [
                                       0.000892 0.000547 0.001340
                                       0.000000 0.000000 0.000000
@@ -1208,6 +1223,7 @@ PROTO Human [
                             physics Physics {
                               density -1
                               mass 0.607500
+                              centerOfMass [ 0.000000 0.000000 0.000000 ]
                               inertiaMatrix [
                                 0.002962 0.000618 0.003213
                                 0.000000 0.000000 0.000000
@@ -1230,6 +1246,7 @@ PROTO Human [
                       physics Physics {
                         density -1
                         mass 0.607500
+                        centerOfMass [ 0.000000 0.000000 0.000000 ]
                         inertiaMatrix [
                           0.002962 0.000618 0.003213
                           0.000000 0.000000 0.000000
@@ -1252,6 +1269,7 @@ PROTO Human [
                 physics Physics {
                   density -1
                   mass 2.032500
+                  centerOfMass [ 0.000000 0.000000 0.000000 ]
                   inertiaMatrix [
                     0.011946 0.004121 0.013409
                     0.000000 0.000000 0.000000
@@ -1274,6 +1292,7 @@ PROTO Human [
           physics Physics {
             density -1
             mass 26.826600
+            centerOfMass [ 0.000000 0.000000 0.000000 ]
             inertiaMatrix [
               1.474500 0.755500 1.431400
               0.000000 0.000000 0.000000
@@ -1296,6 +1315,7 @@ PROTO Human [
     physics Physics {
       density -1
       mass 11.777000
+      centerOfMass [ 0.000000 0.000000 0.000000 ]
       inertiaMatrix [
         0.102800 0.087100 0.057900
         0.000000 0.000000 0.000000
