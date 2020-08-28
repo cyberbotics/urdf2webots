@@ -36,7 +36,7 @@ default_config = {
 }
 
 
-class batchConversion():
+class BatchConversion():
     def __init__(self, sourcePath, outPath):
         self.urdf2webots_path = os.path.dirname(os.path.abspath(__file__))
         # create a unique path for a new batch-conversion
@@ -242,7 +242,7 @@ if __name__ == '__main__':
     optParser.add_option('--update-cfg', dest='cfgUpdate', action='store_true', default=False, help='No conversion. Only updates or creates .json config for every URDF file in "automatic_conversion/urdf".')
 
     options, args = optParser.parse_args()
-    bc = batchConversion(options.sourcePath, options.outPath)
+    bc = BatchConversion(options.sourcePath, options.outPath)
     Override = options.forceMesh
     if options.cfgUpdate:
         bc.check_all_configs()
