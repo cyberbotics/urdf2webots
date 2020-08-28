@@ -102,7 +102,8 @@ def rotationFromMatrix(R):
     # code from here (slightly modified):
     # https://rock-learning.github.io/pytransform3d/_modules/pytransform3d/rotations.html#axis_angle_from_matrix
     angle = numpy.arccos((numpy.trace(R) - 1.0) / 2.0)
-    if angle == 0.0:
+    epsilon = 1e-4
+    if angle < epsilon:
         return numpy.array([1.0, 0.0, 0.0, 0.0])
     a = numpy.empty(4)
 
