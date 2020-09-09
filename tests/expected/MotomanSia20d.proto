@@ -232,16 +232,16 @@ PROTO MotomanSia20d [
                                                 Solid {
                                                   translation 0.000000 0.000000 0.000000
                                                   rotation 0.000000 -0.000000 -1.000000 3.141600
-                                                  physics Physics {
-                                                  }
-                                                  boundingObject Box {
-                                                    size 0.01 0.01 0.01
-                                                  }
                                                   children [
                                                     Group {
                                                       children IS toolSlot
                                                     }
                                                   ]
+                                                  physics Physics {
+                                                  }
+                                                  boundingObject Box {
+                                                    size 0.01 0.01 0.01
+                                                  }
                                                   name "tool0"
                                                 }
                                               ]
