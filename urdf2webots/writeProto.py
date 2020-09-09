@@ -172,7 +172,6 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                 if (inertiaMatrix[0] != 1.0 or inertiaMatrix[4] != 1.0 or inertiaMatrix[8] != 1.0 or
                         inertiaMatrix[1] != 0.0 or inertiaMatrix[2] != 0.0 or inertiaMatrix[5] != 0.0):
                     proto.write((level + 2) * indent + 'inertiaMatrix [\n')
-                    print(inertiaMatrix)
                     # principals moments of inertia (diagonal)
                     proto.write((level + 3) * indent + '%e %e %e\n' % (inertiaMatrix[0], inertiaMatrix[4], inertiaMatrix[8]))
                     # products of inertia
