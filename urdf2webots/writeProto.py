@@ -501,8 +501,8 @@ def URDFShape(proto, link, level, normal=False):
             if name is None:
                 if visualNode.geometry.name is not None:
                     name = computeDefName(visualNode.geometry.name)
+            name = robotNameMain + '_' + name if robotNameMain else name
             if visualNode.geometry.defName is None:
-                name = robotNameMain + '_' + name if robotNameMain else name
                 print('Create meshFile: %sMesh.proto' % name)
                 filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
                 meshProtoFile = open(filepath, 'w')
@@ -536,15 +536,15 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         proto.write(level * indent + 'HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
         position = None
-        if initPos is not None:
-            if len(initPos) > 0:
-                position = initPos[0]
-                del initPos[0]
-        elif joint.limit.lower > 0.0:
+        if joint.limit.lower > 0.0:
             # if 0 is not in the range, set the position to be the middle of the range
             position = joint.limit.lower
             if joint.limit.upper >= joint.limit.lower:
                 position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
+        if initPos is not None:
+            if len(initPos) > 0:
+                position = initPos[0]
+                del initPos[0]        
         if position is not None:
             proto.write((level + 2) * indent + 'position %lf \n' % position)
             mat1 = matrixFromRotation(endpointRotation)
