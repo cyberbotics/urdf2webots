@@ -125,22 +125,21 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                           linkList, jointList, sensorList, boxCollision, normal)
         # 4: export ToolSlot if specified
         if link.name == toolSlot:
-            # add dummy physics and bounding object, so tools don't fall off
-            if link.inertia.mass is None:
-                proto.write((level + 1) * indent + 'physics Physics {\n')
-                proto.write((level + 1) * indent + '}\n')
-
-                proto.write((level + 1) * indent + 'boundingObject Box {\n')
-                proto.write((level + 2) * indent + 'size 0.01 0.01 0.01\n')
-                proto.write((level + 1) * indent + '}\n')
             if not haveChild:
                 haveChild = True
                 proto.write((level + 1) * indent + 'children [\n')
             proto.write((level + 2) * indent + 'Group {\n')
             proto.write((level + 3) * indent + 'children IS toolSlot\n')
             proto.write((level + 2) * indent + '}\n')
-
-        if haveChild:
+            proto.write((level + 1) * indent + ']\n')
+            # add dummy physics and bounding object, so tools don't fall off
+            if link.inertia.mass is None:
+                proto.write((level + 1) * indent + 'physics Physics {\n')
+                proto.write((level + 1) * indent + '}\n')
+                proto.write((level + 1) * indent + 'boundingObject Box {\n')
+                proto.write((level + 2) * indent + 'size 0.01 0.01 0.01\n')
+                proto.write((level + 1) * indent + '}\n')
+        elif haveChild:
             proto.write((level + 1) * indent + ']\n')
         if level == 1:
             proto.write((level + 1) * indent + 'name IS name \n')
@@ -173,10 +172,11 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                 if (inertiaMatrix[0] != 1.0 or inertiaMatrix[4] != 1.0 or inertiaMatrix[8] != 1.0 or
                         inertiaMatrix[1] != 0.0 or inertiaMatrix[2] != 0.0 or inertiaMatrix[5] != 0.0):
                     proto.write((level + 2) * indent + 'inertiaMatrix [\n')
+                    print(inertiaMatrix)
                     # principals moments of inertia (diagonal)
-                    proto.write((level + 3) * indent + '%lf %lf %lf\n' % (inertiaMatrix[0], inertiaMatrix[4], inertiaMatrix[8]))
+                    proto.write((level + 3) * indent + '%e %e %e\n' % (inertiaMatrix[0], inertiaMatrix[4], inertiaMatrix[8]))
                     # products of inertia
-                    proto.write((level + 3) * indent + '%lf %lf %lf\n' % (inertiaMatrix[1], inertiaMatrix[2], inertiaMatrix[5]))
+                    proto.write((level + 3) * indent + '%e %e %e\n' % (inertiaMatrix[1], inertiaMatrix[2], inertiaMatrix[5]))
                     proto.write((level + 2) * indent + ']\n')
             proto.write((level + 1) * indent + '}\n')
             if level == 1 and staticBase:
