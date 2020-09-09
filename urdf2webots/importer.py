@@ -52,12 +52,13 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
         sys.exit('Input file "%s" does not exists.' % inFile)
     if not type(initRotation) == str or len(initRotation.split()) != 4:
         sys.exit('--rotation argument is not valid. Has to be of Type = str and contain 4 values.')
-    try:
-        initPos = initPos.replace(",",' ').replace("[",'').replace("]",'').replace("(",'').replace(")",'')
-        initPos = list(map(float,initPos.split()))
-    except:
-        sys.exit('--init-pos argument is not valid. Your list has to be inside of quotation marks. Example: --init-pos="1.0, 2, -0.4"')  
-    
+    if initPos is not None:
+        try:
+            initPos = initPos.replace(",",' ').replace("[",'').replace("]",'').replace("(",'').replace(")",'')
+            initPos = list(map(float,initPos.split()))
+        except:
+            sys.exit('--init-pos argument is not valid. Your list has to be inside of quotation marks. Example: --init-pos="1.0, 2, -0.4"')  
+        
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
     urdf2webots.writeProto.enableMultiFile = enableMultiFile
     urdf2webots.writeProto.staticBase = staticBase

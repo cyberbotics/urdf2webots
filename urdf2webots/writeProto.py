@@ -536,9 +536,10 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         proto.write(level * indent + 'HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
         position = None
-        if len(initPos) > 0:
-            position = initPos[0]
-            del initPos[0]
+        if initPos is not None:
+            if len(initPos) > 0:
+                position = initPos[0]
+                del initPos[0]
         elif joint.limit.lower > 0.0:
             # if 0 is not in the range, set the position to be the middle of the range
             position = joint.limit.lower
