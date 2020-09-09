@@ -10,7 +10,7 @@ staticBase = False
 enableMultiFile = False
 meshFilesPath = None
 robotNameMain = ''
-
+initPos = None
 
 class RGB():
     """RGB color object."""
@@ -535,11 +535,16 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     if joint.type == 'revolute' or joint.type == 'continuous':
         proto.write(level * indent + 'HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
-        if joint.limit.lower > 0.0:
+        position = None
+        if len(initPos) > 0:
+            position = initPos[0]
+            del initPos[0]
+        elif joint.limit.lower > 0.0:
             # if 0 is not in the range, set the position to be the middle of the range
             position = joint.limit.lower
             if joint.limit.upper >= joint.limit.lower:
                 position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
+        if position is not None:
             proto.write((level + 2) * indent + 'position %lf \n' % position)
             mat1 = matrixFromRotation(endpointRotation)
             mat2 = matrixFromRotation([axis[0], axis[1], axis[2], position])
