@@ -126,7 +126,6 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
         # 4: export ToolSlot if specified
         if link.name == toolSlot:
             if not haveChild:
-                haveChild = True
                 proto.write((level + 1) * indent + 'children [\n')
             proto.write((level + 2) * indent + 'Group {\n')
             proto.write((level + 3) * indent + 'children IS toolSlot\n')
