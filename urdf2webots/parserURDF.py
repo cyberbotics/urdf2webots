@@ -432,6 +432,7 @@ def getOBJMesh(filename, node, link):
     with open(filename, 'r') as file:
         counter = 0
         indexOffset = 0
+        collision = None
         for line in file:
             header, body = line.split(' ', 1)
             if header == '#':
@@ -445,13 +446,15 @@ def getOBJMesh(filename, node, link):
                     indexOffset += len(collision.geometry.trimesh.coord)
                 if isVisual:
                     collision = Visual()
+                    collision.material = node.material
                 else:
                     collision = Collision()
                 collision.position = node.position
                 collision.rotation = node.rotation
                 collision.geometry.scale = node.geometry.scale
+                extSring = '_%d' % (counter) if counter != 0 else ''
+                collision.geometry.name = '%s%s' % (os.path.splitext(os.path.basename(filename))[0], extSring)
                 counter += 1
-                collision.geometry.name = '%s_%d' % (os.path.splitext(os.path.basename(filename))[0], counter)
             elif header == 'f':  # face
                 vertices = body.split()
                 coordIndex = []
