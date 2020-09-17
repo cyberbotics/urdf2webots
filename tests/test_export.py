@@ -64,3 +64,7 @@ class TestScript(unittest.TestCase):
             for expected in paths['expected']:
                 self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected),
                                 msg='Expected result mismatch when exporting "%s"' % paths['input'])
+
+
+if __name__ == '__main__':
+    unittest.main()
