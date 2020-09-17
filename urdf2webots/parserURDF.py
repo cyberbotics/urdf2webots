@@ -423,7 +423,7 @@ def getSTLMesh(filename, node):
 
 def getOBJMesh(filename, node, link):
     """read obj file."""
-    print('Parsing Mesh: ' + filename)    
+    print('Parsing Mesh: ' + filename)
     if hasattr(node, 'material') and node.material:
         isVisual = True
     else:
@@ -433,10 +433,10 @@ def getOBJMesh(filename, node, link):
         counter = 0
         indexOffset = 0
         for line in file:
-            header, body = line.split(' ', 1)            
+            header, body = line.split(' ', 1)
             if header == '#':
                 continue
-            elif header == 'o': 
+            elif header == 'o':
                 if counter != 0:
                     if isVisual:
                         link.visual.append(collision)
