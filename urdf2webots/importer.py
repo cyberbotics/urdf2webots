@@ -47,16 +47,25 @@ def mkdirSafe(directory):
 
 
 def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
-                 disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None, initRotation='0 1 0 0'):
+                 disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None,
+                 initRotation='0 1 0 0', initPos=None):
     if not os.path.exists(inFile):
         sys.exit('Input file "%s" does not exists.' % inFile)
     if not type(initRotation) == str or len(initRotation.split()) != 4:
         sys.exit('--rotation argument is not valid. Has to be of Type = str and contain 4 values.')
+    if initPos is not None:
+        try:
+            initPos = initPos.replace(",", ' ').replace("[", '').replace("]", '').replace("(", '').replace(")", '')
+            initPos = list(map(float, initPos.split()))
+        except Exception as e:
+            sys.exit(e, '\n--init-pos argument is not valid. Your list has to be inside of quotation marks. '
+                     'Example: --init-pos="1.0, 2, -0.4"')
 
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
     urdf2webots.writeProto.enableMultiFile = enableMultiFile
     urdf2webots.writeProto.staticBase = staticBase
     urdf2webots.writeProto.toolSlot = toolSlot
+    urdf2webots.writeProto.initPos = initPos
 
     with open(inFile, 'r') as file:
         inPath = os.path.dirname(os.path.abspath(inFile))
@@ -98,7 +107,6 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
                     robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize
                     outputFile = outFile if outFile else robotName + '.proto'
                 urdf2webots.writeProto.robotNameMain = robotName
-                
 
                 urdf2webots.parserURDF.robotName = robotName  # pass robotName
                 mkdirSafe(outputFile.replace('.proto', '') + '_textures')  # make a dir called 'x_textures'
@@ -182,8 +190,8 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
 if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
     optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
-    optParser.add_option('--output', dest='outFile', default='', help='Specifies the path and, if ending in ".proto", name of the resulting PROTO file.'
-                        ' The filename minus the .proto extension will be the robot name.')
+    optParser.add_option('--output', dest='outFile', default='', help='Specifies the path and, if ending in ".proto", name '
+                         'of the resulting PROTO file. The filename minus the .proto extension will be the robot name.')
     optParser.add_option('--normal', dest='normal', action='store_true', default=False,
                          help='If set, the normals are exported if present in the URDF definition.')
     optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
@@ -199,7 +207,11 @@ if __name__ == '__main__':
                          help='Specify the link that you want to add a tool slot too (exact link name from urdf)')
     optParser.add_option('--rotation', dest='initRotation', default='0 1 0 0',
                          help='Set the rotation field of your PROTO file.')
+    optParser.add_option('--init-pos', dest='initPos', default=None,
+                         help='Set the initial positions of your robot joints. Example: --init-pos="[1.2, 0.5, -1.5]" would '
+                         'set the first 3 joints of your robot to the specified values, and leave the rest with their '
+                         'default value')
     options, args = optParser.parse_args()
 
     convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
-                 options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation)
+                 options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation, options.initPos)

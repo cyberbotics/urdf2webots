@@ -10,6 +10,7 @@ staticBase = False
 enableMultiFile = False
 meshFilesPath = None
 robotNameMain = ''
+initPos = None
 
 
 class RGB():
@@ -162,12 +163,12 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                 inertiaMatrix = [i.ixx, i.ixy, i.ixz, i.ixy, i.iyy, i.iyz, i.ixz, i.iyz, i.izz]
                 if link.inertia.rotation[-1] != 0.0:
                     rotationMatrix = matrixFromRotation(link.inertia.rotation)
-                    I = np.array(inertiaMatrix).reshape(3, 3)
+                    I_mat = np.array(inertiaMatrix).reshape(3, 3)
                     R = np.array(rotationMatrix).reshape(3, 3)
                     R_t = np.transpose(R)
                     # calculate the rotated inertiaMatrix with R_t * I * R. For reference, check the link below
                     # https://www.euclideanspace.com/physics/dynamics/inertia/rotation/index.htm
-                    inertiaMatrix = np.dot(np.dot(R_t, I), R).reshape(9)
+                    inertiaMatrix = np.dot(np.dot(R_t, I_mat), R).reshape(9)
                 if (inertiaMatrix[0] != 1.0 or inertiaMatrix[4] != 1.0 or inertiaMatrix[8] != 1.0 or
                         inertiaMatrix[1] != 0.0 or inertiaMatrix[2] != 0.0 or inertiaMatrix[5] != 0.0):
                     proto.write((level + 2) * indent + 'inertiaMatrix [\n')
@@ -388,7 +389,7 @@ def URDFVisual(proto, visualNode, level, normal=False):
         proto.write((shapeLevel + 1) * indent + '}\n')
 
     elif visualNode.geometry.trimesh.coord:
-        meshType = 'IndexedLineSet' if visualNode.geometry.lineset else 'IndexedFaceSet' 
+        meshType = 'IndexedLineSet' if visualNode.geometry.lineset else 'IndexedFaceSet'
         if visualNode.geometry.defName is not None:
             proto.write((shapeLevel + 1) * indent + 'geometry USE %s\n' % visualNode.geometry.defName)
         else:
@@ -397,7 +398,7 @@ def URDFVisual(proto, visualNode, level, normal=False):
             if visualNode.geometry.defName is not None:
                 proto.write((shapeLevel + 1) * indent + 'geometry DEF %s %s {\n' % (visualNode.geometry.defName, meshType))
             else:
-                proto.write((shapeLevel + 1) * indent + 'geometry %s {\n' %  meshType)
+                proto.write((shapeLevel + 1) * indent + 'geometry %s {\n' % meshType)
             proto.write((shapeLevel + 2) * indent + 'coord Coordinate {\n')
             proto.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
             for value in visualNode.geometry.trimesh.coord:
@@ -501,8 +502,8 @@ def URDFShape(proto, link, level, normal=False):
             if name is None:
                 if visualNode.geometry.name is not None:
                     name = computeDefName(visualNode.geometry.name)
+            name = robotNameMain + '_' + name if robotNameMain else name
             if visualNode.geometry.defName is None:
-                name = robotNameMain + '_' + name if robotNameMain else name
                 print('Create meshFile: %sMesh.proto' % name)
                 filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
                 meshProtoFile = open(filepath, 'w')
@@ -535,11 +536,17 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     if joint.type == 'revolute' or joint.type == 'continuous':
         proto.write(level * indent + 'HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
+        position = None
         if joint.limit.lower > 0.0:
             # if 0 is not in the range, set the position to be the middle of the range
             position = joint.limit.lower
             if joint.limit.upper >= joint.limit.lower:
                 position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
+        if initPos is not None:
+            if len(initPos) > 0:
+                position = initPos[0]
+                del initPos[0]
+        if position is not None:
             proto.write((level + 2) * indent + 'position %lf \n' % position)
             mat1 = matrixFromRotation(endpointRotation)
             mat2 = matrixFromRotation([axis[0], axis[1], axis[2], position])

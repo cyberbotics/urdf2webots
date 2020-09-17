@@ -27,7 +27,10 @@ if __name__ == '__main__':
                          help='Specify the link that you want to add a tool slot too (exact link name from urdf)')
     optParser.add_option('--rotation', dest='initRotation', default='0 1 0 0',
                          help='Set the rotation field of your PROTO file.')
+    optParser.add_option('--init-pos', dest='initPos', default=None,
+                         help='Set the initial positions of your robot joints. Example: --init-pos="[1.2, 0.5, -1.5]" would set '
+                         'the first 3 joints of your robot to the specified values, and leave the rest with their default value.')
     options, args = optParser.parse_args()
 
     convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
-                 options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation)
+                 options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation, options.initPos)
