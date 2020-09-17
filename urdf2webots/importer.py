@@ -54,8 +54,8 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
         sys.exit('--rotation argument is not valid. Has to be of Type = str and contain 4 values.')
     if initPos is not None:
         try:
-            initPos = initPos.replace(",",' ').replace("[",'').replace("]",'').replace("(",'').replace(")",'')
-            initPos = list(map(float,initPos.split()))
+            initPos = initPos.replace(",", ' ').replace("[", '').replace("]", '').replace("(", '').replace(")", '')
+            initPos = list(map(float, initPos.split()))
         except:
             sys.exit('--init-pos argument is not valid. Your list has to be inside of quotation marks. Example: --init-pos="1.0, 2, -0.4"')  
         
