@@ -209,7 +209,7 @@ if __name__ == '__main__':
                          help='Set the rotation field of your PROTO file.')
     optParser.add_option('--init-pos', dest='initPos', default=None,
                          help='Set the initial positions of your robot joints. Example: --init_pos="[1.2, 0.5, -1.5]" would '
-                         'set the first 3 joits of your robot to the specified values, and leave the rest with their '
+                         'set the first 3 joints of your robot to the specified values, and leave the rest with their '
                          'default value')
     options, args = optParser.parse_args()
 
