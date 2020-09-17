@@ -491,6 +491,7 @@ def getOBJMesh(filename, node, link):
         else:
             link.collision.append(collision)
 
+
 def getColladaMesh(filename, node, link):
     """Read collada file."""
     if not colladaIsAvailable:
