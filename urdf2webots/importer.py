@@ -58,7 +58,6 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
             initPos = list(map(float, initPos.split()))
         except:
             sys.exit('--init-pos argument is not valid. Your list has to be inside of quotation marks. Example: --init-pos="1.0, 2, -0.4"')  
-        
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
     urdf2webots.writeProto.enableMultiFile = enableMultiFile
     urdf2webots.writeProto.staticBase = staticBase
