@@ -57,3 +57,7 @@ class TestCodeFormat(unittest.TestCase):
             report.total_errors, 0,
             msg='PEP8 errors:\n%s' % (report)
         )
+
+
+if __name__ == '__main__':
+    unittest.main()
