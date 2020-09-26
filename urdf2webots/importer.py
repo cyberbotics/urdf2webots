@@ -46,7 +46,7 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
+def convert2urdf(inFile, outFile=None, normal=False, insertMesh=False, meshTransform='', boxCollision=False,
                  disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None,
                  initRotation='0 1 0 0', initPos=None, linkToDef=False, jointToDef=False):
     if not os.path.exists(inFile):
@@ -183,7 +183,8 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
 
                 urdf2webots.writeProto.declaration(protoFile, robotName, initRotation)
                 urdf2webots.writeProto.URDFLink(protoFile, rootLink, 1, parentList, childList, linkList, jointList,
-                                                sensorList, boxCollision=boxCollision, normal=normal, robot=True)
+                                                sensorList, boxCollision=boxCollision, normal=normal,
+                                                insertMesh=insertMesh, meshTransform=meshTransform, robot=True)
                 protoFile.write('}\n')
                 protoFile.close()
                 return
@@ -197,6 +198,11 @@ if __name__ == '__main__':
                          'of the resulting PROTO file. The filename minus the .proto extension will be the robot name.')
     optParser.add_option('--normal', dest='normal', action='store_true', default=False,
                          help='If set, the normals are exported if present in the URDF definition.')
+    optParser.add_option('--insert-mesh', dest='insertMesh', action='store_true', default=False,
+                         help='If set, the mesh is exported in the proto file. Otherwise the filepath to the meshes are exported.')
+    optParser.add_option('--mesh-transform', dest='meshTransform', default='',
+                         help='Set the transformation composed by a translation and euler axis representation required to visualize meshed loaded from files correctly.'
+                         'Usage: --mesh-transform="x, y, z, r, p, y, angle')
     optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
                          help='If set, the bounding objects are approximated using boxes.')
     optParser.add_option('--disable-mesh-optimization', dest='disableMeshOptimization', action='store_true', default=False,
@@ -219,5 +225,5 @@ if __name__ == '__main__':
     optParser.add_option('--joint-to-def', dest='jointToDef', action='store_true', default=False,
                          help='If set, urdf joint names are also used as DEF names as well as joint names.')
     options, args = optParser.parse_args()
-    convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
+    convert2urdf(options.inFile, options.outFile, options.normal, options.insertMesh, options.meshTransform, options.boxCollision, options.disableMeshOptimization,
                  options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)

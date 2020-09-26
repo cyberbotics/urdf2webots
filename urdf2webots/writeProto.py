@@ -1,5 +1,6 @@
 """Import modules."""
 
+import os
 import math
 import numpy as np
 
@@ -81,7 +82,7 @@ def declaration(proto, robotName, initRotation):
 
 def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sensorList,
              jointPosition=[0.0, 0.0, 0.0], jointRotation=[1.0, 0.0, 0.0, 0.0],
-             boxCollision=False, normal=False, dummy=False, robot=False, endpoint=False):
+             boxCollision=False, normal=False, insertMesh=False, meshTransform="", dummy=False, robot=False, endpoint=False):
     """Write a link iteratively."""
     indent = '  '
     haveChild = False
@@ -114,7 +115,7 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             if not haveChild:
                 haveChild = True
                 proto.write((level + 1) * indent + 'children [\n')
-            URDFShape(proto, link, level + 2, normal)
+            URDFShape(proto, link, level + 2, normal, insertMesh, meshTransform)
         # 2: export Sensors
         for sensor in sensorList:
             if sensor.parentLink == link.name:
@@ -129,7 +130,7 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
                     haveChild = True
                     proto.write((level + 1) * indent + 'children [\n')
                 URDFJoint(proto, joint, level + 2, parentList, childList,
-                          linkList, jointList, sensorList, boxCollision, normal)
+                          linkList, jointList, sensorList, boxCollision, normal, insertMesh, meshTransform)
         # 4: export ToolSlot if specified
         if link.name == toolSlot:
             if not haveChild:
@@ -336,10 +337,20 @@ def computeDefName(name):
     return name.replace(' ', '_').replace('.', '_')
 
 
-def URDFVisual(proto, visualNode, level, normal=False):
+def URDFVisual(proto, visualNode, level, normal=False, insertMesh=False, meshTransform=""):
     """Write a Visual."""
     indent = '  '
     shapeLevel = level
+
+    useMeshfile = not insertMesh and visualNode.geometry.trimeshFile
+
+    if useMeshfile and meshTransform:
+        transform = meshTransform.split()
+        proto.write(shapeLevel * indent + 'Transform {\n')
+        proto.write((shapeLevel + 1) * indent + 'translation %s %s %s\n' % (transform[0], transform[1], transform[2]))
+        proto.write((shapeLevel + 1) * indent + 'rotation %s %s %s %s\n' % (transform[3], transform[4], transform[5], transform[6]))
+        proto.write((shapeLevel + 1) * indent + 'children [\n')
+        shapeLevel = shapeLevel + 2
 
     proto.write(shapeLevel * indent + 'Shape {\n')
     if visualNode.material.defName is not None:
@@ -395,6 +406,13 @@ def URDFVisual(proto, visualNode, level, normal=False):
     elif visualNode.geometry.sphere.radius != 0:
         proto.write((shapeLevel + 1) * indent + 'geometry Sphere {\n')
         proto.write((shapeLevel + 2) * indent + 'radius ' + str(visualNode.geometry.sphere.radius) + '\n')
+        proto.write((shapeLevel + 1) * indent + '}\n')
+
+    elif useMeshfile:
+        proto.write((shapeLevel + 1) * indent + 'geometry Mesh {\n')
+        proto.write((shapeLevel + 2) * indent + 'url [\n')
+        proto.write((shapeLevel + 3) * indent + '\"meshes/' + os.path.basename(visualNode.geometry.trimeshFile) + '\"\n')
+        proto.write((shapeLevel + 2) * indent + ']\n')
         proto.write((shapeLevel + 1) * indent + '}\n')
 
     elif visualNode.geometry.trimesh.coord:
@@ -484,10 +502,16 @@ def URDFVisual(proto, visualNode, level, normal=False):
             if not visualNode.geometry.lineset:
                 proto.write((shapeLevel + 2) * indent + 'creaseAngle 1\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
+
     proto.write(shapeLevel * indent + '}\n')
 
+    if useMeshfile and meshTransform:
+        shapeLevel = shapeLevel - 2
+        proto.write((shapeLevel + 1) * indent + ']\n')
+        proto.write(shapeLevel * indent + '}\n')
 
-def URDFShape(proto, link, level, normal=False):
+
+def URDFShape(proto, link, level, normal=False, insertMesh=False, meshTransform=""):
     """Write a Shape."""
     indent = '  '
     shapeLevel = level
@@ -506,7 +530,7 @@ def URDFShape(proto, link, level, normal=False):
             proto.write((shapeLevel + 1) * indent + 'children [\n')
             shapeLevel += 2
             transform = True
-        if enableMultiFile and visualNode.geometry.trimesh.coord:
+        if enableMultiFile and (visualNode.geometry.trimesh.coord or visualNode.geometry.trimeshFile):
             name = visualNode.geometry.defName
             if name is None:
                 if visualNode.geometry.name is not None:
@@ -519,20 +543,24 @@ def URDFShape(proto, link, level, normal=False):
                 header(meshProtoFile, tags=['hidden'])
                 meshProtoFile.write('PROTO %sMesh [\n]\n{\n' % name)
                 visualNode.material.defName = None
-                URDFVisual(meshProtoFile, visualNode, 1, normal)
+                URDFVisual(meshProtoFile, visualNode, 1, normal, insertMesh, meshTransform)
                 meshProtoFile.write('}\n')
                 meshProtoFile.close()
             proto.write(shapeLevel * indent + '%sMesh {\n' % name + shapeLevel * indent + '}\n')
         else:
-            URDFVisual(proto, visualNode, shapeLevel, normal)
+            URDFVisual(proto, visualNode, shapeLevel, normal, insertMesh, meshTransform)
         if transform:
             proto.write((shapeLevel - 1) * indent + ']\n')
             proto.write((shapeLevel - 2) * indent + '}\n')
             shapeLevel -= 2
 
+        # workaround: skip adding multiple proto files which would refer to the same mesh file
+        if not insertMesh and visualNode.geometry.trimeshFile:
+            break
+
 
 def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
-              sensorList, boxCollision, normal):
+              sensorList, boxCollision, normal, insertMesh, meshTransform):
     """Write a Joint iteratively."""
     indent = '  '
     if not joint.axis:
@@ -593,7 +621,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
             if childLink.name == joint.child:
                 URDFLink(proto, childLink, level, parentList, childList,
                          linkList, jointList, sensorList, joint.position, joint.rotation,
-                         boxCollision, normal)
+                         boxCollision, normal, insertMesh, meshTransform)
         return
 
     elif joint.type == 'floating' or joint.type == 'planar':
@@ -624,13 +652,13 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         if childLink.name == joint.child:
             URDFLink(proto, childLink, level + 1, parentList, childList,
                      linkList, jointList, sensorList, endpointPosition, endpointRotation,
-                     boxCollision, normal, endpoint=True)
+                     boxCollision, normal, insertMesh, meshTransform, endpoint=True)
             assert(not found_link)
             found_link = True
     # case that non-existing link cited, set dummy flag
     if not found_link and joint.child:
         URDFLink(proto, joint.child, level + 1, parentList, childList,
                  linkList, jointList, sensorList, endpointPosition, endpointRotation,
-                 boxCollision, normal, dummy=True)
+                 boxCollision, normal, insertMesh, meshTransform, dummy=True)
         print('warning: link ' + joint.child + ' is dummy!')
     proto.write(level * indent + '}\n')

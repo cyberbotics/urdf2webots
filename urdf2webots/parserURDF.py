@@ -98,6 +98,7 @@ class Geometry():
         self.cylinder = Cylinder()
         self.sphere = Sphere()
         self.trimesh = Trimesh()
+        self.trimeshFile = ""
         self.scale = [1.0, 1.0, 1.0]
         self.name = None
         self.defName = None
@@ -446,6 +447,7 @@ def getSTLMesh(filename, node):
     b = struct.unpack("<3f", stlFile.read(12))
     c = struct.unpack("<3f", stlFile.read(12))
     struct.unpack("H", stlFile.read(2))
+    node.geometry.trimeshFile = filename
     trimesh = node.geometry.trimesh
     trimesh.coord.append(a)
     trimesh.coord.append(b)
@@ -513,6 +515,7 @@ def getOBJMesh(filename, node, link):
                 collision.geometry.scale = node.geometry.scale
                 extSring = '_%d' % (counter) if counter != 0 else ''
                 collision.geometry.name = '%s%s' % (os.path.splitext(os.path.basename(filename))[0], extSring)
+                collision.geometry.trimeshFile = filename
                 counter += 1
             elif header == 'f':  # face
                 vertices = body.split()
@@ -571,6 +574,7 @@ def getColladaMesh(filename, node, link):
                 index += 1
                 visual.position = node.position
                 visual.rotation = node.rotation
+                visual.geometry.trimeshFile = filename
                 visual.material.diffuse.red = node.material.diffuse.red
                 visual.material.diffuse.green = node.material.diffuse.green
                 visual.material.diffuse.blue = node.material.diffuse.blue
@@ -646,6 +650,7 @@ def getColladaMesh(filename, node, link):
                 collision = Collision()
                 collision.position = node.position
                 collision.rotation = node.rotation
+                collision.geometry.trimeshFile = filename
                 collision.geometry.scale = node.geometry.scale
                 for value in data.vertex:
                     collision.geometry.trimesh.coord.append(numpy.array(value))
