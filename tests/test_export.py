@@ -1,5 +1,6 @@
 """Test module of the urdf2webots script."""
 import os
+import sys
 import unittest
 import shutil
 
