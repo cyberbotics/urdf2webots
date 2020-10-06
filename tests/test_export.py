@@ -1,5 +1,6 @@
 """Test module of the urdf2webots script."""
 import os
+import sys
 import unittest
 import shutil
 
@@ -57,8 +58,8 @@ class TestScript(unittest.TestCase):
     def test_script_produces_the_correct_result(self):
         """Test that urdf2webots produces an expected result."""
         for paths in modelPaths:
-            command = ('python %s --input=%s --output=%s %s' %
-                       (urdf2webotsPath, paths['input'], paths['output'], paths['arguments']))
+            command = ('%s %s --input=%s --output=%s %s' %
+                       (sys.executable, urdf2webotsPath, paths['input'], paths['output'], paths['arguments']))
             retcode = os.system(command)
             self.assertEqual(retcode, 0, msg='Error when exporting "%s"' % (paths['input']))
             for expected in paths['expected']:
