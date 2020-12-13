@@ -70,9 +70,9 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
     with open(inFile, 'r') as file:
         inPath = os.path.dirname(os.path.abspath(inFile))
         content = file.read()
-        packages = re.findall('"package://(.*)"', content)
-        if packages:
-            packageName = packages[0].split('/')[0]
+
+        for match in re.finditer('"package://(.*)"', content):
+            packageName = match.group(1).split('/')[0]
             directory = os.path.dirname(inFile)
             while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
                 directory = os.path.dirname(directory)
@@ -87,7 +87,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
                                      % packageName)
             if os.path.split(directory)[1]:
                 packagePath = os.path.split(directory)[0]
-                content = content.replace('package:/', packagePath)
+                content = content.replace('package://'+packageName, packagePath+'/'+packageName)
             else:
                 sys.stderr.write('Can\'t determine package root path.\n')
 
