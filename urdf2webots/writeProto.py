@@ -40,7 +40,7 @@ def header(proto, srcFile=None, robotName='', tags=[]):
     """Specify VRML file header."""
     if srcFile:
         header.sourceFile = srcFile
-    proto.write('#VRML_SIM R2020b utf8\n')
+    proto.write('#VRML_SIM R2021a utf8\n')
     proto.write('# license: Apache License 2.0\n')
     proto.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     if tags:
