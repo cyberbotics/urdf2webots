@@ -75,7 +75,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
             packageName = packages[0].split('/')[0]
             directory = os.path.dirname(inFile)
             while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
-                directory = os.path.dirname(directory)
+                directory = os.path.dirname(os.path.abspath(inFile))
             if not os.path.split(directory)[1]:
                 try:
                     rospack = rospkg.RosPack()
