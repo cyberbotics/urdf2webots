@@ -73,7 +73,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
         packages = re.findall('"package://(.*)"', content)
         if packages:
             packageName = packages[0].split('/')[0]
-            directory = os.path.dirname(inFile)
+            directory = inPath
             while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
                 directory = os.path.dirname(directory)
             if not os.path.split(directory)[1]:
