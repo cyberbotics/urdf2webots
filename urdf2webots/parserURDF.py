@@ -923,6 +923,8 @@ def isRootLink(link, childList):
 
 def parseGazeboElement(element, parentLink, linkList):
     """Parse a Gazebo element."""
+    if element.hasAttribute("reference"):
+        parentLink = element.getAttribute("reference")
     for plugin in element.getElementsByTagName('plugin'):
         if plugin.hasAttribute('filename') and plugin.getAttribute('filename').startswith('libgazebo_ros_imu'):
             imu = IMU()
