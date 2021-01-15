@@ -2,7 +2,7 @@
 
 import math
 import numpy as np
-
+from urdf2webots.parserURDF import IMU
 from urdf2webots.math_utils import rotateVector, matrixFromRotation, multiplyMatrix, rotationFromMatrix
 
 toolSlot = None
@@ -112,6 +112,13 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
         # 2: export Sensors
         for sensor in sensorList:
             if sensor.parentLink == link.name:
+                # add dummy physics for imu sensor if there is none since gyro requires it
+                if type(sensor) == IMU and link.inertia.mass is None:
+                    proto.write((level + 1) * indent + 'physics Physics {\n')
+                    proto.write((level + 1) * indent + '}\n')
+                    proto.write((level + 1) * indent + 'boundingObject Box {\n')
+                    proto.write((level + 1) * indent + 'size 0.01 0.01 0.01\n')
+                    proto.write((level + 1) * indent + '}\n')
                 if not haveChild:
                     haveChild = True
                     proto.write((level + 1) * indent + 'children [\n')
