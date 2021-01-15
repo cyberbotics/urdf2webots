@@ -923,6 +923,8 @@ def isRootLink(link, childList):
 
 def parseGazeboElement(element, parentLink, linkList):
     """Parse a Gazebo element."""
+    if element.hasAttribute("reference") and any([link.name == element.getAttribute('reference') for link in linkList]):
+        parentLink = element.getAttribute("reference")
     for plugin in element.getElementsByTagName('plugin'):
         if plugin.hasAttribute('filename') and plugin.getAttribute('filename').startswith('libgazebo_ros_imu'):
             imu = IMU()
@@ -937,8 +939,6 @@ def parseGazeboElement(element, parentLink, linkList):
         if sensorElement.getAttribute('type') == 'camera':
             camera = Camera()
             camera.parentLink = parentLink
-            if element.hasAttribute('reference') and element.getAttribute('reference') in linkList:
-                camera.parentLink = element.getAttribute('reference')
             camera.name = sensorElement.getAttribute('name')
             if hasElement(sensorElement, 'camera'):
                 cameraElement = sensorElement.getElementsByTagName('camera')[0]
@@ -962,8 +962,6 @@ def parseGazeboElement(element, parentLink, linkList):
         elif sensorElement.getAttribute('type') == 'ray':
             lidar = Lidar()
             lidar.parentLink = parentLink
-            if element.hasAttribute('reference') and element.getAttribute('reference') in linkList:
-                lidar.parentLink = element.getAttribute('reference')
             lidar.name = sensorElement.getAttribute('name')
             if hasElement(sensorElement, 'ray'):
                 rayElement = sensorElement.getElementsByTagName('ray')[0]
