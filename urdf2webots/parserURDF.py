@@ -356,7 +356,7 @@ class TouchSensor:
         """Export the touch sensor."""
         indent = '  '
         if self.type:
-            file.write(indentationLevel * indent + '  type "%s"\n' % self.type)
+            file.write(indentationLevel * indent + 'type "%s"\n' % self.type)
 
 
 def colorVector2Instance(cv, alpha_last=True):
