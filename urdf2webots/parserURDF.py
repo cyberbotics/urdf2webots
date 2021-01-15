@@ -289,6 +289,8 @@ class Camera():
         """Export this camera."""
         indent = '  '
         file.write(indentationLevel * indent + 'Camera {\n')
+        # rotation to convert from REP103 to webots viewport
+        file.write(indentationLevel * indent + '  rotation 1.0 0.0 0.0 3.141591\n')
         file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
         if self.fov:
             file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
