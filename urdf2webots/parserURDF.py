@@ -218,6 +218,7 @@ class Link():
         self.inertia = Inertia()
         self.visual = []
         self.collision = []
+        self.touchSensor = None
 
 
 class Joint():
@@ -344,6 +345,18 @@ class Lidar():
         if self.resolution:
             file.write(indentationLevel * indent + '  resolution %lf\n' % self.resolution)
         file.write(indentationLevel * indent + '}\n')
+
+
+class TouchSensor:
+    """ Defines a Touch sensor."""
+    def __init__(self):
+        self.type = None
+
+    def export(self, file, indentationLevel):
+        """Export the touch sensor."""
+        indent = '  '
+        if self.type:
+            file.write(indentationLevel * indent + '  type "%s"\n' % self.type)
 
 
 def colorVector2Instance(cv, alpha_last=True):
@@ -936,6 +949,18 @@ def parseGazeboElement(element, parentLink, linkList):
             if hasElement(plugin, 'gaussianNoise'):
                 imu.gaussianNoise = float(plugin.getElementsByTagName('gaussianNoise')[0].firstChild.nodeValue)
             IMU.list.append(imu)
+        elif plugin.hasAttribute('filename') and plugin.getAttribute('filename').startswith('libgazebo_ros_f3d'):
+            touchSensor = TouchSensor()
+            touchSensor.type = "force-3d"
+            if hasElement(plugin, "bodyName"):
+                touchSensorParent = None
+                name = plugin.getElementsByTagName('bodyName')[0].firstChild.nodeValue
+                for link in linkList:
+                    if link.name == name:
+                        touchSensorParent = link
+                        break
+                if touchSensorParent:
+                    touchSensorParent.touchSensor = touchSensor
     for sensorElement in element.getElementsByTagName('sensor'):
         sensorElement = element.getElementsByTagName('sensor')[0]
         if sensorElement.getAttribute('type') == 'camera':
