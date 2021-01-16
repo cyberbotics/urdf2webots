@@ -218,6 +218,7 @@ class Link():
         self.inertia = Inertia()
         self.visual = []
         self.collision = []
+        self.forceSensor = False
 
 
 class Joint():
@@ -936,6 +937,13 @@ def parseGazeboElement(element, parentLink, linkList):
             if hasElement(plugin, 'gaussianNoise'):
                 imu.gaussianNoise = float(plugin.getElementsByTagName('gaussianNoise')[0].firstChild.nodeValue)
             IMU.list.append(imu)
+        elif plugin.hasAttribute('filename') and plugin.getAttribute('filename').startswith('libgazebo_ros_f3d'):
+            if hasElement(plugin, "bodyName"):
+                name = plugin.getElementsByTagName('bodyName')[0].firstChild.nodeValue
+                for link in linkList:
+                    if link.name == name:
+                        link.forceSensor = True
+                        break
     for sensorElement in element.getElementsByTagName('sensor'):
         sensorElement = element.getElementsByTagName('sensor')[0]
         if sensorElement.getAttribute('type') == 'camera':

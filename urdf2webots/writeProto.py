@@ -94,7 +94,11 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
         proto.write((level + 1) * indent + 'synchronization IS synchronization\n')
         proto.write((level + 1) * indent + 'selfCollision IS selfCollision\n')
     else:
-        proto.write((' ' if endpoint else level * indent) + 'Solid {\n')
+        if link.forceSensor:
+            proto.write((' ' if endpoint else level * indent) + 'TouchSensor {\n')
+            proto.write((level + 1) * indent + 'type "force-3d"\n')
+        else:
+            proto.write((' ' if endpoint else level * indent) + 'Solid {\n')
         proto.write((level + 1) * indent + 'translation %lf %lf %lf\n' % (jointPosition[0],
                                                                           jointPosition[1],
                                                                           jointPosition[2]))
