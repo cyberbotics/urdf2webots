@@ -546,11 +546,11 @@ def getColladaMesh(filename, node, link):
                             for val in data._normal_index:
                                 visual.geometry.trimesh.normalIndex.append(val)
                 if data.material and data.material.effect:
-                    if data.material.effect.emission:
+                    if data.material.effect.emission and isinstance(data.material.effect.emission, tuple):
                         visual.material.emission = colorVector2Instance(data.material.effect.emission)
-                    if data.material.effect.ambient:
+                    if data.material.effect.ambient and isinstance(data.material.effect.ambient, tuple):
                         visual.material.ambient = colorVector2Instance(data.material.effect.ambient)
-                    if data.material.effect.specular:
+                    if data.material.effect.specular and isinstance(data.material.effect.specular, tuple):
                         visual.material.specular = colorVector2Instance(data.material.effect.specular)
                     if data.material.effect.shininess:
                         visual.material.shininess = data.material.effect.shininess
