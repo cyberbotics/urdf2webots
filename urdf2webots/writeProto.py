@@ -11,6 +11,7 @@ enableMultiFile = False
 meshFilesPath = None
 robotNameMain = ''
 initPos = None
+nameToDef = False
 
 
 class RGB():
@@ -98,7 +99,7 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             proto.write((' ' if endpoint else level * indent) + 'TouchSensor {\n')
             proto.write((level + 1) * indent + 'type "force-3d"\n')
         else:
-            proto.write((' ' if endpoint else level * indent) + 'Solid {\n')
+            proto.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if nameToDef else '') + 'Solid {\n')
         proto.write((level + 1) * indent + 'translation %lf %lf %lf\n' % (jointPosition[0],
                                                                           jointPosition[1],
                                                                           jointPosition[2]))
