@@ -96,7 +96,7 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
         proto.write((level + 1) * indent + 'selfCollision IS selfCollision\n')
     else:
         if link.forceSensor:
-            proto.write((' ' if endpoint else level * indent) + 'TouchSensor {\n')
+            proto.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if nameToDef else '') + 'TouchSensor {\n')
             proto.write((level + 1) * indent + 'type "force-3d"\n')
         else:
             proto.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if nameToDef else '') + 'Solid {\n')
