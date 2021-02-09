@@ -11,6 +11,8 @@ enableMultiFile = False
 meshFilesPath = None
 robotNameMain = ''
 initPos = None
+linkToDef = False
+jointToDef = False
 
 
 class RGB():
@@ -95,10 +97,10 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
         proto.write((level + 1) * indent + 'selfCollision IS selfCollision\n')
     else:
         if link.forceSensor:
-            proto.write((' ' if endpoint else level * indent) + 'TouchSensor {\n')
+            proto.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if linkToDef else '') + 'TouchSensor {\n')
             proto.write((level + 1) * indent + 'type "force-3d"\n')
         else:
-            proto.write((' ' if endpoint else level * indent) + 'Solid {\n')
+            proto.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if linkToDef else '') + 'Solid {\n')
         proto.write((level + 1) * indent + 'translation %lf %lf %lf\n' % (jointPosition[0],
                                                                           jointPosition[1],
                                                                           jointPosition[2]))
@@ -537,7 +539,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     if joint.rotation[3] != 0.0 and axis:
         axis = rotateVector(axis, joint.rotation)
     if joint.type == 'revolute' or joint.type == 'continuous':
-        proto.write(level * indent + 'HingeJoint {\n')
+        proto.write(level * indent + ('DEF ' + joint.name + ' ' if jointToDef else '') + 'HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
         position = None
         if joint.limit.lower > 0.0:
@@ -563,7 +565,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         proto.write((level + 1) * indent + 'device [\n')
         proto.write((level + 2) * indent + 'RotationalMotor {\n')
     elif joint.type == 'prismatic':
-        proto.write(level * indent + 'SliderJoint {\n')
+        proto.write(level * indent + ('DEF ' + joint.name + ' ' if jointToDef else '') + 'SliderJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters JointParameters {\n')
         if joint.limit.lower > 0.0:
             # if 0 is not in the range, set the position to be the middle of the range

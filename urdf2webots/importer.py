@@ -48,7 +48,7 @@ def mkdirSafe(directory):
 
 def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
                  disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None,
-                 initRotation='0 1 0 0', initPos=None):
+                 initRotation='0 1 0 0', initPos=None, linkToDef=False, jointToDef=False):
     if not os.path.exists(inFile):
         sys.exit('Input file "%s" does not exists.' % inFile)
     if not type(initRotation) == str or len(initRotation.split()) != 4:
@@ -66,6 +66,8 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
     urdf2webots.writeProto.staticBase = staticBase
     urdf2webots.writeProto.toolSlot = toolSlot
     urdf2webots.writeProto.initPos = initPos
+    urdf2webots.writeProto.linkToDef = linkToDef
+    urdf2webots.writeProto.jointToDef = jointToDef
 
     with open(inFile, 'r') as file:
         inPath = os.path.dirname(os.path.abspath(inFile))
@@ -211,7 +213,10 @@ if __name__ == '__main__':
                          help='Set the initial positions of your robot joints. Example: --init-pos="[1.2, 0.5, -1.5]" would '
                          'set the first 3 joints of your robot to the specified values, and leave the rest with their '
                          'default value')
+    optParser.add_option('--link-to-def', dest='linkToDef', action='store_true', default=False,
+                         help='If set, urdf link names are also used as DEF names as well as solid names.')
+    optParser.add_option('--joint-to-def', dest='jointToDef', action='store_true', default=False,
+                         help='If set, urdf joint names are also used as DEF names as well as joint names.')
     options, args = optParser.parse_args()
-
     convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
-                 options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation, options.initPos)
+                 options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)
