@@ -76,7 +76,7 @@ You can find the sources of these URDF files here:
   - kinova robot: https://github.com/Kinovarobotics/kinova-ros/tree/kinetic/kinova_description
   - gait2392 human skeleton: https://github.com/cyberbotics/urdf2webots/tree/master/tests/sources/gait2392_simbody
 
-## Acknowledgement
+## Acknowledgements
 
 <a href="http://rosin-project.eu">
   <img src="http://rosin-project.eu/wp-content/uploads/rosin_ack_logo_wide.png"
