@@ -969,7 +969,7 @@ def parseGazeboElement(element, parentLink, linkList):
                 if hasElement(noiseElement, 'stddev'):
                     camera.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
             Camera.list.append(camera)
-        elif sensorElement.getAttribute('type') == 'ray':
+        elif sensorElement.getAttribute('type') == 'ray' or sensorElement.getAttribute('type') == 'gpu_ray':
             lidar = Lidar()
             lidar.parentLink = parentLink
             lidar.name = sensorElement.getAttribute('name')
