@@ -218,6 +218,7 @@ class Link():
         self.inertia = Inertia()
         self.visual = []
         self.collision = []
+        self.forceSensor = False
 
 
 class Joint():
@@ -289,6 +290,8 @@ class Camera():
         """Export this camera."""
         indent = '  '
         file.write(indentationLevel * indent + 'Camera {\n')
+        # rotation to convert from REP103 to webots viewport
+        file.write(indentationLevel * indent + '  rotation 1.0 0.0 0.0 3.141591\n')
         file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
         if self.fov:
             file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
@@ -543,11 +546,11 @@ def getColladaMesh(filename, node, link):
                             for val in data._normal_index:
                                 visual.geometry.trimesh.normalIndex.append(val)
                 if data.material and data.material.effect:
-                    if data.material.effect.emission:
+                    if data.material.effect.emission and isinstance(data.material.effect.emission, tuple):
                         visual.material.emission = colorVector2Instance(data.material.effect.emission)
-                    if data.material.effect.ambient:
+                    if data.material.effect.ambient and isinstance(data.material.effect.ambient, tuple):
                         visual.material.ambient = colorVector2Instance(data.material.effect.ambient)
-                    if data.material.effect.specular:
+                    if data.material.effect.specular and isinstance(data.material.effect.specular, tuple):
                         visual.material.specular = colorVector2Instance(data.material.effect.specular)
                     if data.material.effect.shininess:
                         visual.material.shininess = data.material.effect.shininess
@@ -923,6 +926,8 @@ def isRootLink(link, childList):
 
 def parseGazeboElement(element, parentLink, linkList):
     """Parse a Gazebo element."""
+    if element.hasAttribute("reference") and any([link.name == element.getAttribute('reference') for link in linkList]):
+        parentLink = element.getAttribute("reference")
     for plugin in element.getElementsByTagName('plugin'):
         if plugin.hasAttribute('filename') and plugin.getAttribute('filename').startswith('libgazebo_ros_imu'):
             imu = IMU()
@@ -932,13 +937,18 @@ def parseGazeboElement(element, parentLink, linkList):
             if hasElement(plugin, 'gaussianNoise'):
                 imu.gaussianNoise = float(plugin.getElementsByTagName('gaussianNoise')[0].firstChild.nodeValue)
             IMU.list.append(imu)
+        elif plugin.hasAttribute('filename') and plugin.getAttribute('filename').startswith('libgazebo_ros_f3d'):
+            if hasElement(plugin, "bodyName"):
+                name = plugin.getElementsByTagName('bodyName')[0].firstChild.nodeValue
+                for link in linkList:
+                    if link.name == name:
+                        link.forceSensor = True
+                        break
     for sensorElement in element.getElementsByTagName('sensor'):
         sensorElement = element.getElementsByTagName('sensor')[0]
         if sensorElement.getAttribute('type') == 'camera':
             camera = Camera()
             camera.parentLink = parentLink
-            if element.hasAttribute('reference') and element.getAttribute('reference') in linkList:
-                camera.parentLink = element.getAttribute('reference')
             camera.name = sensorElement.getAttribute('name')
             if hasElement(sensorElement, 'camera'):
                 cameraElement = sensorElement.getElementsByTagName('camera')[0]
@@ -959,11 +969,9 @@ def parseGazeboElement(element, parentLink, linkList):
                 if hasElement(noiseElement, 'stddev'):
                     camera.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
             Camera.list.append(camera)
-        elif sensorElement.getAttribute('type') == 'ray':
+        elif sensorElement.getAttribute('type') == 'ray' or sensorElement.getAttribute('type') == 'gpu_ray':
             lidar = Lidar()
             lidar.parentLink = parentLink
-            if element.hasAttribute('reference') and element.getAttribute('reference') in linkList:
-                lidar.parentLink = element.getAttribute('reference')
             lidar.name = sensorElement.getAttribute('name')
             if hasElement(sensorElement, 'ray'):
                 rayElement = sensorElement.getElementsByTagName('ray')[0]

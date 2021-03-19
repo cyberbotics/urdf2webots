@@ -30,7 +30,11 @@ if __name__ == '__main__':
     optParser.add_option('--init-pos', dest='initPos', default=None,
                          help='Set the initial positions of your robot joints. Example: --init-pos="[1.2, 0.5, -1.5]" would set '
                          'the first 3 joints of your robot to the specified values, and leave the rest with their default value.')
+    optParser.add_option('--link-to-def', dest='linkToDef', action='store_true', default=False,
+                         help='If set, urdf link names are also used as DEF names as well as solid names.')
+    optParser.add_option('--joint-to-def', dest='jointToDef', action='store_true', default=False,
+                         help='If set, urdf joint names are also used as DEF names as well as joint names.')
     options, args = optParser.parse_args()
 
     convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
-                 options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation, options.initPos)
+                 options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)

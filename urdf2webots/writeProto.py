@@ -11,6 +11,8 @@ enableMultiFile = False
 meshFilesPath = None
 robotNameMain = ''
 initPos = None
+linkToDef = False
+jointToDef = False
 
 
 class RGB():
@@ -40,7 +42,7 @@ def header(proto, srcFile=None, robotName='', tags=[]):
     """Specify VRML file header."""
     if srcFile:
         header.sourceFile = srcFile
-    proto.write('#VRML_SIM R2020b utf8\n')
+    proto.write('#VRML_SIM R2021a utf8\n')
     proto.write('# license: Apache License 2.0\n')
     proto.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     if tags:
@@ -94,7 +96,11 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
         proto.write((level + 1) * indent + 'synchronization IS synchronization\n')
         proto.write((level + 1) * indent + 'selfCollision IS selfCollision\n')
     else:
-        proto.write((' ' if endpoint else level * indent) + 'Solid {\n')
+        if link.forceSensor:
+            proto.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if linkToDef else '') + 'TouchSensor {\n')
+            proto.write((level + 1) * indent + 'type "force-3d"\n')
+        else:
+            proto.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if linkToDef else '') + 'Solid {\n')
         proto.write((level + 1) * indent + 'translation %lf %lf %lf\n' % (jointPosition[0],
                                                                           jointPosition[1],
                                                                           jointPosition[2]))
@@ -154,10 +160,9 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
             proto.write((level + 1) * indent + 'physics Physics {\n')
             proto.write((level + 2) * indent + 'density -1\n')
             proto.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
-            if link.inertia.position != [0.0, 0.0, 0.0]:
-                proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
-                                                                                       link.inertia.position[1],
-                                                                                       link.inertia.position[2]))
+            proto.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
+                                                                                   link.inertia.position[1],
+                                                                                   link.inertia.position[2]))
             if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
                 i = link.inertia
                 inertiaMatrix = [i.ixx, i.ixy, i.ixz, i.ixy, i.iyy, i.iyz, i.ixz, i.iyz, i.izz]
@@ -534,7 +539,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
     if joint.rotation[3] != 0.0 and axis:
         axis = rotateVector(axis, joint.rotation)
     if joint.type == 'revolute' or joint.type == 'continuous':
-        proto.write(level * indent + 'HingeJoint {\n')
+        proto.write(level * indent + ('DEF ' + joint.name + ' ' if jointToDef else '') + 'HingeJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters HingeJointParameters {\n')
         position = None
         if joint.limit.lower > 0.0:
@@ -560,7 +565,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
         proto.write((level + 1) * indent + 'device [\n')
         proto.write((level + 2) * indent + 'RotationalMotor {\n')
     elif joint.type == 'prismatic':
-        proto.write(level * indent + 'SliderJoint {\n')
+        proto.write(level * indent + ('DEF ' + joint.name + ' ' if jointToDef else '') + 'SliderJoint {\n')
         proto.write((level + 1) * indent + 'jointParameters JointParameters {\n')
         if joint.limit.lower > 0.0:
             # if 0 is not in the range, set the position to be the middle of the range
