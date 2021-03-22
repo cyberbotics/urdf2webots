@@ -269,7 +269,7 @@ class IMU():
         file.write(indentationLevel * indent + '  name "%s compass"\n' % self.name)
         if self.gaussianNoise > 0:
             file.write(indentationLevel * indent + '  lookupTable [-1 -1 %lf, 1 1 %lf]\n' %
-                       -self.gaussianNoise, self.gaussianNoise)
+                       (-self.gaussianNoise, self.gaussianNoise))
         file.write(indentationLevel * indent + '}\n')
 
 
