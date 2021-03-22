@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened, labeled, unlabeled]
 
 jobs:
-  travis:
+  tests:
     strategy:
       matrix:
         python: [2.7, 3.5, 3.6, 3.7, 3.8]
