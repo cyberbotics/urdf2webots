@@ -39,11 +39,17 @@ modelPaths = [
 def fileCompare(file1, file2):
     """Compare content of two files."""
     with open(file1) as f1, open(file2) as f2:
-        for line1, line2 in zip(f1, f2):
+        for i, (line1, line2) in enumerate(zip(f1, f2)):
             if line1.startswith('# Extracted from:') and line2.startswith('# Extracted from:'):
                 # This line may differ.
                 continue
+            elif line1.startswith('#VRML_SIM') and line2.startswith('#VRML_SIM'):
+                # This line may differ according to Webots version used
+                continue
             elif line1 != line2:
+                # Prints the difference between result and expected line
+                print('Diff (line ' + str(i) + ') in ' + file1)
+                print('result: ' + line1 + 'expect: ' + line2)
                 return False
     return True
 
