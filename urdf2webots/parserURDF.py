@@ -580,6 +580,9 @@ def getColladaMesh(filename, node, link):
                                             except IOError:
                                                 visual.material.texture = ""
                                                 print('failed to open ' + os.path.join(dirname, file))
+                            else:
+                                visual.material.diffuse = colorVector2Instance([1.0, 1.0, 1.0, 1.0])
+
                 link.visual.append(visual)
     else:
         for geometry in list(colladaMesh.scene.objects('geometry')):
