@@ -344,11 +344,15 @@ def URDFVisual(proto, visualNode, level, normal=False, insertMesh=False, meshTra
 
     useMeshfile = not insertMesh and visualNode.geometry.trimeshFile
 
-    if useMeshfile and meshTransform:
-        transform = meshTransform.split()
+    if useMeshfile:
+        transform = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]
+        if meshTransform:
+            transform = meshTransform.split()
+        scale = visualNode.geometry.scale
         proto.write(shapeLevel * indent + 'Transform {\n')
         proto.write((shapeLevel + 1) * indent + 'translation %s %s %s\n' % (transform[0], transform[1], transform[2]))
         proto.write((shapeLevel + 1) * indent + 'rotation %s %s %s %s\n' % (transform[3], transform[4], transform[5], transform[6]))
+        proto.write((shapeLevel + 1) * indent + 'scale %s %s %s\n' % (scale[0], scale[1], scale[2]))
         proto.write((shapeLevel + 1) * indent + 'children [\n')
         shapeLevel = shapeLevel + 2
 
@@ -505,7 +509,7 @@ def URDFVisual(proto, visualNode, level, normal=False, insertMesh=False, meshTra
 
     proto.write(shapeLevel * indent + '}\n')
 
-    if useMeshfile and meshTransform:
+    if useMeshfile:
         shapeLevel = shapeLevel - 2
         proto.write((shapeLevel + 1) * indent + ']\n')
         proto.write(shapeLevel * indent + '}\n')
