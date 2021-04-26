@@ -273,6 +273,48 @@ class IMU():
         file.write(indentationLevel * indent + '}\n')
 
 
+class P3D():
+    """Define P3D (ground truth pose)."""
+
+    list = []
+
+    def __init__(self):
+        """Initializatization."""
+        self.name = 'p3d'
+        self.gaussianNoise = 0
+        self.noiseCorrelation = 0
+        self.speedNoise = 0
+        self.parentLink = None
+
+    def export(self, file, indentationLevel):
+        """Export this P3D."""
+        indent = '  '
+
+        # export GPS
+        file.write(indentationLevel * indent + 'GPS {\n')
+        file.write(indentationLevel * indent + '  name "%s gps"\n' % self.name)
+        if self.noiseCorrelation > 0:
+            file.write(indentationLevel * indent + '  noiseCorrelation %lf\n' % self.noiseCorrelation)
+        if self.speedNoise > 0:
+            file.write(indentationLevel * indent + '  speedNoise %lf\n' % self.speedNoise)
+        file.write(indentationLevel * indent + '}\n')
+
+        # export InertialUnit
+        file.write(indentationLevel * indent + 'InertialUnit {\n')
+        file.write(indentationLevel * indent + '  name "%s inertial"\n' % self.name)
+        if self.gaussianNoise > 0:
+            file.write(indentationLevel * indent + '  noise %lf\n' % (self.gaussianNoise / (math.pi/2)))
+        file.write(indentationLevel * indent + '}\n')
+
+        # export Gyro
+        file.write(indentationLevel * indent + 'Gyro {\n')
+        file.write(indentationLevel * indent + '  name "%s gyro"\n' % self.name)
+        if self.gaussianNoise > 0:
+            file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' %
+                       (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
+        file.write(indentationLevel * indent + '}\n')
+
+
 class Camera():
     """Define a camera sensor."""
 
@@ -944,6 +986,12 @@ def parseGazeboElement(element, parentLink, linkList):
                     if link.name == name:
                         link.forceSensor = True
                         break
+        elif plugin.hasAttribute('filename') and plugin.getAttribute('filename').startswith('libgazebo_ros_p3d'):
+            p3d = P3D()
+            p3d.parentLink = parentLink
+            if hasElement(plugin, 'topicName'):
+                p3d.name = plugin.getElementsByTagName('topicName')[0].firstChild.nodeValue
+            P3D.list.append(p3d)
     for sensorElement in element.getElementsByTagName('sensor'):
         sensorElement = element.getElementsByTagName('sensor')[0]
         if sensorElement.getAttribute('type') == 'camera':
