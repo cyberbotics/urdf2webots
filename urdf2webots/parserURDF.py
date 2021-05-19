@@ -991,6 +991,10 @@ def parseGazeboElement(element, parentLink, linkList):
             p3d.parentLink = parentLink
             if hasElement(plugin, 'topicName'):
                 p3d.name = plugin.getElementsByTagName('topicName')[0].firstChild.nodeValue
+            if hasElement(plugin, "xyzOffsets"):
+                print('\033[1;33mWarning: URDF parser cannot handle \"xyzOffsets\" from p3d!\033[0m')
+            if hasElement(plugin, "rpyOffsets"):
+                print('\033[1;33mWarning: URDF parser cannot handle \"rpyOffsets\" from p3d!\033[0m')
             P3D.list.append(p3d)
     for sensorElement in element.getElementsByTagName('sensor'):
         sensorElement = element.getElementsByTagName('sensor')[0]
