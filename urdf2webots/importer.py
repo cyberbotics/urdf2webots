@@ -176,6 +176,7 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
                         urdf2webots.parserURDF.parseGazeboElement(child, rootLink.name, linkList)
 
                 sensorList = (urdf2webots.parserURDF.IMU.list +
+                              urdf2webots.parserURDF.P3D.list +
                               urdf2webots.parserURDF.Camera.list +
                               urdf2webots.parserURDF.Lidar.list)
                 print('There are %d links, %d joints and %d sensors' % (len(linkList), len(jointList), len(sensorList)))
