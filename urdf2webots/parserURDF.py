@@ -1,4 +1,5 @@
 """Import modules."""
+import math
 import os
 import sys
 import struct
@@ -253,18 +254,31 @@ class IMU():
     def export(self, file, indentationLevel):
         """Export this IMU."""
         indent = '  '
+
+        # export InertialUnit
+        file.write(indentationLevel * indent + 'InertialUnit {\n')
+        file.write(indentationLevel * indent + '  name "%s inertial"\n' % self.name)
+        if self.gaussianNoise > 0:
+            file.write(indentationLevel * indent + '  noise %lf\n' % (self.gaussianNoise / (math.pi/2)))
+        file.write(indentationLevel * indent + '}\n')
+
+        # export Accelerometer
         file.write(indentationLevel * indent + 'Accelerometer {\n')
         file.write(indentationLevel * indent + '  name "%s accelerometer"\n' % self.name)
         if self.gaussianNoise > 0:
             file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' %
                        (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
         file.write(indentationLevel * indent + '}\n')
+
+        # export Gyro
         file.write(indentationLevel * indent + 'Gyro {\n')
         file.write(indentationLevel * indent + '  name "%s gyro"\n' % self.name)
         if self.gaussianNoise > 0:
             file.write(indentationLevel * indent + '  lookupTable [-100 -100 %lf, 100 100 %lf]\n' %
                        (-self.gaussianNoise / 100.0, self.gaussianNoise / 100.0))
         file.write(indentationLevel * indent + '}\n')
+
+        # export Compass
         file.write(indentationLevel * indent + 'Compass {\n')
         file.write(indentationLevel * indent + '  name "%s compass"\n' % self.name)
         if self.gaussianNoise > 0:
