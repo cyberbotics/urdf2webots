@@ -1055,13 +1055,13 @@ def parseGazeboElement(element, parentLink, linkList):
                             maxAngle = float(horizontalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
                             lidar.fov = maxAngle - minAngle
                     if hasElement(scanElement, 'vertical'):
-                        horizontalElement = scanElement.getElementsByTagName('horizontal')[0]
-                        if hasElement(horizontalElement, 'samples'):
+                        verticalElement = scanElement.getElementsByTagName('vertical')[0]
+                        if hasElement(verticalElement, 'samples'):
                             lidar.numberOfLayers = \
-                              int(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
-                        if hasElement(horizontalElement, 'min_angle') and hasElement(horizontalElement, 'max_angle'):
-                            minAngle = float(horizontalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
-                            maxAngle = float(horizontalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
+                              int(verticalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
+                        if hasElement(verticalElement, 'min_angle') and hasElement(verticalElement, 'max_angle'):
+                            minAngle = float(verticalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
+                            maxAngle = float(verticalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
                             lidar.verticalFieldOfView = maxAngle - minAngle
                 if hasElement(rayElement, 'range'):
                     rangeElement = rayElement.getElementsByTagName('range')[0]
