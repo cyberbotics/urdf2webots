@@ -346,7 +346,7 @@ def URDFVisual(proto, visualNode, level, normal=False, insertMesh=False, meshTra
 
     if useMeshfile:
         transform = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]
-        if meshTransform:
+        if meshTransform and os.path.splitext(visualNode.geometry.trimeshFile)[1].lower() == '.dae':
             transform = meshTransform.split()
         scale = visualNode.geometry.scale
         proto.write(shapeLevel * indent + 'Transform {\n')
