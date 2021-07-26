@@ -441,19 +441,11 @@ def getSTLMesh(filename, node):
     stlFile = open(filename, 'rb')
     stlFile.read(80)
     numTriangles = struct.unpack("@i", stlFile.read(4))[0]
-    struct.unpack("<3f", stlFile.read(12))
-    a = struct.unpack("<3f", stlFile.read(12))
-    b = struct.unpack("<3f", stlFile.read(12))
-    c = struct.unpack("<3f", stlFile.read(12))
-    struct.unpack("H", stlFile.read(2))
-    trimesh = node.geometry.trimesh
-    trimesh.coord.append(a)
-    trimesh.coord.append(b)
-    trimesh.coord.append(c)
     if numTriangles > 50000 and not disableMeshOptimization:
         print('Warning: This mesh has a lot of triangles!')
         print('Warning: It is recommended to use the script with the \'--disable-mesh-optimization\' argument.')
-    for i in range(1, numTriangles):
+    trimesh = node.geometry.trimesh
+    for i in range(numTriangles):
         if i % 100 == 0:
             sys.stdout.write('%d / %d\r' % (i, numTriangles))
         struct.unpack("<3f", stlFile.read(12))
