@@ -365,6 +365,52 @@ class Camera():
         file.write(indentationLevel * indent + '}\n')
 
 
+class RangeFinder():
+    """Define a range finder sensor."""
+
+    list = []
+
+    def __init__(self):
+        """Initialization."""
+        self.name = 'rangefinder'
+        self.fov = None
+        self.width = None
+        self.height = None
+        self.noise = None
+        self.near = None
+        self.minRange = None
+        self.maxRange = None
+        self.resolution = None
+
+    def export(self, file, indentationLevel):
+        """Export this range finder."""
+        indent = '  '
+        file.write(indentationLevel * indent + 'RangeFinder {\n')
+        # rotation to convert from REP103 to webots viewport
+        file.write(indentationLevel * indent + '  rotation 1.0 0.0 0.0 3.141591\n')
+        file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
+        if self.fov:
+            file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
+        if self.width:
+            file.write(indentationLevel * indent + '  width %d\n' % self.width)
+        if self.height:
+            file.write(indentationLevel * indent + '  height %d\n' % self.height)
+        if self.noise:
+            file.write(indentationLevel * indent + '  noise %lf\n' % self.noise)
+        if self.near:
+            file.write(indentationLevel * indent + '  near %lf\n' % self.near)
+        if self.minRange:
+            if self.minRange < self.near:
+                file.write(indentationLevel * indent + '  minRange %lf\n' % self.near)
+            else:
+                file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
+        if self.maxRange:
+            file.write(indentationLevel * indent + '  maxRange %lf\n' % self.maxRange)
+        if self.resolution:
+            file.write(indentationLevel * indent + '  resolution %lf\n' % self.resolution)
+        file.write(indentationLevel * indent + '}\n')
+
+
 class Lidar():
     """Define a lidar sensor."""
 
@@ -955,6 +1001,37 @@ def parseGazeboElement(element, parentLink, linkList):
                 if hasElement(noiseElement, 'stddev'):
                     camera.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
             Camera.list.append(camera)
+        elif sensorElement.getAttribute('type') == 'depth':
+            rangefinder = RangeFinder()
+            rangefinder.parentLink = parentLink
+            rangefinder.name = sensorElement.getAttribute('name')
+            if hasElement(sensorElement, 'camera'):
+                cameraElement = sensorElement.getElementsByTagName('camera')[0]
+                if hasElement(cameraElement, 'horizontal_fov'):
+                    rangefinder.fov = float(cameraElement.getElementsByTagName('horizontal_fov')[0].firstChild.nodeValue)
+                if hasElement(cameraElement, 'image'):
+                    imageElement = cameraElement.getElementsByTagName('image')[0]
+                    if hasElement(imageElement, 'width'):
+                        rangefinder.width = int(imageElement.getElementsByTagName('width')[0].firstChild.nodeValue)
+                    if hasElement(imageElement, 'height'):
+                        rangefinder.height = int(imageElement.getElementsByTagName('height')[0].firstChild.nodeValue)
+                if hasElement(cameraElement, 'clip'):
+                    clipElement = cameraElement.getElementsByTagName('clip')[0]
+                    if hasElement(clipElement, 'near'):
+                        rangefinder.near = float(clipElement.getElementsByTagName('near')[0].firstChild.nodeValue)
+            if hasElement(sensorElement, 'noise'):
+                noiseElement = sensorElement.getElementsByTagName('noise')[0]
+                if hasElement(noiseElement, 'stddev'):
+                    rangefinder.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
+            if hasElement(sensorElement, 'range'):
+                rangeElement = sensorElement.getElementsByTagName('range')[0]
+                if hasElement(rangeElement, 'min'):
+                    rangefinder.minRange = float(rangeElement.getElementsByTagName('min')[0].firstChild.nodeValue)
+                if hasElement(rangeElement, 'max'):
+                    rangefinder.maxRange = float(rangeElement.getElementsByTagName('max')[0].firstChild.nodeValue)
+                if hasElement(rangeElement, 'resolution'):
+                    rangefinder.resolution = float(rangeElement.getElementsByTagName('resolution')[0].firstChild.nodeValue)
+            RangeFinder.list.append(rangefinder)
         elif sensorElement.getAttribute('type') == 'ray' or sensorElement.getAttribute('type') == 'gpu_ray':
             lidar = Lidar()
             lidar.parentLink = parentLink
