@@ -366,6 +366,7 @@ class Lidar():
         self.maxRange = None
         self.resolution = None
         self.noise = None
+        self.near = None
 
     def export(self, file, indentationLevel):
         """Export this lidar."""
@@ -381,15 +382,18 @@ class Lidar():
         if self.numberOfLayers:
             file.write(indentationLevel * indent + '  numberOfLayers %d\n' % self.numberOfLayers)
         if self.minRange:
-            if self.minRange < 0.01:
-                file.write(indentationLevel * indent + '  near %lf\n' % self.minRange)
-            file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
+            if self.near and self.minRange < self.near:
+                file.write(indentationLevel * indent + '  minRange %lf\n' % self.near)
+            else:
+                file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
         if self.maxRange:
             file.write(indentationLevel * indent + '  maxRange %lf\n' % self.maxRange)
         if self.noise:
             file.write(indentationLevel * indent + '  noise %lf\n' % self.noise)
         if self.resolution:
             file.write(indentationLevel * indent + '  resolution %lf\n' % self.resolution)
+        if self.near:
+            file.write(indentationLevel * indent + '  near %lf\n' % self.near)
         file.write(indentationLevel * indent + '}\n')
 
 
@@ -863,6 +867,10 @@ def parseGazeboElement(element, parentLink, linkList):
                             minAngle = float(verticalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
                             maxAngle = float(verticalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
                             lidar.verticalFieldOfView = maxAngle - minAngle
+                if hasElement(rayElement, 'clip'):
+                    clipElement = rayElement.getElementsByTagName('clip')[0]
+                    if hasElement(clipElement, 'near'):
+                        lidar.near = float(clipElement.getElementsByTagName('near')[0].firstChild.nodeValue)
                 if hasElement(rayElement, 'range'):
                     rangeElement = rayElement.getElementsByTagName('range')[0]
                     if hasElement(rangeElement, 'min'):
