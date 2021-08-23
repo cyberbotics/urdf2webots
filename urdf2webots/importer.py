@@ -149,25 +149,24 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
                     linkList.append(urdf2webots.parserURDF.getLink(link, inPath))
                 for link in linkList:
                     if urdf2webots.parserURDF.isRootLink(link.name, childList):
+                        # We want to skip links between the robot and the static environment.
                         rootLink = link
-                        # if root link has only one joint which type is fixed,
-                        # it should not be part of the model (link between robot and static environment)
-                        while True:
-                            directJoint = []
-                            found = False  # To avoid endless loop
+                        previousRootLink = link
+                        while rootLink in ['base_link', 'base_footprint']:
+                            directJoints = []
                             for joint in jointList:
                                 if joint.parent == rootLink.name:
-                                    directJoint.append(joint)
-                            if len(directJoint) == 1 and directJoint[0].type == 'fixed':
+                                    directJoints.append(joint)
+                            if len(directJoints) == 1:
                                 for childLink in linkList:
-                                    if childLink.name == directJoint[0].child:
+                                    if childLink.name == directJoints[0].child:
+                                        previousRootLink = rootLink
                                         rootLink = childLink
-                                        found = True
-                                        break
                             else:
+                                rootLink = previousRootLink
                                 break
-                            if not found:
-                                break
+
+
                         print('Root link: ' + rootLink.name)
                         break
 
