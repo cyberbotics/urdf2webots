@@ -29,6 +29,7 @@ counter = 0
 # to pass from external
 robotName = ''
 disableMeshOptimization = False
+extensionList = ['.3ds', '.blend', '.bvh', '.dae', '.fbx', '.stl', '.obj', '.x3d']
 
 
 class Trimesh():
@@ -87,6 +88,14 @@ class Sphere():
         self.radius = 0.0
 
 
+class Mesh():
+    """Define mesh object."""
+
+    def __init__(self):
+        """Initializatization."""
+        self.url = ""
+
+
 class Geometry():
     """Define geometry object."""
 
@@ -98,6 +107,7 @@ class Geometry():
         self.cylinder = Cylinder()
         self.sphere = Sphere()
         self.trimesh = Trimesh()
+        self.mesh = Mesh()
         self.scale = [1.0, 1.0, 1.0]
         self.name = None
         self.defName = None
@@ -786,6 +796,13 @@ def getVisual(link, node, path):
                 visual.geometry.scale[1] = float(meshScale[1])
                 visual.geometry.scale[2] = float(meshScale[2])
             extension = os.path.splitext(meshfile)[1].lower()
+            if extension in extensionList:
+                visual.geometry.mesh.url = "\"" + meshfile + "\""
+                link.visual.append(visual)
+            else:
+                print('Unsupported mesh format: \"' + extension + '\"')
+
+            '''
             if extension == '.dae':
                 getColladaMesh(meshfile, visual, link)
             elif extension == '.obj':
@@ -802,6 +819,7 @@ def getVisual(link, node, path):
                 link.visual.append(visual)
             else:
                 print('Unsupported mesh format: \"' + extension + '\"')
+            '''
 
 
 def getCollision(link, node, path):
@@ -848,22 +866,11 @@ def getCollision(link, node, path):
                 idx0 = meshfile.find('package://')
                 meshfile = meshfile[idx0 + len('package://'):]
             extension = os.path.splitext(meshfile)[1].lower()
-            if extension == '.dae':
-                getColladaMesh(meshfile, collision, link)
-            elif extension == '.obj':
-                getOBJMesh(meshfile, collision, link)
-            elif extension == '.stl':
-                name = os.path.splitext(os.path.basename(meshfile))[0]
-                if name in Geometry.reference:
-                    collision.geometry = Geometry.reference[name]
-                else:
-                    if extension == '.stl':
-                        collision.geometry.stl = getSTLMesh(meshfile, collision)
-                    collision.geometry.name = name
-                    Geometry.reference[name] = collision.geometry
+            if extension in extensionList:
+                collision.geometry.mesh.url = "\"" + meshfile + "\""
                 link.collision.append(collision)
             else:
-                print('Unsupported mesh format for collision: \"' + extension + '\"')
+                print('Unsupported mesh format: \"' + extension + '\"')
 
 
 def getAxis(node):

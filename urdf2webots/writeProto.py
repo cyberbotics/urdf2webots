@@ -279,40 +279,19 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write((boundingLevel + 1) * indent + ']\n')
             proto.write(boundingLevel * indent + '}\n')
 
-        elif boundingObject.geometry.trimesh.coord:
+        elif boundingObject.geometry.mesh.url:
             if boundingObject.geometry.defName is not None:
                 proto.write(initialIndent + 'USE %s\n' % boundingObject.geometry.defName)
             else:
                 if boundingObject.geometry.name is not None:
                     boundingObject.geometry.defName = computeDefName(boundingObject.geometry.name)
-                    proto.write(initialIndent + 'DEF %s IndexedFaceSet {\n' % boundingObject.geometry.defName)
+                if boundingObject.geometry.defName is not None:
+                    proto.write(initialIndent + 'DEF %s Mesh {\n' % (boundingObject.geometry.defName))
                 else:
-                    proto.write(initialIndent + 'IndexedFaceSet {\n')
+                    proto.write(initialIndent + 'Mesh {\n')
 
-                proto.write((boundingLevel + 1) * indent + 'coord Coordinate {\n')
-                proto.write((boundingLevel + 2) * indent + 'point [\n' + (boundingLevel + 3) * indent)
-                for value in boundingObject.geometry.trimesh.coord:
-                    proto.write('%lf %lf %lf, ' % (value[0] * boundingObject.geometry.scale[0],
-                                                   value[1] * boundingObject.geometry.scale[1],
-                                                   value[2] * boundingObject.geometry.scale[2]))
-                proto.write('\n' + (boundingLevel + 2) * indent + ']\n')
-                proto.write((boundingLevel + 1) * indent + '}\n')
-
-                proto.write((boundingLevel + 1) * indent + 'coordIndex [\n' + (boundingLevel + 2) * indent)
-                if isinstance(boundingObject.geometry.trimesh.coordIndex[0], np.ndarray) \
-                   or type(boundingObject.geometry.trimesh.coordIndex[0]) == list:
-                    for value in boundingObject.geometry.trimesh.coordIndex:
-                        if len(value) == 3:
-                            proto.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
-                elif isinstance(boundingObject.geometry.trimesh.coordIndex[0], np.int32):
-                    for i in range(len(boundingObject.geometry.trimesh.coordIndex) / 3):
-                        proto.write('%d %d %d -1 ' % (boundingObject.geometry.trimesh.coordIndex[3 * i + 0],
-                                                      boundingObject.geometry.trimesh.coordIndex[3 * i + 1],
-                                                      boundingObject.geometry.trimesh.coordIndex[3 * i + 2]))
-                else:
-                    print('Unsupported "%s" coordinate type' % type(boundingObject.geometry.trimesh.coordIndex[0]))
-                proto.write('\n' + (boundingLevel + 1) * indent + ']\n')
-                proto.write(boundingLevel * indent + '}\n')
+                proto.write((boundingLevel + 1) * indent + 'url ' + str(boundingObject.geometry.mesh.url) + '\n')
+                proto.write(initialIndent + '}\n')
 
         else:
             proto.write(initialIndent + 'Box{\n')
@@ -396,6 +375,25 @@ def URDFVisual(proto, visualNode, level, normal=False):
         proto.write((shapeLevel + 1) * indent + 'geometry Sphere {\n')
         proto.write((shapeLevel + 2) * indent + 'radius ' + str(visualNode.geometry.sphere.radius) + '\n')
         proto.write((shapeLevel + 1) * indent + '}\n')
+
+    elif visualNode.geometry.mesh.url:
+        if visualNode.geometry.defName is not None:
+            proto.write((shapeLevel + 1) * indent + 'geometry USE %s\n' % visualNode.geometry.defName)
+        else:
+            if visualNode.geometry.name is not None:
+                visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
+            if visualNode.geometry.defName is not None:
+                proto.write((shapeLevel + 1) * indent + 'geometry DEF %s Mesh {\n' % (visualNode.geometry.defName))
+            else:
+                proto.write((shapeLevel + 1) * indent + 'geometry Mesh {\n')
+
+            proto.write((shapeLevel + 2) * indent + 'url ' + str(visualNode.geometry.mesh.url) + '\n')
+            proto.write((shapeLevel + 1) * indent + '}\n')
+
+    proto.write(shapeLevel * indent + '}\n')
+
+'''
+def URDFVisual(proto, visualNode, level, normal=False):
 
     elif visualNode.geometry.trimesh.coord:
         meshType = 'IndexedLineSet' if visualNode.geometry.lineset else 'IndexedFaceSet'
@@ -485,7 +483,7 @@ def URDFVisual(proto, visualNode, level, normal=False):
                 proto.write((shapeLevel + 2) * indent + 'creaseAngle 1\n')
             proto.write((shapeLevel + 1) * indent + '}\n')
     proto.write(shapeLevel * indent + '}\n')
-
+'''
 
 def URDFShape(proto, link, level, normal=False):
     """Write a Shape."""
