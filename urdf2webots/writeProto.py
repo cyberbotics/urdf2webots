@@ -291,7 +291,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                     proto.write(initialIndent + 'Mesh {\n')
 
                 proto.write((boundingLevel + 1) * indent + 'url ' + str(boundingObject.geometry.mesh.url) + '\n')
-                proto.write(initialIndent + '}\n')
+                proto.write(boundingLevel * indent + '}\n')
 
         else:
             proto.write(initialIndent + 'Box{\n')
