@@ -652,7 +652,7 @@ def getCollision(link, node, path):
                     Geometry.reference[name] = collision.geometry
                 link.collision.append(collision)
             else:
-                print('Unsupported mesh format: \"' + extension + '\"')
+                print('Unsupported mesh format for collision: \"' + extension + '\"')
 
 
 def getAxis(node):
