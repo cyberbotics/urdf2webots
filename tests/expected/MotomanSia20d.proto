@@ -37,7 +37,7 @@ PROTO MotomanSia20d [
           emissiveColor 0.000000 0.000000 0.000000
         }
         geometry DEF MOTOMAN_BASE Mesh {
-          url "/home/benjamin/Desktop/motoman/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_BASE.stl"
+          url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_BASE.stl"
         }
       }
       HingeJoint {
@@ -77,7 +77,7 @@ PROTO MotomanSia20d [
                     emissiveColor 0.000000 0.000000 0.000000
                   }
                   geometry DEF MOTOMAN_AXIS_S Mesh {
-                    url "/home/benjamin/Desktop/motoman/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_S.stl"
+                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_S.stl"
                   }
                 }
               ]
@@ -113,7 +113,7 @@ PROTO MotomanSia20d [
                       Shape {
                         appearance USE blue
                         geometry DEF MOTOMAN_AXIS_L Mesh {
-                          url "/home/benjamin/Desktop/motoman/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_L.stl"
+                          url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_L.stl"
                         }
                       }
                     ]
@@ -145,7 +145,7 @@ PROTO MotomanSia20d [
                         Shape {
                           appearance USE silver
                           geometry DEF MOTOMAN_AXIS_E Mesh {
-                            url "/home/benjamin/Desktop/motoman/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_E.stl"
+                            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_E.stl"
                           }
                         }
                         HingeJoint {
@@ -178,7 +178,7 @@ PROTO MotomanSia20d [
                                   Shape {
                                     appearance USE blue
                                     geometry DEF MOTOMAN_AXIS_U Mesh {
-                                      url "/home/benjamin/Desktop/motoman/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_U.stl"
+                                      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_U.stl"
                                     }
                                   }
                                 ]
@@ -209,7 +209,7 @@ PROTO MotomanSia20d [
                                     Shape {
                                       appearance USE silver
                                       geometry DEF MOTOMAN_AXIS_R Mesh {
-                                        url "/home/benjamin/Desktop/motoman/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_R.stl"
+                                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_R.stl"
                                       }
                                     }
                                     HingeJoint {
@@ -242,7 +242,7 @@ PROTO MotomanSia20d [
                                               Shape {
                                                 appearance USE blue
                                                 geometry DEF MOTOMAN_AXIS_B Mesh {
-                                                  url "/home/benjamin/Desktop/motoman/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_B.stl"
+                                                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_B.stl"
                                                 }
                                               }
                                             ]
@@ -273,7 +273,7 @@ PROTO MotomanSia20d [
                                                 Shape {
                                                   appearance USE silver
                                                   geometry DEF MOTOMAN_AXIS_T Mesh {
-                                                    url "/home/benjamin/Desktop/motoman/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_T.stl"
+                                                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_T.stl"
                                                   }
                                                 }
                                                 Solid {
