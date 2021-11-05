@@ -444,7 +444,7 @@ def hasElement(node, element):
     else:
         return False
 
-
+'''
 def getSTLMesh(filename, node):
     """Read stl file."""
     print('Parsing Mesh: ' + filename)
@@ -480,8 +480,8 @@ def getSTLMesh(filename, node):
                                    indexC if indexC is not None else trimesh.coord.index(c)])
     stlFile.close()
     return node
-
-
+'''
+'''
 def getOBJMesh(filename, node, link):
     """read obj file."""
     print('Parsing Mesh: ' + filename)
@@ -554,8 +554,8 @@ def getOBJMesh(filename, node, link):
             link.visual.append(collision)
         else:
             link.collision.append(collision)
-
-
+'''
+'''
 def getColladaMesh(filename, node, link):
     """Read collada file."""
     if not colladaIsAvailable:
@@ -654,7 +654,7 @@ def getColladaMesh(filename, node, link):
                 for value in data.vertex_index:
                     collision.geometry.trimesh.coordIndex.append(value)
                 link.collision.append(collision)
-
+'''
 
 def getPosition(node):
     """Read position of a phsical or visual object."""
@@ -797,7 +797,13 @@ def getVisual(link, node, path):
                 visual.geometry.scale[2] = float(meshScale[2])
             extension = os.path.splitext(meshfile)[1].lower()
             if extension in extensionList:
-                visual.geometry.mesh.url = "\"" + meshfile + "\""
+                name = os.path.splitext(os.path.basename(meshfile))[0]
+                if name in Geometry.reference:
+                    visual.geometry = Geometry.reference[name]
+                else:
+                    visual.geometry.mesh.url = "\"" + meshfile + "\""
+                    visual.geometry.name = name
+                    Geometry.reference[name] = visual.geometry
                 link.visual.append(visual)
             else:
                 print('Unsupported mesh format: \"' + extension + '\"')
@@ -867,7 +873,13 @@ def getCollision(link, node, path):
                 meshfile = meshfile[idx0 + len('package://'):]
             extension = os.path.splitext(meshfile)[1].lower()
             if extension in extensionList:
-                collision.geometry.mesh.url = "\"" + meshfile + "\""
+                name = os.path.splitext(os.path.basename(meshfile))[0]
+                if name in Geometry.reference:
+                    collision.geometry = Geometry.reference[name]
+                else:
+                    collision.geometry.mesh.url = "\"" + meshfile + "\""
+                    collision.geometry.name = name
+                    Geometry.reference[name] = collision.geometry
                 link.collision.append(collision)
             else:
                 print('Unsupported mesh format: \"' + extension + '\"')
