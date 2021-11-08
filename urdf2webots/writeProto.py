@@ -286,7 +286,7 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                 if boundingObject.geometry.name is not None:
                     boundingObject.geometry.defName = computeDefName(boundingObject.geometry.name)
                 if boundingObject.geometry.defName is not None:
-                    proto.write(initialIndent + 'DEF %s Mesh {\n' % (boundingObject.geometry.defName))
+                    proto.write(initialIndent + 'DEF %s Mesh {\n' % boundingObject.geometry.defName)
                 else:
                     proto.write(initialIndent + 'Mesh {\n')
 
