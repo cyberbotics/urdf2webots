@@ -93,7 +93,7 @@ class Mesh():
 
     def __init__(self):
         """Initializatization."""
-        self.url = ""
+        self.url = ''
 
 
 class Geometry():
@@ -647,7 +647,7 @@ def getCollision(link, node, path):
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
                 else:
-                    collision.geometry.mesh.url = "\"" + meshfile + "\""
+                    collision.geometry.mesh.url = '"' + meshfile + '"'
                     collision.geometry.name = name
                     Geometry.reference[name] = collision.geometry
                 link.collision.append(collision)
