@@ -590,7 +590,7 @@ def getVisual(link, node, path):
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
-                    visual.geometry.mesh.url = "\"" + meshfile + "\""
+                    visual.geometry.mesh.url = '"' + meshfile + '"'
                     visual.geometry.name = name
                     Geometry.reference[name] = visual.geometry
                 link.visual.append(visual)

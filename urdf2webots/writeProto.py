@@ -383,7 +383,7 @@ def URDFVisual(proto, visualNode, level, normal=False):
             if visualNode.geometry.name is not None:
                 visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
             if visualNode.geometry.defName is not None:
-                proto.write((shapeLevel + 1) * indent + 'geometry DEF %s Mesh {\n' % (visualNode.geometry.defName))
+                proto.write((shapeLevel + 1) * indent + 'geometry DEF %s Mesh {\n' % visualNode.geometry.defName)
             else:
                 proto.write((shapeLevel + 1) * indent + 'geometry Mesh {\n')
 
