@@ -28,13 +28,13 @@ pip install -r requirements.txt
 ### From pip
 
 ```
-python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--static-base] [--tool-slot=linkName] [--name-to-def] [--help]
+python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--static-base] [--tool-slot=linkName] [--name-to-def] [--help]
 ```
 
 ### From Sources
 
 ```
-python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--multi-file] [--static-base] [--tool-slot=linkName] [--name-to-def] [--help]
+python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--disable-mesh-optimization] [--static-base] [--tool-slot=linkName] [--name-to-def] [--help]
 ```
 
 ### Arguments
@@ -46,7 +46,6 @@ The script accepts the following arguments:
   - **--normal**: If set, the normals are exported if present in the URDF definition.
   - **--box-collision**: If set, the bounding objects are approximated using boxes.
   - **--disable-mesh-optimization**: If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the conversion).
-  - **--multi-file**: If set, the mesh files are exported as separated PROTO files.
   - **--static-base**: If set, the base link will have the option to be static (disable physics)
   - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from urdf).
   - **--rotation="0 1 0 0"**: Set the rotation field of your PROTO file. If your URDF file uses the z-axis as 'up', use `--rotation="1 0 0 -1.5708"`.

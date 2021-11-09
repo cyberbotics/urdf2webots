@@ -47,7 +47,7 @@ def mkdirSafe(directory):
 
 
 def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
-                 disableMeshOptimization=False, enableMultiFile=False, staticBase=False, toolSlot=None,
+                 disableMeshOptimization=False, staticBase=False, toolSlot=None,
                  initRotation='0 1 0 0', initPos=None, linkToDef=False, jointToDef=False):
     if not os.path.exists(inFile):
         sys.exit('Input file "%s" does not exists.' % inFile)
@@ -62,7 +62,6 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
                      'Example: --init-pos="1.0, 2, -0.4"')
 
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
-    urdf2webots.writeProto.enableMultiFile = enableMultiFile
     urdf2webots.writeProto.staticBase = staticBase
     urdf2webots.writeProto.toolSlot = toolSlot
     urdf2webots.writeProto.initPos = initPos
@@ -112,10 +111,6 @@ def convert2urdf(inFile, outFile=None, normal=False, boxCollision=False,
 
                 urdf2webots.parserURDF.robotName = robotName  # pass robotName
                 mkdirSafe(outputFile.replace('.proto', '') + '_textures')  # make a dir called 'x_textures'
-
-                if enableMultiFile:
-                    mkdirSafe(outputFile.replace('.proto', '') + '_meshes')  # make a dir called 'x_meshes'
-                    urdf2webots.writeProto.meshFilesPath = outputFile.replace('.proto', '') + '_meshes'
 
                 robot = child
                 protoFile = open(outputFile, 'w')
@@ -201,8 +196,6 @@ if __name__ == '__main__':
     optParser.add_option('--disable-mesh-optimization', dest='disableMeshOptimization', action='store_true', default=False,
                          help='If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the '
                          'conversion).')
-    optParser.add_option('--multi-file', dest='enableMultiFile', action='store_true', default=False,
-                         help='If set, the mesh files are exported as separated PROTO files')
     optParser.add_option('--static-base', dest='staticBase', action='store_true', default=False,
                          help='If set, the base link will have the option to be static (disable physics)')
     optParser.add_option('--tool-slot', dest='toolSlot', default=None,
@@ -219,4 +212,4 @@ if __name__ == '__main__':
                          help='If set, urdf joint names are also used as DEF names as well as joint names.')
     options, args = optParser.parse_args()
     convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
-                 options.enableMultiFile, options.staticBase, options.toolSlot, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)
+                 options.staticBase, options.toolSlot, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)

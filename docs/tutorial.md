@@ -54,17 +54,15 @@ This will compile the URDF from the XACRO file and save it as model.urdf in the 
 
 ## Converting the URDF to a PROTO file
 
-Convert the model.urdf with the following command. I recommend the 2 added parameters:
+Convert the model.urdf with the following command. I recommend the added parameter:
 **--box-collision**: simplifies objects. This can greatly improve the simulation of object interactions, especially grasping.
-
-**--multi-file**: puts the mesh data in a separate file. If not set, the proto file becomes huge and very slow and sluggish in all editors / IDEs I tried.
 
 **--static-base** and **--tool-slot=tool0** are more specific for robotic arms. Have a look at all options and explanations below. To figure out, what the **--tool-slot=LinkName** is called for your robotic arm, you will have to open the model.urdf and figure out what the link is called.
 
 **--rotation="1 0 0 -1.5708"** will change the default rotation of the converted model, so that the z-axis points up. If we were not to set this, the robot would spawn sideways when adding to Webots, where the y-axis is "up" by default.
 
 ```
-python -m urdf2webots.importer --input=model.urdf --box-collision --multi-file --static-base --tool-slot=tool0 --rotation="1 0 0 -1.5708"
+python -m urdf2webots.importer --input=model.urdf --box-collision --static-base --tool-slot=tool0 --rotation="1 0 0 -1.5708"
 ```
 
 Check the [main README](../README.md) for a list of all options.

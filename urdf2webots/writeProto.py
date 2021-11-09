@@ -7,7 +7,6 @@ from urdf2webots.math_utils import rotateVector, matrixFromRotation, multiplyMat
 
 toolSlot = None
 staticBase = False
-enableMultiFile = False
 meshFilesPath = None
 robotNameMain = ''
 initPos = None
@@ -412,25 +411,7 @@ def URDFShape(proto, link, level, normal=False):
             proto.write((shapeLevel + 1) * indent + 'children [\n')
             shapeLevel += 2
             transform = True
-        if enableMultiFile and visualNode.geometry.trimesh.coord:
-            name = visualNode.geometry.defName
-            if name is None:
-                if visualNode.geometry.name is not None:
-                    name = computeDefName(visualNode.geometry.name)
-            name = robotNameMain + '_' + name if robotNameMain else name
-            if visualNode.geometry.defName is None:
-                print('Create meshFile: %sMesh.proto' % name)
-                filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
-                meshProtoFile = open(filepath, 'w')
-                header(meshProtoFile, tags=['hidden'])
-                meshProtoFile.write('PROTO %sMesh [\n]\n{\n' % name)
-                visualNode.material.defName = None
-                URDFVisual(meshProtoFile, visualNode, 1, normal)
-                meshProtoFile.write('}\n')
-                meshProtoFile.close()
-            proto.write(shapeLevel * indent + '%sMesh {\n' % name + shapeLevel * indent + '}\n')
-        else:
-            URDFVisual(proto, visualNode, shapeLevel, normal)
+        URDFVisual(proto, visualNode, shapeLevel, normal)
         if transform:
             proto.write((shapeLevel - 1) * indent + ']\n')
             proto.write((shapeLevel - 2) * indent + '}\n')
