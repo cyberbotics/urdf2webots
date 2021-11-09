@@ -239,45 +239,6 @@ def URDFBoundingObject(proto, link, level, boxCollision):
             proto.write((boundingLevel + 1) * indent + 'radius ' + str(boundingObject.geometry.sphere.radius) + '\n')
             proto.write(boundingLevel * indent + '}\n')
 
-        elif boundingObject.geometry.trimesh.coord and boxCollision:
-            aabb = {
-                'minimum': {'x': float('inf'),
-                            'y': float('inf'),
-                            'z': float('inf')},
-                'maximum': {'x': float('-inf'),
-                            'y': float('-inf'),
-                            'z': float('-inf')}
-            }
-            for value in boundingObject.geometry.trimesh.coord:
-                x = value[0] * boundingObject.geometry.scale[0]
-                y = value[1] * boundingObject.geometry.scale[1]
-                z = value[2] * boundingObject.geometry.scale[2]
-                aabb['minimum']['x'] = min(aabb['minimum']['x'], x)
-                aabb['maximum']['x'] = max(aabb['maximum']['x'], x)
-                aabb['minimum']['y'] = min(aabb['minimum']['y'], y)
-                aabb['maximum']['y'] = max(aabb['maximum']['y'], y)
-                aabb['minimum']['z'] = min(aabb['minimum']['z'], z)
-                aabb['maximum']['z'] = max(aabb['maximum']['z'], z)
-
-            proto.write(initialIndent + 'Transform {\n')
-            proto.write((boundingLevel + 1) * indent + 'translation %f %f %f\n' % (
-                        0.5 * (aabb['maximum']['x'] + aabb['minimum']['x']) + boundingObject.position[0],
-                        0.5 * (aabb['maximum']['y'] + aabb['minimum']['y']) + boundingObject.position[1],
-                        0.5 * (aabb['maximum']['z'] + aabb['minimum']['z']) + boundingObject.position[2],))
-            proto.write((boundingLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (boundingObject.rotation[0],
-                                                                                       boundingObject.rotation[1],
-                                                                                       boundingObject.rotation[2],
-                                                                                       boundingObject.rotation[3]))
-            proto.write((boundingLevel + 1) * indent + 'children [\n')
-            proto.write((boundingLevel + 2) * indent + 'Box {\n')
-            proto.write((boundingLevel + 3) * indent + 'size %f %f %f\n' % (
-                        aabb['maximum']['x'] - aabb['minimum']['x'],
-                        aabb['maximum']['y'] - aabb['minimum']['y'],
-                        aabb['maximum']['z'] - aabb['minimum']['z'],))
-            proto.write((boundingLevel + 2) * indent + '}\n')
-            proto.write((boundingLevel + 1) * indent + ']\n')
-            proto.write(boundingLevel * indent + '}\n')
-
         elif boundingObject.geometry.mesh.url:
             if boundingObject.geometry.defName is not None:
                 proto.write(initialIndent + 'USE %s\n' % boundingObject.geometry.defName)
