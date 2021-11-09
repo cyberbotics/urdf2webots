@@ -6,7 +6,7 @@
 
 PROTO Human [
   field  SFVec3f     translation     0 0 0
-  field  SFRotation  rotation        0 1 0 0
+  field  SFRotation  rotation        0 0 1 0
   field  SFString    name            "Human"  # Is `Robot.name`.
   field  SFString    controller      "void"   # Is `Robot.controller`.
   field  MFString    controllerArgs  []       # Is `Robot.controllerArgs`.
