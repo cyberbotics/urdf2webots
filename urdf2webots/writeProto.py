@@ -7,7 +7,6 @@ from urdf2webots.math_utils import rotateVector, matrixFromRotation, multiplyMat
 
 toolSlot = None
 staticBase = False
-meshFilesPath = None
 robotNameMain = ''
 initPos = None
 linkToDef = False
