@@ -16,9 +16,6 @@ if __name__ == '__main__':
                          help='If set, the normals are exported if present in the URDF definition.')
     optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
                          help='If set, the bounding objects are approximated using boxes.')
-    optParser.add_option('--disable-mesh-optimization', dest='disableMeshOptimization', action='store_true', default=False,
-                         help='If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the '
-                         'conversion).')
     optParser.add_option('--static-base', dest='staticBase', action='store_true', default=False,
                          help='If set, the base link will have the option to be static (disable physics)')
     optParser.add_option('--tool-slot', dest='toolSlot', default=None,
@@ -34,5 +31,5 @@ if __name__ == '__main__':
                          help='If set, urdf joint names are also used as DEF names as well as joint names.')
     options, args = optParser.parse_args()
 
-    convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.disableMeshOptimization,
-                 options.staticBase, options.toolSlot, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)
+    convert2urdf(options.inFile, options.outFile, options.normal, options.boxCollision, options.staticBase,
+                 options.toolSlot, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)

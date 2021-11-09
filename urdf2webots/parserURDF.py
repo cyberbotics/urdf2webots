@@ -28,7 +28,6 @@ counter = 0
 
 # to pass from external
 robotName = ''
-disableMeshOptimization = False
 extensionList = ['.3ds', '.blend', '.bvh', '.dae', '.fbx', '.stl', '.obj', '.x3d']
 
 
