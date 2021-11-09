@@ -78,7 +78,7 @@ def declaration(proto, robotName, initRotation):
 
 
 def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sensorList,
-             jointPosition=[0.0, 0.0, 0.0], jointRotation=[1.0, 0.0, 0.0, 0.0],
+             jointPosition=[0.0, 0.0, 0.0], jointRotation=[0.0, 0.0, 1.0, 0.0],
              boxCollision=False, normal=False, dummy=False, robot=False, endpoint=False):
     """Write a link iteratively."""
     indent = '  '
