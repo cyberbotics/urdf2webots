@@ -2,7 +2,7 @@
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # This is a proto file for Webots for the MotomanSia20d
-# Extracted from: /home/david/urdf2webots/tests/sources/motoman/motoman_sia20d_support/urdf/sia20d.urdf
+# Extracted from: /home/benja/urdf2webots/tests/sources/motoman/motoman_sia20d_support/urdf/sia20d.urdf
 
 PROTO MotomanSia20d [
   field  SFVec3f     translation     0 0 0
@@ -28,7 +28,17 @@ PROTO MotomanSia20d [
     synchronization IS synchronization
     selfCollision IS selfCollision
     children [
-      MotomanSia20d_MOTOMAN_BASEMesh {
+      Shape {
+        appearance DEF blue PBRAppearance {
+          baseColor 0.000000 0.000000 1.000000
+          transparency 0.000000
+          roughness 1.000000
+          metalness 0
+          emissiveColor 0.000000 0.000000 0.000000
+        }
+        geometry DEF MOTOMAN_BASE Mesh {
+          url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_BASE.stl"
+        }
       }
       HingeJoint {
         jointParameters HingeJointParameters {
@@ -58,7 +68,17 @@ PROTO MotomanSia20d [
               translation 0.000000 0.000000 0.000000
               rotation -0.000000 0.000000 1.000000 3.141600
               children [
-                MotomanSia20d_MOTOMAN_AXIS_SMesh {
+                Shape {
+                  appearance DEF silver PBRAppearance {
+                    baseColor 0.800000 0.800000 0.800000
+                    transparency 0.000000
+                    roughness 1.000000
+                    metalness 0
+                    emissiveColor 0.000000 0.000000 0.000000
+                  }
+                  geometry DEF MOTOMAN_AXIS_S Mesh {
+                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_S.stl"
+                  }
                 }
               ]
             }
@@ -90,7 +110,11 @@ PROTO MotomanSia20d [
                     translation 0.000000 0.000000 0.000000
                     rotation -1.000000 -0.000007 -0.000000 1.571593
                     children [
-                      MotomanSia20d_MOTOMAN_AXIS_LMesh {
+                      Shape {
+                        appearance USE blue
+                        geometry DEF MOTOMAN_AXIS_L Mesh {
+                          url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_L.stl"
+                        }
                       }
                     ]
                   }
@@ -118,7 +142,11 @@ PROTO MotomanSia20d [
                       translation 0.000000 0.000000 0.490000
                       rotation 0.000000 0.000000 1.000000 0.200000
                       children [
-                        MotomanSia20d_MOTOMAN_AXIS_EMesh {
+                        Shape {
+                          appearance USE silver
+                          geometry DEF MOTOMAN_AXIS_E Mesh {
+                            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_E.stl"
+                          }
                         }
                         HingeJoint {
                           jointParameters HingeJointParameters {
@@ -147,7 +175,11 @@ PROTO MotomanSia20d [
                                 translation 0.000000 0.000000 0.000000
                                 rotation 1.000000 0.000050 0.000043 4.711593
                                 children [
-                                  MotomanSia20d_MOTOMAN_AXIS_UMesh {
+                                  Shape {
+                                    appearance USE blue
+                                    geometry DEF MOTOMAN_AXIS_U Mesh {
+                                      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_U.stl"
+                                    }
                                   }
                                 ]
                               }
@@ -174,7 +206,11 @@ PROTO MotomanSia20d [
                                   translation 0.000000 0.000000 0.420000
                                   rotation 0.000000 1.000000 0.000000 0.000000
                                   children [
-                                    MotomanSia20d_MOTOMAN_AXIS_RMesh {
+                                    Shape {
+                                      appearance USE silver
+                                      geometry DEF MOTOMAN_AXIS_R Mesh {
+                                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_R.stl"
+                                      }
                                     }
                                     HingeJoint {
                                       jointParameters HingeJointParameters {
@@ -203,7 +239,11 @@ PROTO MotomanSia20d [
                                             translation 0.000000 0.000000 0.000000
                                             rotation -1.000000 0.000000 0.000000 1.570000
                                             children [
-                                              MotomanSia20d_MOTOMAN_AXIS_BMesh {
+                                              Shape {
+                                                appearance USE blue
+                                                geometry DEF MOTOMAN_AXIS_B Mesh {
+                                                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_B.stl"
+                                                }
                                               }
                                             ]
                                           }
@@ -230,7 +270,11 @@ PROTO MotomanSia20d [
                                               translation 0.000000 0.000000 0.180000
                                               rotation 0.000000 1.000000 0.000000 0.000000
                                               children [
-                                                MotomanSia20d_MOTOMAN_AXIS_TMesh {
+                                                Shape {
+                                                  appearance USE silver
+                                                  geometry DEF MOTOMAN_AXIS_T Mesh {
+                                                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_T.stl"
+                                                  }
                                                 }
                                                 Solid {
                                                   translation 0.000000 0.000000 0.000000

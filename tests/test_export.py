@@ -14,18 +14,8 @@ modelPaths = [
     {
         'input': os.path.join(sourceDirectory, 'motoman/motoman_sia20d_support/urdf/sia20d.urdf'),
         'output': os.path.join(resultDirectory, 'MotomanSia20d.proto'),
-        'expected': [
-            os.path.join(expectedDirectory, 'MotomanSia20d.proto'),
-            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MotomanSia20d_MOTOMAN_AXIS_BMesh.proto'),
-            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MotomanSia20d_MOTOMAN_AXIS_EMesh.proto'),
-            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MotomanSia20d_MOTOMAN_AXIS_LMesh.proto'),
-            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MotomanSia20d_MOTOMAN_AXIS_RMesh.proto'),
-            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MotomanSia20d_MOTOMAN_AXIS_SMesh.proto'),
-            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MotomanSia20d_MOTOMAN_AXIS_TMesh.proto'),
-            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MotomanSia20d_MOTOMAN_AXIS_UMesh.proto'),
-            os.path.join(expectedDirectory, 'MotomanSia20d_meshes', 'MotomanSia20d_MOTOMAN_BASEMesh.proto'),
-        ],
-        'arguments': '--multi-file --static-base --tool-slot=tool0 --rotation="1 0 0 0" --init-pos="[0.1, -0.1, 0.2]"'
+        'expected': [os.path.join(expectedDirectory, 'MotomanSia20d.proto')],
+        'arguments': '--static-base --tool-slot=tool0 --rotation="1 0 0 0" --init-pos="[0.1, -0.1, 0.2]"'
     },
     {
         'input': os.path.join(sourceDirectory, 'gait2392_simbody/urdf/human.urdf'),
