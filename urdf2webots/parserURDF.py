@@ -28,8 +28,22 @@ counter = 0
 
 # to pass from external
 robotName = ''
-extensionList = ['.3ds', '.blend', '.bvh', '.dae', '.fbx', '.stl', '.obj', '.x3d']
+extensionListSingleColor = ['.stl', '.obj']
 
+
+disableMeshOptimization = False
+
+class Trimesh():
+    """Define triangular mesh object."""
+
+    def __init__(self):
+        """Initializatization."""
+        self.coord = []  # list of coordinate points
+        self.coordIndex = []  # list of index of points
+        self.texCoord = []  # list of coordinate points for texture
+        self.texCoordIndex = []  # list of index for texture
+        self.normal = []  # list of normals
+        self.normalIndex = []  # list of index of normals
 
 class Inertia():
     """Define inertia object."""
@@ -92,6 +106,7 @@ class Geometry():
         self.box = Box()
         self.cylinder = Cylinder()
         self.sphere = Sphere()
+        self.trimesh = Trimesh()
         self.mesh = Mesh()
         self.scale = [1.0, 1.0, 1.0]
         self.name = None
@@ -430,6 +445,106 @@ def hasElement(node, element):
         return False
 
 
+def getColladaMesh(filename, node, link):
+    """Read collada file."""
+    if not colladaIsAvailable:
+        sys.stderr.write('Collada module not found, please install it with:\n')
+        sys.stderr.write('  python -m pip install pycollada\n')
+        sys.stderr.write('Skipping "%s"\n' % filename)
+        return
+    print('Parsing Mesh: ' + filename)
+    colladaMesh = Collada(filename)
+    index = -1
+    if hasattr(node, 'material') and node.material:
+        for geometry in list(colladaMesh.scene.objects('geometry')):
+            for data in list(geometry.primitives()):
+                visual = Visual()
+                index += 1
+                visual.position = node.position
+                visual.rotation = node.rotation
+                visual.material.diffuse.red = node.material.diffuse.red
+                visual.material.diffuse.green = node.material.diffuse.green
+                visual.material.diffuse.blue = node.material.diffuse.blue
+                visual.material.diffuse.alpha = node.material.diffuse.alpha
+                visual.material.texture = node.material.texture
+                name = '%s_%d' % (os.path.splitext(os.path.basename(filename))[0], index)
+                if type(data.original) is lineset.LineSet:
+                    visual.geometry.lineset = True
+                if name in Geometry.reference:
+                    visual.geometry = Geometry.reference[name]
+                else:
+                    Geometry.reference[name] = visual.geometry
+                    visual.geometry.name = name
+                    visual.geometry.scale = node.geometry.scale
+                    for val in data.vertex:
+                        visual.geometry.trimesh.coord.append(numpy.array(val))
+                    for val in data.vertex_index:
+                        visual.geometry.trimesh.coordIndex.append(val)
+                    if data.texcoordset:  # non-empty
+                        for val in data.texcoordset[0]:
+                            visual.geometry.trimesh.texCoord.append(val)
+                    if data.texcoord_indexset:  # non-empty
+                        for val in data.texcoord_indexset[0]:
+                            visual.geometry.trimesh.texCoordIndex.append(val)
+                    if hasattr(data, '_normal') and data._normal is not None and data._normal.size > 0:
+                        for val in data._normal:
+                            visual.geometry.trimesh.normal.append(numpy.array(val))
+                        if hasattr(data, '_normal_index') and data._normal_index is not None and data._normal_index.size > 0:
+                            for val in data._normal_index:
+                                visual.geometry.trimesh.normalIndex.append(val)
+                if data.material and data.material.effect:
+                    if data.material.effect.emission and isinstance(data.material.effect.emission, tuple):
+                        visual.material.emission = colorVector2Instance(data.material.effect.emission)
+                    if data.material.effect.ambient and isinstance(data.material.effect.ambient, tuple):
+                        visual.material.ambient = colorVector2Instance(data.material.effect.ambient)
+                    if data.material.effect.specular and isinstance(data.material.effect.specular, tuple):
+                        visual.material.specular = colorVector2Instance(data.material.effect.specular)
+                    if data.material.effect.shininess:
+                        visual.material.shininess = data.material.effect.shininess
+                    if data.material.effect.index_of_refraction:
+                        visual.material.index_of_refraction = data.material.effect.index_of_refraction
+                    if data.material.effect.diffuse:
+                        if numpy.size(data.material.effect.diffuse) > 1\
+                                and all([isinstance(x, numbers.Number) for x in data.material.effect.diffuse]):
+                            # diffuse is defined by values
+                            visual.material.diffuse = colorVector2Instance(data.material.effect.diffuse)
+                        else:
+                            # diffuse is defined by *.tif files
+                            visual.material.texture = 'textures/' + \
+                                                      data.material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
+                            txt = os.path.splitext(visual.material.texture)[1]
+                            if txt == '.tiff' or txt == '.tif':
+                                for dirname, dirnames, filenames in os.walk('.'):
+                                    for file in filenames:
+                                        if file == str(visual.material.texture.split('/')[-1]):
+                                            try:
+                                                tifImage = Image.open(os.path.join(dirname, file))
+                                                img = './' + robotName + '_textures'
+                                                tifImage.save(os.path.splitext(os.path.join(img, file))[0] + '.png')
+                                                visual.material.texture = (robotName +
+                                                                           '_textures/' + os.path.splitext(file)[0] + '.png')
+                                                print('translated image ' + visual.material.texture)
+                                            except IOError:
+                                                visual.material.texture = ""
+                                                print('failed to open ' + os.path.join(dirname, file))
+                            else:
+                                visual.material.diffuse = colorVector2Instance([1.0, 1.0, 1.0, 1.0])
+
+                link.visual.append(visual)
+    else:
+        for geometry in list(colladaMesh.scene.objects('geometry')):
+            for data in list(geometry.primitives()):
+                collision = Collision()
+                collision.position = node.position
+                collision.rotation = node.rotation
+                collision.geometry.scale = node.geometry.scale
+                for value in data.vertex:
+                    collision.geometry.trimesh.coord.append(numpy.array(value))
+                for value in data.vertex_index:
+                    collision.geometry.trimesh.coordIndex.append(value)
+                link.collision.append(collision)
+
+
 def getPosition(node):
     """Read position of a phsical or visual object."""
     position = [0.0, 0.0, 0.0]
@@ -570,7 +685,7 @@ def getVisual(link, node, path):
                 visual.geometry.scale[1] = float(meshScale[1])
                 visual.geometry.scale[2] = float(meshScale[2])
             extension = os.path.splitext(meshfile)[1].lower()
-            if extension in extensionList:
+            if extension in extensionListSingleColor:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
@@ -579,6 +694,8 @@ def getVisual(link, node, path):
                     visual.geometry.name = name
                     Geometry.reference[name] = visual.geometry
                 link.visual.append(visual)
+            elif extension == '.dae':
+                getColladaMesh(meshfile, visual, link)
             else:
                 print('Unsupported mesh format: \"' + extension + '\"')
 
@@ -627,7 +744,7 @@ def getCollision(link, node, path):
                 idx0 = meshfile.find('package://')
                 meshfile = meshfile[idx0 + len('package://'):]
             extension = os.path.splitext(meshfile)[1].lower()
-            if extension in extensionList:
+            if extension in extensionListSingleColor:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
@@ -636,6 +753,8 @@ def getCollision(link, node, path):
                     collision.geometry.name = name
                     Geometry.reference[name] = collision.geometry
                 link.collision.append(collision)
+            elif extension == '.dae':
+                getColladaMesh(meshfile, collision, link)
             else:
                 print('Unsupported mesh format for collision: \"' + extension + '\"')
 
