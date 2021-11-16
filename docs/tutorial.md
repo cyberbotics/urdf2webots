@@ -27,7 +27,7 @@ source devel/setup.bash
 **Note:** If you want to convert this exact same robot, you will have to replace the file at
 `kuka_experimental/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae`
 with this (original file is corrupted):
-[base_link.dae](https://drive.google.com/file/d/1J0dVuDOW7k3wa6Gj0vpjKzlNMzQHOAfD/view?usp=sharing)
+[base_link.dae](./assets/files/base_link.dae)
 
 To follow the below instructions, you'll need to have the `xacro` tool installed; some ROS installations don't include it by default. If you don't have it, you can install it as follows on Ubuntu (substitute your ROS distribution for "noetic"):
 ```
