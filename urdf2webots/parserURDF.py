@@ -744,7 +744,7 @@ def getCollision(link, node, path):
                 idx0 = meshfile.find('package://')
                 meshfile = meshfile[idx0 + len('package://'):]
             extension = os.path.splitext(meshfile)[1].lower()
-            if extension in extensionListSingleColor:
+            if extension in extensionListSingleAppearance:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
