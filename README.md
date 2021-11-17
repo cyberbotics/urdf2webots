@@ -18,9 +18,8 @@ On macOS, export the pip binary path to the PATH: `export PATH="/Users/$USER/Lib
 ### From Sources
 
 ```
-git clone https://github.com/cyberbotics/urdf2webots.git
-cd urdf2webots
-pip install -r requirements.txt
+git clone --recurse-submodules https://github.com/cyberbotics/urdf2webots.git
+pip install --upgrade --editable urdf2webots
 ```
 
 ## Usage
@@ -29,12 +28,6 @@ pip install -r requirements.txt
 
 ```
 python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--static-base] [--tool-slot=linkName] [--name-to-def] [--help]
-```
-
-### From Sources
-
-```
-python demo.py --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--static-base] [--tool-slot=linkName] [--name-to-def] [--help]
 ```
 
 ### Arguments
