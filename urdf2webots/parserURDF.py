@@ -28,7 +28,7 @@ counter = 0
 
 # to pass from external
 robotName = ''
-extensionListSingleColor = ['.stl', '.obj']
+extensionListSingleAppearance = ['.stl', '.obj']
 
 
 disableMeshOptimization = False
@@ -685,7 +685,7 @@ def getVisual(link, node, path):
                 visual.geometry.scale[1] = float(meshScale[1])
                 visual.geometry.scale[2] = float(meshScale[2])
             extension = os.path.splitext(meshfile)[1].lower()
-            if extension in extensionListSingleColor:
+            if extension in extensionListSingleAppearance:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
