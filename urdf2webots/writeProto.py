@@ -362,36 +362,64 @@ def URDFVisual(proto, visualNode, level, normal=False):
     else:
         if visualNode.material.name is not None:
             visualNode.material.defName = computeDefName(visualNode.material.name)
-        if visualNode.material.defName is not None:
-            proto.write((shapeLevel + 1) * indent + 'appearance DEF %s PBRAppearance {\n' % visualNode.material.defName)
-        else:
-            proto.write((shapeLevel + 1) * indent + 'appearance PBRAppearance {\n')
-        ambientColor = RGBA2RGB(visualNode.material.ambient)
-        diffuseColor = RGBA2RGB(visualNode.material.diffuse, RGB_background=ambientColor)
-        emissiveColor = RGBA2RGB(visualNode.material.emission, RGB_background=ambientColor)
-        roughness = 1.0 - visualNode.material.specular.alpha * (visualNode.material.specular.red +
-                                                                visualNode.material.specular.green +
-                                                                visualNode.material.specular.blue) / 3.0
-        if visualNode.material.shininess:
-            roughness *= (1.0 - 0.5 * visualNode.material.shininess)
-        proto.write((shapeLevel + 2) * indent + 'baseColor %lf %lf %lf\n' % (diffuseColor.red,
-                                                                             diffuseColor.green,
-                                                                             diffuseColor.blue))
-        proto.write((shapeLevel + 2) * indent + 'transparency %lf\n' % (1.0 - visualNode.material.diffuse.alpha))
-        proto.write((shapeLevel + 2) * indent + 'roughness %lf\n' % roughness)
-        proto.write((shapeLevel + 2) * indent + 'metalness 0\n')
-        proto.write((shapeLevel + 2) * indent + 'emissiveColor %lf %lf %lf\n' % (emissiveColor.red,
-                                                                                 emissiveColor.green,
-                                                                                 emissiveColor.blue))
-        if visualNode.material.texture != "":
-            proto.write((shapeLevel + 2) * indent + 'baseColorMap ImageTexture {\n')
-            proto.write((shapeLevel + 3) * indent + 'url [ "' + visualNode.material.texture + '" ]\n')
-            proto.write((shapeLevel + 2) * indent + '}\n')
+        if visualNode.geometry.lineset:
+            if visualNode.material.defName is not None:
+                proto.write((shapeLevel + 1) * indent + 'appearance DEF %s Appearance {\n' % visualNode.material.defName)
+            else:
+                proto.write((shapeLevel + 1) * indent + 'appearance Appearance {\n')
 
-            proto.write((shapeLevel + 2) * indent + 'textureTransform TextureTransform {\n')
-            proto.write((shapeLevel + 3) * indent + 'scale 1 -1\n')
+            proto.write((shapeLevel + 2) * indent + 'material Material {\n')
+
+            ambientColor = RGBA2RGB(visualNode.material.ambient)
+            diffuseColor = RGBA2RGB(visualNode.material.diffuse, RGB_background=ambientColor)
+            emissiveColor = RGBA2RGB(visualNode.material.emission, RGB_background=ambientColor)
+            specularColor = RGBA2RGB(visualNode.material.specular, RGB_background=ambientColor)
+
+            proto.write((shapeLevel + 3) * indent + 'diffuseColor %lf %lf %lf\n' % (diffuseColor.red,
+                                                                                diffuseColor.green,
+                                                                                diffuseColor.blue))      
+            proto.write((shapeLevel + 3) * indent + 'emissiveColor %lf %lf %lf\n' % (emissiveColor.red,
+                                                                                    emissiveColor.green,
+                                                                                    emissiveColor.blue))
+            if visualNode.material.shininess:
+                proto.write((shapeLevel + 3) * indent + 'shininess %lf\n' % (visualNode.material.shininess))
+            proto.write((shapeLevel + 3) * indent + 'specularColor %lf %lf %lf\n' % (specularColor.red,
+                                                                                    specularColor.green,
+                                                                                    specularColor.blue))
+            proto.write((shapeLevel + 3) * indent + 'transparency %lf\n' % (1.0 - visualNode.material.diffuse.alpha))
             proto.write((shapeLevel + 2) * indent + '}\n')
-        proto.write((shapeLevel + 1) * indent + '}\n')
+            proto.write((shapeLevel + 1) * indent + '}\n')
+        else:
+            if visualNode.material.defName is not None:
+                proto.write((shapeLevel + 1) * indent + 'appearance DEF %s PBRAppearance {\n' % visualNode.material.defName)
+            else:
+                proto.write((shapeLevel + 1) * indent + 'appearance PBRAppearance {\n')
+            ambientColor = RGBA2RGB(visualNode.material.ambient)
+            diffuseColor = RGBA2RGB(visualNode.material.diffuse, RGB_background=ambientColor)
+            emissiveColor = RGBA2RGB(visualNode.material.emission, RGB_background=ambientColor)
+            roughness = 1.0 - visualNode.material.specular.alpha * (visualNode.material.specular.red +
+                                                                    visualNode.material.specular.green +
+                                                                    visualNode.material.specular.blue) / 3.0
+            if visualNode.material.shininess:
+                roughness *= (1.0 - 0.5 * visualNode.material.shininess)
+            proto.write((shapeLevel + 2) * indent + 'baseColor %lf %lf %lf\n' % (diffuseColor.red,
+                                                                                diffuseColor.green,
+                                                                                diffuseColor.blue))
+            proto.write((shapeLevel + 2) * indent + 'transparency %lf\n' % (1.0 - visualNode.material.diffuse.alpha))
+            proto.write((shapeLevel + 2) * indent + 'roughness %lf\n' % roughness)
+            proto.write((shapeLevel + 2) * indent + 'metalness 0\n')
+            proto.write((shapeLevel + 2) * indent + 'emissiveColor %lf %lf %lf\n' % (emissiveColor.red,
+                                                                                    emissiveColor.green,
+                                                                                    emissiveColor.blue))
+            if visualNode.material.texture != "":
+                proto.write((shapeLevel + 2) * indent + 'baseColorMap ImageTexture {\n')
+                proto.write((shapeLevel + 3) * indent + 'url [ "' + visualNode.material.texture + '" ]\n')
+                proto.write((shapeLevel + 2) * indent + '}\n')
+
+                proto.write((shapeLevel + 2) * indent + 'textureTransform TextureTransform {\n')
+                proto.write((shapeLevel + 3) * indent + 'scale 1 -1\n')
+                proto.write((shapeLevel + 2) * indent + '}\n')
+            proto.write((shapeLevel + 1) * indent + '}\n')
 
     if visualNode.geometry.box.x != 0:
         proto.write((shapeLevel + 1) * indent + 'geometry Box {\n')

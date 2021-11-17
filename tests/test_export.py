@@ -22,6 +22,12 @@ modelPaths = [
         'output': os.path.join(resultDirectory, 'Human.proto'),
         'expected': [os.path.join(expectedDirectory, 'Human.proto')],
         'arguments': ''
+    },
+    {
+        'input': os.path.join(sourceDirectory, 'kuka_lbr_iiwa_support/urdf/model.urdf'),
+        'output': os.path.join(resultDirectory, 'KukaLbrIiwa14R820.proto'),
+        'expected': [os.path.join(expectedDirectory, 'KukaLbrIiwa14R820.proto')],
+        'arguments': '--box-collision --static-base --tool-slot=tool0 --rotation="1 0 0 -1.5708"'
     }
 ]
 
