@@ -20,6 +20,6 @@ jobs:
         python-version: ${{ matrix.python }}
     - name: Test
       run: |
-        pip install -r requirements.txt
+        pip install --upgrade --editable .
         pip install -r tests/requirements.txt
         python -m unittest discover -s tests
