@@ -8,7 +8,7 @@ testDirectory = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 sourceDirectory = os.path.join(testDirectory, 'sources')
 resultDirectory = os.path.join(testDirectory, 'results')
 expectedDirectory = os.path.join(testDirectory, 'expected')
-urdf2webotsPath = os.path.abspath(os.path.join(testDirectory, '..', 'demo.py'))
+urdf2webotsPath = os.path.abspath(os.path.join(testDirectory, '..', 'urdf2webots/importer.py'))
 
 modelPaths = [
     {
@@ -35,6 +35,9 @@ def fileCompare(file1, file2):
                 continue
             elif line1.startswith('#VRML_SIM') and line2.startswith('#VRML_SIM'):
                 # This line may differ according to Webots version used
+                continue
+            elif 'CI' not in os.environ and '/home/runner/work/' in line2:
+                # When testing locally, the paths may differ.
                 continue
             elif line1 != line2:
                 # Prints the difference between result and expected line
