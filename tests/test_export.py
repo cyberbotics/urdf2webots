@@ -8,20 +8,26 @@ testDirectory = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 sourceDirectory = os.path.join(testDirectory, 'sources')
 resultDirectory = os.path.join(testDirectory, 'results')
 expectedDirectory = os.path.join(testDirectory, 'expected')
-urdf2webotsPath = os.path.abspath(os.path.join(testDirectory, '..', 'demo.py'))
+urdf2webotsPath = os.path.abspath(os.path.join(testDirectory, '..', 'urdf2webots/importer.py'))
 
 modelPaths = [
     {
         'input': os.path.join(sourceDirectory, 'motoman/motoman_sia20d_support/urdf/sia20d.urdf'),
         'output': os.path.join(resultDirectory, 'MotomanSia20d.proto'),
         'expected': [os.path.join(expectedDirectory, 'MotomanSia20d.proto')],
-        'arguments': '--static-base --tool-slot=tool0 --rotation="1 0 0 0" --init-pos="[0.1, -0.1, 0.2]"'
+        'arguments': '--multi-file --static-base --tool-slot=tool0 --rotation="1 0 0 0" --init-pos="[0.1, -0.1, 0.2]"'
     },
     {
         'input': os.path.join(sourceDirectory, 'gait2392_simbody/urdf/human.urdf'),
         'output': os.path.join(resultDirectory, 'Human.proto'),
         'expected': [os.path.join(expectedDirectory, 'Human.proto')],
         'arguments': ''
+    },
+    {
+        'input': os.path.join(sourceDirectory, 'kuka_lbr_iiwa_support/urdf/model.urdf'),
+        'output': os.path.join(resultDirectory, 'KukaLbrIiwa14R820.proto'),
+        'expected': [os.path.join(expectedDirectory, 'KukaLbrIiwa14R820.proto')],
+        'arguments': '--box-collision --static-base --tool-slot=tool0 --rotation="1 0 0 -1.5708"'
     }
 ]
 
@@ -35,6 +41,9 @@ def fileCompare(file1, file2):
                 continue
             elif line1.startswith('#VRML_SIM') and line2.startswith('#VRML_SIM'):
                 # This line may differ according to Webots version used
+                continue
+            elif 'CI' not in os.environ and '/home/runner/work/' in line2:
+                # When testing locally, the paths may differ.
                 continue
             elif line1 != line2:
                 # Prints the difference between result and expected line
