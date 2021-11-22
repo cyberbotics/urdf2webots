@@ -28,6 +28,9 @@ source devel/setup.bash
 `kuka_experimental/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae`
 with this (original file is corrupted):
 [base_link.dae](./assets/files/base_link.dae)
+```
+cp ~/Downloads/base_link.dae src/kuka_experimental/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae
+```
 
 To follow the below instructions, you'll need to have the `xacro` tool installed; some ROS installations don't include it by default. If you don't have it, you can install it as follows on Ubuntu (substitute your ROS distribution for "noetic"):
 ```
