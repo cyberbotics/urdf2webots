@@ -12,6 +12,7 @@ linkToDef = False
 jointToDef = False
 enableMultiFile = False
 meshFilesPath = None
+indexSolid = 0
 
 
 class RGB():
@@ -84,6 +85,7 @@ def URDFLink(worldFile, link, level, parentList,
     """Write a link iteratively."""
     indent = '  '
     haveChild = False
+    requiredName = ''
     if robot:
         worldFile.write(level * indent + 'Robot {\n')
         worldFile.write((level + 1) * indent + 'translation '+initTranslation+'\n')
@@ -94,6 +96,11 @@ def URDFLink(worldFile, link, level, parentList,
             worldFile.write((level + 1) * indent + 'type "force-3d"\n')
         else:
             worldFile.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if linkToDef else '') + 'Solid {\n')
+            # need a unique name for every solid node
+            global indexSolid
+            requiredName = 'solid' + str(indexSolid)
+            indexSolid += 1
+        
         worldFile.write((level + 1) * indent + 'translation %lf %lf %lf\n' % (jointPosition[0],
                                                                           jointPosition[1],
                                                                           jointPosition[2]))
@@ -125,6 +132,8 @@ def URDFLink(worldFile, link, level, parentList,
                           linkList, jointList, sensorList, boxCollision, normal)
         if haveChild:
             worldFile.write((level + 1) * indent + ']\n')
+            if requiredName:
+                worldFile.write((level + 1) * indent + 'name "' + requiredName + '"\n')
         else:
             worldFile.write((level + 1) * indent + 'name "' + link.name + '"\n')
 

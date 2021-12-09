@@ -16,7 +16,7 @@ except ImportError as e:
 import numbers
 
 from urdf2webots.gazebo_materials import materials
-from urdf2webots.math_utils import convertRPYtoEulerAxis
+from urdf2webots.math_utils import convertRPYtoEulerAxis, rotateVector, combineRotations
 
 try:
     from collada import Collada, lineset
@@ -866,6 +866,50 @@ def isRootLink(link, childList):
         if link == child:
             return False
     return True
+
+
+def cleanDummyLinks(linkList, jointList):
+    """Remove the dummy link used for tool slots"""
+    linkIndex = 0
+    childList = []
+    for joint in jointList:
+        childList.append(joint.child)
+
+    while linkIndex < len(linkList):
+        link = linkList[linkIndex]
+
+        # We want to skip links between the robot and the static environment.
+        if isRootLink(link.name, childList):
+            linkIndex += 1
+            continue
+                        
+        # This link will not have 'physics' field -> remove it
+        if link.inertia.mass is None and not link.collision:
+            linkList.remove(link)
+            
+            parentJointIndex = None
+            childJointIndex = None
+            index = -1
+            for joint in jointList:
+                index += 1
+                if joint.parent == link.name:
+                    childJointIndex = index
+                elif joint.child == link.name:
+                    parentJointIndex = index
+
+            if parentJointIndex:
+                if childJointIndex:
+                    jointList[parentJointIndex].child = jointList[childJointIndex].child
+                    jointList[parentJointIndex].position = jointList[parentJointIndex].position + rotateVector(jointList[parentJointIndex].position, jointList[parentJointIndex].rotation)
+                    jointList[parentJointIndex].rotation = combineRotations(jointList[childJointIndex].rotation, jointList[parentJointIndex].rotation)
+                    jointList[parentJointIndex].name = jointList[parentJointIndex].parent + "-" + jointList[parentJointIndex].child
+                    jointList.remove(jointList[childJointIndex])
+                else:
+                    jointList.remove(jointList[parentJointIndex])
+        else:
+            linkIndex += 1
+
+    return (linkList, jointList)
 
 
 def parseGazeboElement(element, parentLink, linkList):

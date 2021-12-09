@@ -143,20 +143,23 @@ def convert2urdf(inFile, worldFile, robotName='', normal=False, boxCollision=Fal
                             material = urdf2webots.parserURDF.Material()
                             material.parseFromMaterialNode(child)
 
-                linkList = []
-                jointList = []
+                linkRawList = []
+                jointRawList = []
                 parentList = []
                 childList = []
                 rootLink = urdf2webots.parserURDF.Link()
 
+                for link in linkElementList:
+                    linkRawList.append(urdf2webots.parserURDF.getLink(link, inPath))
                 for joint in jointElementList:
-                    jointList.append(urdf2webots.parserURDF.getJoint(joint))
-                    parentList.append(jointList[-1].parent)
-                    childList.append(jointList[-1].child)
+                    jointRawList.append(urdf2webots.parserURDF.getJoint(joint))
+                (linkList, jointList) = urdf2webots.parserURDF.cleanDummyLinks(linkRawList, jointRawList)
+
+                for joint in jointList:
+                    parentList.append(joint.parent)
+                    childList.append(joint.child)
                 parentList.sort()
                 childList.sort()
-                for link in linkElementList:
-                    linkList.append(urdf2webots.parserURDF.getLink(link, inPath))
                 for link in linkList:
                     if urdf2webots.parserURDF.isRootLink(link.name, childList):
                         # We want to skip links between the robot and the static environment.
