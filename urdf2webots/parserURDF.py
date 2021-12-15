@@ -882,11 +882,11 @@ def cleanDummyLinks(linkList, jointList):
         if isRootLink(link.name, childList):
             linkIndex += 1
             continue
-                        
+
         # This link will not have 'physics' field -> remove it
         if link.inertia.mass is None and not link.collision:
             linkList.remove(link)
-            
+
             parentJointIndex = None
             childJointIndex = None
             index = -1
@@ -908,9 +908,7 @@ def cleanDummyLinks(linkList, jointList):
                     jointList.remove(jointList[parentJointIndex])
         else:
             linkIndex += 1
-
-    return (linkList, jointList)
-
+    childList.clear()
 
 def parseGazeboElement(element, parentLink, linkList):
     """Parse a Gazebo element."""

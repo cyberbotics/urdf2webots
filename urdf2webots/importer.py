@@ -6,11 +6,14 @@
 import os
 import errno
 import optparse
+import tempfile
 import re
 import sys
 import urdf2webots.parserURDF
 import urdf2webots.writeRobot
 from xml.dom import minidom
+
+import copy
 
 try:
     import rospkg
@@ -46,9 +49,9 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convert2urdf(inFile, worldFile, robotName='', normal=False, boxCollision=False,
+def convert2urdf(inFile, robotName='', normal=False, boxCollision=False,
                  disableMeshOptimization=False, enableMultiFile=False,
-                 staticBase=False, initTranslation='0 0 0',
+                 initTranslation='0 0 0',
                  initRotation='0 1 0 0', initPos=None, linkToDef=False,
                  jointToDef=False):
     if not inFile:
@@ -57,13 +60,6 @@ def convert2urdf(inFile, worldFile, robotName='', normal=False, boxCollision=Fal
         sys.exit('Input file "%s" does not exists.' % inFile)
     if not inFile.endswith('.urdf'):
         sys.exit('"%s" is not an urdf file.' % inFile)
-
-    if not worldFile:
-        sys.exit('World file not specified (should be specified with the "--worldFile" argument).')
-    if not os.path.isfile(worldFile):
-        sys.exit('World file "%s" does not exists.' % inFile)
-    if not worldFile.endswith('.wbt'):
-        sys.exit('"%s" is not an world file.' % worldFile)
 
     if not type(initTranslation) == str or len(initTranslation.split()) != 3:
         sys.exit('--translation argument is not valid. Has to be of Type = str and contain 3 values.')
@@ -82,6 +78,8 @@ def convert2urdf(inFile, worldFile, robotName='', normal=False, boxCollision=Fal
     urdf2webots.writeRobot.initPos = initPos
     urdf2webots.writeRobot.linkToDef = linkToDef
     urdf2webots.writeRobot.jointToDef = jointToDef
+    urdf2webots.writeRobot.indexSolid = 0
+    urdf2webots.writeRobot.staticBase = False
 
     with open(inFile, 'r') as file:
         inPath = os.path.dirname(os.path.abspath(inFile))
@@ -113,18 +111,14 @@ def convert2urdf(inFile, worldFile, robotName='', normal=False, boxCollision=Fal
             if child.localName == 'robot':
                 if robotName == '':
                     robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize
-                urdf2webots.writeRobot.robotName = robotName
-
-                urdf2webots.parserURDF.robotName = robotName  # pass robotName
-                mkdirSafe(worldFile.replace('.wbt', '') + '_textures')  # make a dir called 'x_textures'
-
-                if enableMultiFile:
-                    mkdirSafe(worldFile.replace('.wbt', '') + '_meshes')  # make a dir called 'x_meshes'
-                    urdf2webots.writeRobot.meshFilesPath = worldFile.replace('.wbt', '') + '_meshes'
+                urdf2webots.writeRobot.robotName = robotName  # pass robotName
+                urdf2webots.parserURDF.robotName = robotName
 
                 robot = child
-                worldFile = open(worldFile, 'a')
-                urdf2webots.writeRobot.header(worldFile, inFile)
+
+                tmp_robot_file = tempfile.TemporaryFile(mode="w+")
+
+                urdf2webots.writeRobot.header(tmp_robot_file, inFile)
                 linkElementList = []
                 jointElementList = []
                 for child in robot.childNodes:
@@ -139,21 +133,21 @@ def convert2urdf(inFile, worldFile, robotName='', normal=False, boxCollision=Fal
                         jointElementList.append(child)
                     elif child.localName == 'material':
                         if not child.hasAttribute('name') \
-                           or child.getAttribute('name') not in urdf2webots.parserURDF.Material.namedMaterial:
+                        or child.getAttribute('name') not in urdf2webots.parserURDF.Material.namedMaterial:
                             material = urdf2webots.parserURDF.Material()
                             material.parseFromMaterialNode(child)
 
-                linkRawList = []
-                jointRawList = []
+                linkList = []
+                jointList = []
                 parentList = []
                 childList = []
                 rootLink = urdf2webots.parserURDF.Link()
 
                 for link in linkElementList:
-                    linkRawList.append(urdf2webots.parserURDF.getLink(link, inPath))
+                    linkList.append(urdf2webots.parserURDF.getLink(link, inPath))
                 for joint in jointElementList:
-                    jointRawList.append(urdf2webots.parserURDF.getJoint(joint))
-                (linkList, jointList) = urdf2webots.parserURDF.cleanDummyLinks(linkRawList, jointRawList)
+                    jointList.append(urdf2webots.parserURDF.getJoint(joint))
+                urdf2webots.parserURDF.cleanDummyLinks(linkList, jointList)
 
                 for joint in jointList:
                     parentList.append(joint.parent)
@@ -187,24 +181,27 @@ def convert2urdf(inFile, worldFile, robotName='', normal=False, boxCollision=Fal
                         urdf2webots.parserURDF.parseGazeboElement(child, rootLink.name, linkList)
 
                 sensorList = (urdf2webots.parserURDF.IMU.list +
-                              urdf2webots.parserURDF.P3D.list +
-                              urdf2webots.parserURDF.Camera.list +
-                              urdf2webots.parserURDF.Lidar.list)
+                            urdf2webots.parserURDF.P3D.list +
+                            urdf2webots.parserURDF.Camera.list +
+                            urdf2webots.parserURDF.Lidar.list)
                 print('There are %d links, %d joints and %d sensors' % (len(linkList), len(jointList), len(sensorList)))
 
-                urdf2webots.writeRobot.URDFLink(worldFile, rootLink, 0, parentList,
+                urdf2webots.writeRobot.URDFLink(tmp_robot_file, rootLink, 0, parentList,
                                                 childList, linkList, jointList, sensorList, boxCollision=boxCollision,
                                                 normal=normal, robot=True, initTranslation=initTranslation, initRotation=initRotation)
-                worldFile.close()
-                return
-    print('Could not read file')
 
+                linkElementList.clear()
+                jointElementList.clear()
+                parentList.clear()
+                childList.clear()
+
+                tmp_robot_file.seek(0)
+                return (tmp_robot_file.read(), rootLink.name)
+    print('Could not read file')
 
 if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
     optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
-    optParser.add_option('--worldFile', dest='worldFile', default='', help='Specifies the world file where the result of the '
-                         'conversion will be inserted.')
     optParser.add_option('--robotName', dest='robotName', default='', help='Specifies the name of the robot.')
     optParser.add_option('--normal', dest='normal', action='store_true', default=False,
                          help='If set, the normals are exported if present in the URDF definition.')
@@ -228,5 +225,5 @@ if __name__ == '__main__':
     optParser.add_option('--joint-to-def', dest='jointToDef', action='store_true', default=False,
                          help='If set, urdf joint names are also used as DEF names as well as joint names.')
     options, args = optParser.parse_args()
-    convert2urdf(options.inFile, options.worldFile, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
+    convert2urdf(options.inFile, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
                  options.enableMultiFile, options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)
