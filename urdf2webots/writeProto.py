@@ -149,7 +149,7 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
         elif haveChild:
             proto.write((level + 1) * indent + ']\n')
         if level == 1:
-            proto.write((level + 1) * indent + 'name IS name \n')
+            proto.write((level + 1) * indent + 'name IS name\n')
         else:
             proto.write((level + 1) * indent + 'name "' + link.name + '"\n')
 
@@ -614,7 +614,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
                 position = initPos[0]
                 del initPos[0]
         if position is not None:
-            proto.write((level + 2) * indent + 'position %lf \n' % position)
+            proto.write((level + 2) * indent + 'position %lf\n' % position)
             mat1 = matrixFromRotation(endpointRotation)
             mat2 = matrixFromRotation([axis[0], axis[1], axis[2], position])
             mat3 = multiplyMatrix(mat2, mat1)
@@ -634,7 +634,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
             position = joint.limit.lower
             if joint.limit.upper >= joint.limit.lower:
                 position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
-            proto.write((level + 2) * indent + 'position %lf \n' % position)
+            proto.write((level + 2) * indent + 'position %lf\n' % position)
             length = math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2])
             if length > 0:
                 endpointPosition[0] += axis[0] / length * position
