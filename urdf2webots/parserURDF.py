@@ -2,7 +2,6 @@
 import math
 import os
 import sys
-import struct
 import numpy
 try:
     from PIL import Image
@@ -24,12 +23,9 @@ try:
 except ImportError:
     colladaIsAvailable = False
 
-counter = 0
-
 # to pass from external
 robotName = ''
 extensionListSingleAppearance = ['.stl', '.obj']
-
 
 disableMeshOptimization = False
 

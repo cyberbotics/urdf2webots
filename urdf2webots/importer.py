@@ -13,8 +13,6 @@ import urdf2webots.parserURDF
 import urdf2webots.writeRobot
 from xml.dom import minidom
 
-import copy
-
 try:
     import rospkg
 except ImportError:
@@ -80,6 +78,8 @@ def convert2urdf(inFile, robotName='', normal=False, boxCollision=False,
     urdf2webots.writeRobot.jointToDef = jointToDef
     urdf2webots.writeRobot.indexSolid = 0
     urdf2webots.writeRobot.staticBase = False
+    urdf2webots.parserURDF.Material.namedMaterial.clear()
+    urdf2webots.parserURDF.Geometry.reference.clear()
 
     with open(inFile, 'r') as file:
         inPath = os.path.dirname(os.path.abspath(inFile))
@@ -116,9 +116,9 @@ def convert2urdf(inFile, robotName='', normal=False, boxCollision=False,
 
                 robot = child
 
-                tmp_robot_file = tempfile.TemporaryFile(mode="w+")
+                tmp_robot_file = tempfile.NamedTemporaryFile(mode="w+", prefix='tempRobotURDFStringWebots')
 
-                urdf2webots.writeRobot.header(tmp_robot_file, inFile)
+                #urdf2webots.writeRobot.header(tmp_robot_file, inFile)
                 linkElementList = []
                 jointElementList = []
                 for child in robot.childNodes:
@@ -190,13 +190,8 @@ def convert2urdf(inFile, robotName='', normal=False, boxCollision=False,
                                                 childList, linkList, jointList, sensorList, boxCollision=boxCollision,
                                                 normal=normal, robot=True, initTranslation=initTranslation, initRotation=initRotation)
 
-                linkElementList.clear()
-                jointElementList.clear()
-                parentList.clear()
-                childList.clear()
-
                 tmp_robot_file.seek(0)
-                return (tmp_robot_file.read(), rootLink.name)
+                return (tmp_robot_file.read())
     print('Could not read file')
 
 if __name__ == '__main__':
