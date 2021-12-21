@@ -1,4 +1,4 @@
-#VRML_SIM R2021b utf8
+#VRML_SIM R2022a utf8
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # This is a proto file for Webots for the MotomanSia20d
@@ -14,8 +14,8 @@ PROTO MotomanSia20d [
   field  SFBool      supervisor      FALSE            # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE             # Is `Robot.synchronization`.
   field  SFBool      selfCollision   FALSE            # Is `Robot.selfCollision`.
-  field  SFBool      staticBase      TRUE             # Defines if the robot base should be pinned to the static environment.
-  field  MFNode      toolSlot        []               # Extend the robot with new nodes at the end of the arm.
+  field  SFBool ???     staticBase      TRUE             # Defines if the robot base should be pinned to the static environment.
+  field  MFNode  ???    toolSlot        []               # Extend the robot with new nodes at the end of the arm.
 ]
 {
   Robot {
@@ -42,7 +42,7 @@ PROTO MotomanSia20d [
       }
       HingeJoint {
         jointParameters HingeJointParameters {
-          position 0.100000 
+          position 0.100000
           axis 0.000000 0.000000 1.000000
           anchor 0.000000 0.000000 0.410000
           dampingConstant 0.0
@@ -84,7 +84,7 @@ PROTO MotomanSia20d [
             }
             HingeJoint {
               jointParameters HingeJointParameters {
-                position -0.100000 
+                position -0.100000
                 axis 0.000000 1.000000 0.000000
                 anchor 0.000000 0.000000 0.000000
                 dampingConstant 0.0
@@ -120,7 +120,7 @@ PROTO MotomanSia20d [
                   }
                   HingeJoint {
                     jointParameters HingeJointParameters {
-                      position 0.200000 
+                      position 0.200000
                       axis 0.000000 0.000000 1.000000
                       anchor 0.000000 0.000000 0.490000
                       dampingConstant 0.0
@@ -370,7 +370,7 @@ PROTO MotomanSia20d [
         name "base"
       }
     ]
-    name IS name 
+    name IS name
     boundingObject USE MOTOMAN_BASE
     %{ if fields.staticBase.value == false then }%
     physics Physics {

@@ -43,7 +43,7 @@ def header(proto, srcFile=None, robotName='', tags=[]):
     """Specify VRML file header."""
     if srcFile:
         header.sourceFile = srcFile
-    proto.write('#VRML_SIM R2021b utf8\n')
+    proto.write('#VRML_SIM R2022a utf8\n')
     proto.write('# license: Apache License 2.0\n')
     proto.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     if tags:
@@ -377,7 +377,7 @@ def URDFVisual(proto, visualNode, level, normal=False):
 
             proto.write((shapeLevel + 3) * indent + 'diffuseColor %lf %lf %lf\n' % (diffuseColor.red,
                                                                                 diffuseColor.green,
-                                                                                diffuseColor.blue))      
+                                                                                diffuseColor.blue))
             proto.write((shapeLevel + 3) * indent + 'emissiveColor %lf %lf %lf\n' % (emissiveColor.red,
                                                                                     emissiveColor.green,
                                                                                     emissiveColor.blue))
