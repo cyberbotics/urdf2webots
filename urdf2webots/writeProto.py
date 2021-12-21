@@ -1,6 +1,5 @@
 """Import modules."""
 
-import os
 import math
 import numpy as np
 
@@ -297,10 +296,6 @@ def URDFBoundingObject(proto, link, level, boxCollision):
                     proto.write('%lf %lf %lf, ' % (value[0] * boundingObject.geometry.scale[0],
                                                    value[1] * boundingObject.geometry.scale[1],
                                                    value[2] * boundingObject.geometry.scale[2]))
-                # remove the last ', ' from the file
-                proto.seek(-2, os.SEEK_END)
-                proto.truncate()
-
                 proto.write('\n' + (boundingLevel + 2) * indent + ']\n')
                 proto.write((boundingLevel + 1) * indent + '}\n')
 
@@ -462,10 +457,6 @@ def URDFVisual(proto, visualNode, level, normal=False):
                 proto.write('%lf %lf %lf, ' % (value[0] * visualNode.geometry.scale[0],
                                                value[1] * visualNode.geometry.scale[1],
                                                value[2] * visualNode.geometry.scale[2]))
-            # remove the last ', ' from the file
-            proto.seek(-2, os.SEEK_END)
-            proto.truncate()
-
             proto.write('\n' + (shapeLevel + 3) * indent + ']\n')
             proto.write((shapeLevel + 2) * indent + '}\n')
 
@@ -492,11 +483,6 @@ def URDFVisual(proto, visualNode, level, normal=False):
                 proto.write((shapeLevel + 3) * indent + 'vector [\n' + (shapeLevel + 4) * indent)
                 for value in visualNode.geometry.trimesh.normal:
                     proto.write('%lf %lf %lf, ' % (value[0], value[1], value[2]))
-
-                # remove the last ', ' from the file
-                proto.seek(-2, os.SEEK_END)
-                proto.truncate()
-
                 proto.write('\n' + (shapeLevel + 3) * indent + ']\n')
                 proto.write((shapeLevel + 2) * indent + '}\n')
 
@@ -520,11 +506,6 @@ def URDFVisual(proto, visualNode, level, normal=False):
                 proto.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
                 for value in visualNode.geometry.trimesh.texCoord:
                     proto.write('%lf %lf, ' % (value[0], value[1]))
-
-                # remove the last ', ' from the file
-                proto.seek(-2, os.SEEK_END)
-                proto.truncate()
-
                 proto.write('\n' + (shapeLevel + 3) * indent + ']\n')
                 proto.write((shapeLevel + 2) * indent + '}\n')
 
