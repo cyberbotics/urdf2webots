@@ -60,7 +60,7 @@ Check out [this tutorial](./docs/tutorial.md) for a more in-depth, step by step 
 
 
 ## Notes
-This tool have been tested using Webots R2020b on Ubuntu16.04 and Windows.  
+This tool have been tested using Webots R2022a on Ubuntu20.04 and Windows.  
 You can find the sources of these URDF files here:  
   - universal robot: https://github.com/ros-industrial/universal_robot/tree/kinetic-devel/ur_description  
   - pr2 robot: https://github.com/PR2/pr2_common/tree/kinetic-devel/pr2_description  

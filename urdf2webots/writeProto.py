@@ -43,7 +43,7 @@ def header(proto, srcFile=None, robotName='', tags=[]):
     """Specify VRML file header."""
     if srcFile:
         header.sourceFile = srcFile
-    proto.write('#VRML_SIM R2021b utf8\n')
+    proto.write('#VRML_SIM R2022a utf8\n')
     proto.write('# license: Apache License 2.0\n')
     proto.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     if tags:
@@ -81,7 +81,7 @@ def declaration(proto, robotName, initRotation):
 
 
 def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sensorList,
-             jointPosition=[0.0, 0.0, 0.0], jointRotation=[1.0, 0.0, 0.0, 0.0],
+             jointPosition=[0.0, 0.0, 0.0], jointRotation=[0.0, 0.0, 1.0, 0.0],
              boxCollision=False, normal=False, dummy=False, robot=False, endpoint=False):
     """Write a link iteratively."""
     indent = '  '
@@ -149,7 +149,7 @@ def URDFLink(proto, link, level, parentList, childList, linkList, jointList, sen
         elif haveChild:
             proto.write((level + 1) * indent + ']\n')
         if level == 1:
-            proto.write((level + 1) * indent + 'name IS name \n')
+            proto.write((level + 1) * indent + 'name IS name\n')
         else:
             proto.write((level + 1) * indent + 'name "' + link.name + '"\n')
 
@@ -377,7 +377,7 @@ def URDFVisual(proto, visualNode, level, normal=False):
 
             proto.write((shapeLevel + 3) * indent + 'diffuseColor %lf %lf %lf\n' % (diffuseColor.red,
                                                                                 diffuseColor.green,
-                                                                                diffuseColor.blue))      
+                                                                                diffuseColor.blue))
             proto.write((shapeLevel + 3) * indent + 'emissiveColor %lf %lf %lf\n' % (emissiveColor.red,
                                                                                     emissiveColor.green,
                                                                                     emissiveColor.blue))
@@ -614,7 +614,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
                 position = initPos[0]
                 del initPos[0]
         if position is not None:
-            proto.write((level + 2) * indent + 'position %lf \n' % position)
+            proto.write((level + 2) * indent + 'position %lf\n' % position)
             mat1 = matrixFromRotation(endpointRotation)
             mat2 = matrixFromRotation([axis[0], axis[1], axis[2], position])
             mat3 = multiplyMatrix(mat2, mat1)
@@ -634,7 +634,7 @@ def URDFJoint(proto, joint, level, parentList, childList, linkList, jointList,
             position = joint.limit.lower
             if joint.limit.upper >= joint.limit.lower:
                 position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
-            proto.write((level + 2) * indent + 'position %lf \n' % position)
+            proto.write((level + 2) * indent + 'position %lf\n' % position)
             length = math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2])
             if length > 0:
                 endpointPosition[0] += axis[0] / length * position

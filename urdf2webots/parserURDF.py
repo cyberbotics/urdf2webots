@@ -51,7 +51,7 @@ class Inertia():
     def __init__(self):
         """Initializatization."""
         self.position = [0.0, 0.0, 0.0]
-        self.rotation = [1.0, 0.0, 0.0, 0.0]
+        self.rotation = [0.0, 0.0, 1.0, 0.0]
         self.mass = None
         self.ixx = 1.0
         self.ixy = 0.0
@@ -165,7 +165,7 @@ class Visual():
     def __init__(self):
         """Initializatization."""
         self.position = [0.0, 0.0, 0.0]
-        self.rotation = [1.0, 0.0, 0.0, 0.0]
+        self.rotation = [0.0, 0.0, 1.0, 0.0]
         self.geometry = Geometry()
         self.material = Material()
 
@@ -176,7 +176,7 @@ class Collision():
     def __init__(self):
         """Initializatization."""
         self.position = [0.0, 0.0, 0.0]
-        self.rotation = [1.0, 0.0, 0.0, 0.0]
+        self.rotation = [0.0, 0.0, 1.0, 0.0]
         self.geometry = Geometry()
 
 
@@ -240,7 +240,7 @@ class Joint():
         self.name = 'default'
         self.type = 'default'
         self.position = [0.0, 0.0, 0.0]
-        self.rotation = [1.0, 0.0, 0.0, 0.0]
+        self.rotation = [0.0, 0.0, 1.0, 0.0]
         self.parent = 'default'
         self.child = 'default'
         self.axis = []
@@ -357,7 +357,6 @@ class Camera():
         indent = '  '
         file.write(indentationLevel * indent + 'Camera {\n')
         # rotation to convert from REP103 to webots viewport
-        file.write(indentationLevel * indent + '  rotation 1.0 0.0 0.0 3.141591\n')
         file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
         if self.fov:
             file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
@@ -388,7 +387,7 @@ class Lidar():
         self.noise = None
 
     def export(self, file, indentationLevel):
-        """Export this camera."""
+        """Export this lidar."""
         indent = '  '
         file.write(indentationLevel * indent + 'Lidar {\n')
         file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
