@@ -27,7 +27,7 @@ source devel/setup.bash
 **Note:** If you want to convert this exact same robot, you will have to replace the file at
 `kuka_experimental/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae`
 with this (original file is corrupted):
-[base_link.dae](./assets/files/base_link.dae)
+[base_link.dae](https://raw.githubusercontent.com/wiki/cyberbotics/urdf2webots/files/base_link.dae)
 ```
 cp ~/Downloads/base_link.dae src/kuka_experimental/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae
 ```
@@ -52,8 +52,8 @@ rosrun xacro xacro -o model.urdf lbr_iiwa_14_r820.xacro
 ```
 This will compile the URDF from the XACRO file and save it as model.urdf in the same directory. If your launch file added parameters to the XACRO calls, you need to add them here too.
 
-<br /> 
-<br /> 
+<br />
+<br />
 
 ## Converting the URDF to a PROTO file
 
