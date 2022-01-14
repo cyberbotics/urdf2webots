@@ -15,7 +15,7 @@ except ImportError as e:
 import numbers
 
 from urdf2webots.gazebo_materials import materials
-from urdf2webots.math_utils import convertRPYtoEulerAxis, rotateVector, combineRotations
+from urdf2webots.math_utils import convertRPYtoEulerAxis, rotateVector, combineRotations, combineTranslations
 
 try:
     from collada import Collada, lineset
@@ -838,6 +838,7 @@ def getJoint(node):
     joint.type = node.getAttribute('type')
     if hasElement(node, 'origin'):
         if node.getElementsByTagName('origin')[0].getAttribute('xyz'):
+            print("joint " + str(joint.name) + " has position " + str(getPosition(node)))
             joint.position = getPosition(node)
         if node.getElementsByTagName('origin')[0].getAttribute('rpy'):
             joint.rotation = getRotation(node)
@@ -889,14 +890,17 @@ def cleanDummyLinks(linkList, jointList):
             for joint in jointList:
                 index += 1
                 if joint.parent == link.name:
+                    print("dummy link " + str(link.name) + " has child " + str(joint.name))
                     childJointIndex = index
                 elif joint.child == link.name:
                     parentJointIndex = index
+                    print("dummy link " + str(link.name) + " has parent " + str(joint.name))
 
             if parentJointIndex:
                 if childJointIndex:
                     jointList[parentJointIndex].child = jointList[childJointIndex].child
-                    jointList[parentJointIndex].position = jointList[parentJointIndex].position + rotateVector(jointList[parentJointIndex].position, jointList[parentJointIndex].rotation)
+                    print("dummy link " + str(link.name) + " with parent pos is " + str(jointList[parentJointIndex].position) + " and non rotated pos is " + str(jointList[childJointIndex].position) + " and rotated pos is " + str(rotateVector(jointList[childJointIndex].position, jointList[childJointIndex].rotation)))
+                    jointList[parentJointIndex].position = combineTranslations(jointList[parentJointIndex].position, rotateVector(jointList[childJointIndex].position, jointList[childJointIndex].rotation))
                     jointList[parentJointIndex].rotation = combineRotations(jointList[childJointIndex].rotation, jointList[parentJointIndex].rotation)
                     jointList[parentJointIndex].name = jointList[parentJointIndex].parent + "-" + jointList[parentJointIndex].child
                     jointList.remove(jointList[childJointIndex])

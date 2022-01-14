@@ -153,3 +153,10 @@ def combineRotations(rotation1, rotation2):
     matrix2 = matrixFromRotation(rotation2)
     matrixRes = multiplyMatrix(matrix1, matrix2)
     return rotationFromMatrix(matrixRes)
+
+def combineTranslations(translation1, translation2):
+    """Combine two translations."""
+    result = []
+    for (component1, component2) in zip(translation1, translation2):
+        result.append(component1+component2)
+    return result
