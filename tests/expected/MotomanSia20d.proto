@@ -14,7 +14,6 @@ PROTO MotomanSia20d [
   field  SFBool      supervisor      FALSE            # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE             # Is `Robot.synchronization`.
   field  SFBool      selfCollision   FALSE            # Is `Robot.selfCollision`.
-  field  SFBool      staticBase      TRUE             # Defines if the robot base should be pinned to the static environment.
   field  MFNode      toolSlot        []               # Extend the robot with new nodes at the end of the arm.
 ]
 {
@@ -169,7 +168,7 @@ PROTO MotomanSia20d [
                           ]
                           endPoint Solid {
                             translation 0.000000 0.000000 0.000000
-                            rotation 0.000000 1.000000 0.000000 0.000000
+                            rotation 0.000000 0.000000 1.000000 0.000000
                             children [
                               Transform {
                                 translation 0.000000 0.000000 0.000000
@@ -204,7 +203,7 @@ PROTO MotomanSia20d [
                                 ]
                                 endPoint Solid {
                                   translation 0.000000 0.000000 0.420000
-                                  rotation 0.000000 1.000000 0.000000 0.000000
+                                  rotation 0.000000 0.000000 1.000000 0.000000
                                   children [
                                     Shape {
                                       appearance USE silver
@@ -233,7 +232,7 @@ PROTO MotomanSia20d [
                                       ]
                                       endPoint Solid {
                                         translation 0.000000 0.000000 0.000000
-                                        rotation 0.000000 1.000000 0.000000 0.000000
+                                        rotation 0.000000 0.000000 1.000000 0.000000
                                         children [
                                           Transform {
                                             translation 0.000000 0.000000 0.000000
@@ -268,7 +267,7 @@ PROTO MotomanSia20d [
                                             ]
                                             endPoint Solid {
                                               translation 0.000000 0.000000 0.180000
-                                              rotation 0.000000 1.000000 0.000000 0.000000
+                                              rotation 0.000000 0.000000 1.000000 0.000000
                                               children [
                                                 Shape {
                                                   appearance USE silver
@@ -366,15 +365,13 @@ PROTO MotomanSia20d [
       }
       Solid {
         translation 0.000000 0.000000 0.410000
-        rotation 0.000000 1.000000 0.000000 0.000000
+        rotation 0.000000 0.000000 1.000000 0.000000
         name "base"
       }
     ]
     name IS name
     boundingObject USE MOTOMAN_BASE
-    %{ if fields.staticBase.value == false then }%
     physics Physics {
     }
-    %{ end }%
   }
 }

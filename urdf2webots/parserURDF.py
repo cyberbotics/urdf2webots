@@ -2,7 +2,6 @@
 import math
 import os
 import sys
-import struct
 import numpy
 try:
     from PIL import Image
@@ -16,15 +15,13 @@ except ImportError as e:
 import numbers
 
 from urdf2webots.gazebo_materials import materials
-from urdf2webots.math_utils import convertRPYtoEulerAxis
+from urdf2webots.math_utils import convertRPYtoEulerAxis, rotateVector, combineRotations, combineTranslations
 
 try:
     from collada import Collada, lineset
     colladaIsAvailable = True
 except ImportError:
     colladaIsAvailable = False
-
-counter = 0
 
 # to pass from external
 robotName = ''
@@ -866,6 +863,50 @@ def isRootLink(link, childList):
             return False
     return True
 
+def cleanDummyLinks(linkList, jointList):
+    """Remove the dummy link used for tool slots"""
+    linkIndex = 0
+    childList = []
+    for joint in jointList:
+        childList.append(joint.child)
+
+    while linkIndex < len(linkList):
+        link = linkList[linkIndex]
+
+        # We want to skip links between the robot and the static environment.
+        if isRootLink(link.name, childList):
+            linkIndex += 1
+            continue
+
+        # This link will not have 'physics' field -> remove it
+        if link.inertia.mass is None and not link.collision:
+            linkList.remove(link)
+
+            parentJointIndex = None
+            childJointIndex = None
+            index = -1
+            for joint in jointList:
+                index += 1
+                if joint.parent == link.name:
+                    print("dummy link " + str(link.name) + " has child " + str(joint.name))
+                    childJointIndex = index
+                elif joint.child == link.name:
+                    parentJointIndex = index
+                    print("dummy link " + str(link.name) + " has parent " + str(joint.name))
+
+            if parentJointIndex:
+                if childJointIndex:
+                    jointList[parentJointIndex].child = jointList[childJointIndex].child
+                    print("dummy link " + str(link.name) + " with parent pos is " + str(jointList[parentJointIndex].position) + " and non rotated pos is " + str(jointList[childJointIndex].position) + " and rotated pos is " + str(rotateVector(jointList[childJointIndex].position, jointList[childJointIndex].rotation)))
+                    jointList[parentJointIndex].position = combineTranslations(jointList[parentJointIndex].position, rotateVector(jointList[childJointIndex].position, jointList[childJointIndex].rotation))
+                    jointList[parentJointIndex].rotation = combineRotations(jointList[childJointIndex].rotation, jointList[parentJointIndex].rotation)
+                    jointList[parentJointIndex].name = jointList[parentJointIndex].parent + "-" + jointList[parentJointIndex].child
+                    jointList.remove(jointList[childJointIndex])
+                else:
+                    jointList.remove(jointList[parentJointIndex])
+        else:
+            linkIndex += 1
+    childList.clear()
 
 def parseGazeboElement(element, parentLink, linkList):
     """Parse a Gazebo element."""
