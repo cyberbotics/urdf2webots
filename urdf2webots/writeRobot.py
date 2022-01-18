@@ -641,6 +641,11 @@ def URDFJoint(robotFile, joint, level, parentList, childList, linkList, jointLis
             position = joint.limit.lower
             if joint.limit.upper >= joint.limit.lower:
                 position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
+        elif joint.limit.upper < 0.0:
+            # if 0 is not in the range, set the position to be the middle of the range
+            position = joint.limit.upper
+            if joint.limit.upper >= joint.limit.lower:
+                position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
         if initPos is not None:
             if len(initPos) > 0:
                 position = initPos[0]
