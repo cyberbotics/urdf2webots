@@ -74,6 +74,7 @@ class TestScript(unittest.TestCase):
 
     def test_script_produces_the_correct_result(self):
         """Test that urdf2webots produces an expected result."""
+        print("Proto file tests...")
         for paths in modelPathsProto:
             command = ('%s %s --input=%s --output=%s %s' %
                        (sys.executable, urdf2webotsPath, paths['input'], paths['output'], paths['arguments']))
@@ -83,9 +84,10 @@ class TestScript(unittest.TestCase):
                 self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected),
                                 msg='Expected result mismatch when exporting "%s"' % paths['input'])
 
+        print("Robot string tests...")
         for paths in modelPathsRobotString:
-            robot_string = convert2urdf(inFile=paths['input'], isProto=False, robotName=paths['robotName'], initTranslation=paths['translation'],
-                                    initRotation=paths['rotation'])
+            robot_string = convert2urdf(inFile=paths['input'], isProto=False, robotName=paths['robotName'],
+                                        initTranslation=paths['translation'], initRotation=paths['rotation'])
             f = open(paths['output'], "a")
             f.write(robot_string)
             f.close()

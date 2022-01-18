@@ -36,16 +36,16 @@ The script accepts the following arguments:
   - **-h, --help**: Show the help message and exit.
   - **--input=INFILE**: Specifies the urdf file to convert.
   - **--output=OUTFILE**: If set, specifies the path and, if ending in ".proto", name of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).
-  - **--is-proto=True**: If set to false, the conversion will return a Webots VRML robot string.
-  - **--robotName**: Specify the name of your robot (has to be specified if you set --is-proto to `False`)..
+  - **--is-proto=True**: If set to false, the conversion will return a Webots VRML robot string (default is `True`).
+  - **--robotName**: Specify the name of your robot (for robot string conversion only and should be specified if you want to control multiple robots with external controllers).
   - **--normal**: If set, the normals are exported if present in the URDF definition.
   - **--box-collision**: If set, the bounding objects are approximated using boxes.
   - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from urdf, for PROTO conversion only).
   - **--translation="0 0 0"**: Set the translation field of your PROTO file or Webots VRML robot string.
   - **--rotation="0 0 1 0"**: Set the rotation field of your PROTO file or Webots VRML robot string.
   - **--init-pos=JointPositions**: Set the initial positions of your robot joints. Example: `--init-pos="[1.2, 0.5, -1.5]"` would set the first 3 joints of your robot to the specified values, and leave the rest with their default value.
-  - **--link-to-def**: Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName)
-  - **--joint-to-def**: Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName)
+  - **--link-to-def**: Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
+  - **--joint-to-def**: Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
 
 > Previously the **--static-base** argument was supported in order to set the base link static (disable physics). It has been removed as a common way to do it in an URDF file is to add the following to your URFD file (assuming **base_link** is the root link of your robot):
 >
@@ -61,9 +61,37 @@ The script accepts the following arguments:
 
 ### In your Python Code
 
+#### Arguments
+
+The same arguments offered for conversion from the terminal are available in python conversion, but some have different names:
+
+| Terminal   |      Python      |
+|----------|-------------|
+| --input |  inFile |
+| --output |  outFile |
+| --is-proto |  isProto |
+| --robotName |  robotName |
+| --normal |  normal |
+| --box-collision |  boxCollision |
+| --tool-slot |  toolSlot |
+| --translation |  initTranslation |
+| --rotation |  initRotation |
+| --init-pos |  initPos |
+| --link-to-def |  linkToDef |
+| --joint-to-def |  jointToDef |
+
+#### Convert into Webots PROTO files
+
 ```
 from urdf2webots.importer import convert2urdf
 convert2urdf('MY_PATH/MY_URDF.urdf')
+```
+
+#### Convert into Webots VRML robot strings
+
+```
+from urdf2webots.importer import convert2urdf
+convert2urdf('MY_PATH/MY_URDF.urdf', isProto=False)
 ```
 
 ### In-Depth Tutorial

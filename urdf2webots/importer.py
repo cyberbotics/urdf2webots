@@ -73,10 +73,17 @@ def convert2urdf(inFile, outFile=None, isProto=True, robotName='', normal=False,
     urdf2webots.writeRobot.isProto = isProto
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
     urdf2webots.writeRobot.enableMultiFile = enableMultiFile
-    urdf2webots.writeRobot.toolSlot = toolSlot
     urdf2webots.writeRobot.initPos = initPos
-    urdf2webots.writeRobot.linkToDef = linkToDef
-    urdf2webots.writeRobot.jointToDef = jointToDef
+    if isProto:
+        urdf2webots.writeRobot.toolSlot = toolSlot
+        urdf2webots.writeRobot.linkToDef = linkToDef
+        urdf2webots.writeRobot.jointToDef = jointToDef
+    else:
+        urdf2webots.writeRobot.toolSlot = None
+        urdf2webots.writeRobot.linkToDef = False
+        urdf2webots.writeRobot.jointToDef = False
+
+    # Required reset in case of multiple conversions
     urdf2webots.writeRobot.indexSolid = 0
     urdf2webots.writeRobot.staticBase = False
     urdf2webots.parserURDF.Material.namedMaterial.clear()
