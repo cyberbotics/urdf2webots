@@ -3,6 +3,7 @@ import os
 import sys
 import unittest
 import shutil
+from urdf2webots.importer import convert2urdf
 
 testDirectory = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 sourceDirectory = os.path.join(testDirectory, 'sources')
@@ -10,7 +11,7 @@ resultDirectory = os.path.join(testDirectory, 'results')
 expectedDirectory = os.path.join(testDirectory, 'expected')
 urdf2webotsPath = os.path.abspath(os.path.join(testDirectory, '..', 'urdf2webots/importer.py'))
 
-modelPaths = [
+modelPathsProto = [
     {
         'input': os.path.join(sourceDirectory, 'motoman/motoman_sia20d_support/urdf/sia20d.urdf'),
         'output': os.path.join(resultDirectory, 'MotomanSia20d.proto'),
@@ -28,6 +29,17 @@ modelPaths = [
         'output': os.path.join(resultDirectory, 'KukaLbrIiwa14R820.proto'),
         'expected': [os.path.join(expectedDirectory, 'KukaLbrIiwa14R820.proto')],
         'arguments': '--box-collision --tool-slot=tool0 --rotation="1 0 0 -1.5708"'
+    }
+]
+
+modelPathsRobotString = [
+    {
+        'input': os.path.join(sourceDirectory, 'kuka_lbr_iiwa_support/urdf/model.urdf'),
+        'output': os.path.join(resultDirectory, 'KukaLbrIiwa14R820.txt'),
+        'expected': [os.path.join(expectedDirectory, 'KukaLbrIiwa14R820.txt')],
+        'robotName': 'kuka',
+        'translation': '0 0 2',
+        'rotation': '1 0 0 -1.5708',
     }
 ]
 
@@ -62,11 +74,21 @@ class TestScript(unittest.TestCase):
 
     def test_script_produces_the_correct_result(self):
         """Test that urdf2webots produces an expected result."""
-        for paths in modelPaths:
+        for paths in modelPathsProto:
             command = ('%s %s --input=%s --output=%s %s' %
                        (sys.executable, urdf2webotsPath, paths['input'], paths['output'], paths['arguments']))
             retcode = os.system(command)
             self.assertEqual(retcode, 0, msg='Error when exporting "%s"' % (paths['input']))
+            for expected in paths['expected']:
+                self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected),
+                                msg='Expected result mismatch when exporting "%s"' % paths['input'])
+
+        for paths in modelPathsRobotString:
+            robot_string = convert2urdf(inFile=paths['input'], isProto=False, robotName=paths['robotName'], initTranslation=paths['translation'],
+                                    initRotation=paths['rotation'])
+            f = open(paths['output'], "a")
+            f.write(robot_string)
+            f.close()
             for expected in paths['expected']:
                 self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected),
                                 msg='Expected result mismatch when exporting "%s"' % paths['input'])

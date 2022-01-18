@@ -539,6 +539,7 @@ def getColladaMesh(filename, node, link):
                 for value in data.vertex_index:
                     collision.geometry.trimesh.coordIndex.append(value)
                 link.collision.append(collision)
+    del colladaMesh
 
 
 def getPosition(node):
