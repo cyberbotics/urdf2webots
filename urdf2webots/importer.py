@@ -10,7 +10,7 @@ import tempfile
 import re
 import sys
 import urdf2webots.parserURDF
-import urdf2webots.writeProto
+import urdf2webots.writeRobot
 from xml.dom import minidom
 
 try:
@@ -70,22 +70,22 @@ def convert2urdf(inFile, outFile=None, isProto=True, robotName='', normal=False,
             sys.exit(e, '\n--init-pos argument is not valid. Your list has to be inside of quotation marks. '
                      'Example: --init-pos="1.0, 2, -0.4"')
 
-    urdf2webots.writeProto.isProto = isProto
+    urdf2webots.writeRobot.isProto = isProto
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
-    urdf2webots.writeProto.enableMultiFile = enableMultiFile
-    urdf2webots.writeProto.initPos = initPos
+    urdf2webots.writeRobot.enableMultiFile = enableMultiFile
+    urdf2webots.writeRobot.initPos = initPos
     if isProto:
-        urdf2webots.writeProto.toolSlot = toolSlot
-        urdf2webots.writeProto.linkToDef = linkToDef
-        urdf2webots.writeProto.jointToDef = jointToDef
+        urdf2webots.writeRobot.toolSlot = toolSlot
+        urdf2webots.writeRobot.linkToDef = linkToDef
+        urdf2webots.writeRobot.jointToDef = jointToDef
     else:
-        urdf2webots.writeProto.toolSlot = None
-        urdf2webots.writeProto.linkToDef = False
-        urdf2webots.writeProto.jointToDef = False
+        urdf2webots.writeRobot.toolSlot = None
+        urdf2webots.writeRobot.linkToDef = False
+        urdf2webots.writeRobot.jointToDef = False
 
     # Required reset in case of multiple conversions
-    urdf2webots.writeProto.indexSolid = 0
-    urdf2webots.writeProto.staticBase = False
+    urdf2webots.writeRobot.indexSolid = 0
+    urdf2webots.writeRobot.staticBase = False
     urdf2webots.parserURDF.Material.namedMaterial.clear()
     urdf2webots.parserURDF.Geometry.reference.clear()
 
@@ -134,14 +134,14 @@ def convert2urdf(inFile, outFile=None, isProto=True, robotName='', normal=False,
 
                     if enableMultiFile:
                         mkdirSafe(outputFile.replace('.proto', '') + '_meshes')  # make a dir called 'x_meshes'
-                        urdf2webots.writeProto.meshFilesPath = outputFile.replace('.proto', '') + '_meshes'
+                        urdf2webots.writeRobot.meshFilesPath = outputFile.replace('.proto', '') + '_meshes'
 
                     protoFile = open(outputFile, 'w')
-                    urdf2webots.writeProto.header(protoFile, inFile, robotName)
+                    urdf2webots.writeRobot.header(protoFile, inFile, robotName)
                 else:
                     tmp_robot_file = tempfile.NamedTemporaryFile(mode="w+", prefix='tempRobotURDFStringWebots')
 
-                urdf2webots.writeProto.robotName = robotName
+                urdf2webots.writeRobot.robotName = robotName
                 urdf2webots.parserURDF.robotName = robotName  # pass robotName
 
                 robot = child
@@ -209,14 +209,14 @@ def convert2urdf(inFile, outFile=None, isProto=True, robotName='', normal=False,
                 print('There are %d links, %d joints and %d sensors' % (len(linkList), len(jointList), len(sensorList)))
 
                 if isProto:
-                    urdf2webots.writeProto.declaration(protoFile, robotName, initTranslation, initRotation)
-                    urdf2webots.writeProto.URDFLink(protoFile, rootLink, 1, parentList, childList, linkList, jointList,
+                    urdf2webots.writeRobot.declaration(protoFile, robotName, initTranslation, initRotation)
+                    urdf2webots.writeRobot.URDFLink(protoFile, rootLink, 1, parentList, childList, linkList, jointList,
                                                     sensorList, boxCollision=boxCollision, normal=normal, robot=True)
                     protoFile.write('}\n')
                     protoFile.close()
                     return
                 else:
-                    urdf2webots.writeProto.URDFLink(tmp_robot_file, rootLink, 0, parentList,
+                    urdf2webots.writeRobot.URDFLink(tmp_robot_file, rootLink, 0, parentList,
                                 childList, linkList, jointList, sensorList, boxCollision=boxCollision,
                                 normal=normal, robot=True, initTranslation=initTranslation, initRotation=initRotation)
 
