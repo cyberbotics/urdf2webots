@@ -864,7 +864,7 @@ def isRootLink(link, childList):
     return True
 
 def cleanDummyLinks(linkList, jointList):
-    """Remove the dummy link used for tool slots"""
+    """Remove the dummy links used for tool slots"""
     linkIndex = 0
     childList = []
     for joint in jointList:
@@ -888,16 +888,13 @@ def cleanDummyLinks(linkList, jointList):
             for joint in jointList:
                 index += 1
                 if joint.parent == link.name:
-                    print("dummy link " + str(link.name) + " has child " + str(joint.name))
                     childJointIndex = index
                 elif joint.child == link.name:
                     parentJointIndex = index
-                    print("dummy link " + str(link.name) + " has parent " + str(joint.name))
 
             if parentJointIndex:
                 if childJointIndex:
                     jointList[parentJointIndex].child = jointList[childJointIndex].child
-                    print("dummy link " + str(link.name) + " with parent pos is " + str(jointList[parentJointIndex].position) + " and non rotated pos is " + str(jointList[childJointIndex].position) + " and rotated pos is " + str(rotateVector(jointList[childJointIndex].position, jointList[childJointIndex].rotation)))
                     jointList[parentJointIndex].position = combineTranslations(jointList[parentJointIndex].position, rotateVector(jointList[childJointIndex].position, jointList[childJointIndex].rotation))
                     jointList[parentJointIndex].rotation = combineRotations(jointList[childJointIndex].rotation, jointList[parentJointIndex].rotation)
                     jointList[parentJointIndex].name = jointList[parentJointIndex].parent + "-" + jointList[parentJointIndex].child

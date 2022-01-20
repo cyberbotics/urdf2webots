@@ -83,7 +83,7 @@ def convert2urdf(inFile, outFile=None, isProto=True, robotName='', normal=False,
         urdf2webots.writeRobot.linkToDef = False
         urdf2webots.writeRobot.jointToDef = False
 
-    # Required reset in case of multiple conversions
+    # Required resets in case of multiple conversions
     urdf2webots.writeRobot.indexSolid = 0
     urdf2webots.writeRobot.staticBase = False
     urdf2webots.parserURDF.Material.namedMaterial.clear()
