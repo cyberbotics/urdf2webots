@@ -114,9 +114,9 @@ to
 
 Dont forget to save the file (<kbd>Ctrl</kbd> + <kbd>S</kbd>). In order to see the changes to your PROTO file in action, either save your world and reload it, or delete the robot and add it again.
 
-## Converting the URDF to a robot string and import it
+## Converting the URDF to a Webots Robot string and import it
 
-You can achieve the exact same result as above by converting the URDF to a robot string and use a supervisor to add this robot in the simulation!
+You can achieve the exact same result as above by converting the URDF to a Webots Robot string and use a supervisor to add this robot in the simulation.
 
 First import the library:
 
@@ -132,7 +132,7 @@ root_node = robot.getRoot()
 children_field = root_node.getField('children')
 ```
 
-Finally you can convert your URDF and add its corresponding robot to the simulation (be sure to set `isProto` to `False`, otherwise the tool will convert the URDF into a PROTO file):
+Finally you can convert your URDF file and add its corresponding robot to the simulation (be sure to set `isProto` to `False`, otherwise the tool will convert the URDF into a PROTO file):
 
 ```
 robot_string = convert2urdf(inFile=model.urdf, isProto=False)

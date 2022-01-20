@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""URDF files to Webots PROTO or robot converter."""
+"""URDF files to Webots PROTO or Robot node converter."""
 
 
 import os
@@ -247,7 +247,7 @@ if __name__ == '__main__':
     optParser.add_option('--translation', dest='initTranslation', default='0 0 0',
                          help='Set the translation field of your PROTO file or Webots VRML robot string.')
     optParser.add_option('--rotation', dest='initRotation', default='0 0 1 0',
-                         help='Set the rotation field of your PROTO file or Webots VRML robot string.')
+                         help='Set the rotation field of your PROTO file or Webots Robot node string.')
     optParser.add_option('--init-pos', dest='initPos', default=None,
                          help='Set the initial positions of your robot joints. Example: --init-pos="[1.2, 0.5, -1.5]" would '
                          'set the first 3 joints of your robot to the specified values, and leave the rest with their '

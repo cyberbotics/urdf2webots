@@ -878,7 +878,7 @@ def cleanDummyLinks(linkList, jointList):
             linkIndex += 1
             continue
 
-        # This link will not have 'physics' field -> remove it
+        # This link will not have a 'physics' field -> remove it
         if link.inertia.mass is None and not link.collision:
             linkList.remove(link)
 
