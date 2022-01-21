@@ -37,10 +37,8 @@ def rotationFromQuaternion(q):
     return v
 
 
-def convertRPYtoQuaternions(rpy, cylinder=False):
+def convertRPYtoQuaternions(rpy):
     """Convert RPY to quaternions."""
-    if cylinder:
-        rpy[0] += 0.5 * math.pi
     cy = math.cos(rpy[2] * 0.5)
     sy = math.sin(rpy[2] * 0.5)
     cp = math.cos(rpy[1] * 0.5)
@@ -56,9 +54,9 @@ def convertRPYtoQuaternions(rpy, cylinder=False):
     return q
 
 
-def convertRPYtoEulerAxis(rpy, cylinder=False):
+def convertRPYtoEulerAxis(rpy):
     """Convert RPY angles to Euler angles."""
-    return rotationFromQuaternion(convertRPYtoQuaternions(rpy, cylinder))
+    return rotationFromQuaternion(convertRPYtoQuaternions(rpy))
 
 
 def multiplyMatrix(mat1, mat2):

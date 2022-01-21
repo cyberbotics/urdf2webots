@@ -356,7 +356,6 @@ class Camera():
         """Export this camera."""
         indent = '  '
         file.write(indentationLevel * indent + 'Camera {\n')
-        # rotation to convert from REP103 to webots viewport
         file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
         if self.fov:
             file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
@@ -554,7 +553,7 @@ def getPosition(node):
     return position
 
 
-def getRotation(node, isCylinder=False):
+def getRotation(node):
     """Read rotation of a phsical or visual object."""
     rotation = [0.0, 0.0, 0.0]
     if hasElement(node, 'origin'):
@@ -562,10 +561,7 @@ def getRotation(node, isCylinder=False):
         rotation[0] = float(orientationString[0])
         rotation[1] = float(orientationString[1])
         rotation[2] = float(orientationString[2])
-    if isCylinder:
-        return convertRPYtoEulerAxis(rotation, True)
-    else:
-        return convertRPYtoEulerAxis(rotation, False)
+    return convertRPYtoEulerAxis(rotation)
 
 
 def getInertia(node):
@@ -599,12 +595,9 @@ def getVisual(link, node, path):
             if visualElement.getElementsByTagName('origin')[0].getAttribute('xyz'):
                 visual.position = getPosition(visualElement)
             if visualElement.getElementsByTagName('origin')[0].getAttribute('rpy'):
-                if hasElement(visualElement.getElementsByTagName('geometry')[0], 'cylinder'):
-                    visual.rotation = getRotation(visualElement, True)
-                else:
-                    visual.rotation = getRotation(visualElement)
+                visual.rotation = getRotation(visualElement)
         elif hasElement(visualElement.getElementsByTagName('geometry')[0], 'cylinder'):
-            visual.rotation = getRotation(visualElement, True)
+            visual.rotation = getRotation(visualElement)
 
         geometryElement = visualElement.getElementsByTagName('geometry')[0]
 
@@ -708,12 +701,9 @@ def getCollision(link, node, path):
             if collisionElement.getElementsByTagName('origin')[0].getAttribute('xyz'):
                 collision.position = getPosition(collisionElement)
             if collisionElement.getElementsByTagName('origin')[0].getAttribute('rpy'):
-                if hasElement(collisionElement.getElementsByTagName('geometry')[0], 'cylinder'):
-                    collision.rotation = getRotation(collisionElement, True)
-                else:
-                    collision.rotation = getRotation(collisionElement)
+                collision.rotation = getRotation(collisionElement)
         elif hasElement(collisionElement.getElementsByTagName('geometry')[0], 'cylinder'):
-            collision.rotation = getRotation(collisionElement, True)
+            collision.rotation = getRotation(collisionElement)
 
         geometryElement = collisionElement.getElementsByTagName('geometry')[0]
         if hasElement(geometryElement, 'box'):
