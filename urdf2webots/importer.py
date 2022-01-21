@@ -169,7 +169,7 @@ def convert2urdf(inFile, outFile=None, isProto=True, robotName='', normal=False,
                 for joint in jointElementList:
                     jointList.append(urdf2webots.parserURDF.getJoint(joint))
                 if not isProto:
-                    urdf2webots.parserURDF.cleanDummyLinks(linkList, jointList)
+                    urdf2webots.parserURDF.removeDummyLinks(linkList, jointList)
 
                 for joint in jointList:
                     parentList.append(joint.parent)
