@@ -863,7 +863,7 @@ def isRootLink(link, childList):
             return False
     return True
 
-def cleanDummyLinks(linkList, jointList):
+def removeDummyLinks(linkList, jointList):
     """Remove the dummy links used for tool slots"""
     linkIndex = 0
     childList = []
