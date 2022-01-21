@@ -60,10 +60,10 @@ This will compile the URDF from the XACRO file and save it as model.urdf in the 
 Convert the model.urdf with the following command. I recommend the added parameter:
 **--box-collision**: simplifies objects. This can greatly improve the simulation of object interactions, especially grasping.
 
-**--static-base** and **--tool-slot=tool0** are more specific for robotic arms. Have a look at all options and explanations below. To figure out, what the **--tool-slot=LinkName** is called for your robotic arm, you will have to open the model.urdf and figure out what the link is called.
+**--tool-slot=tool0** is more specific for robotic arms. Have a look at all options and explanations below. To figure out, what the **--tool-slot=LinkName** is called for your robotic arm, you will have to open the model.urdf and figure out what the link is called.
 
 ```
-python -m urdf2webots.importer --input=model.urdf --box-collision --static-base --tool-slot=tool0
+python -m urdf2webots.importer --input=model.urdf --box-collision --tool-slot=tool0
 ```
 
 Check the [main README](../README.md) for a list of all options.
@@ -113,3 +113,28 @@ to
 `field  SFRotation  rotation     0 1 0 1.5708`
 
 Dont forget to save the file (<kbd>Ctrl</kbd> + <kbd>S</kbd>). In order to see the changes to your PROTO file in action, either save your world and reload it, or delete the robot and add it again.
+
+## Converting the URDF to a Webots Robot string and import it
+
+You can achieve the exact same result as above by converting the URDF to a Webots Robot string and use a supervisor to add this robot in the simulation.
+
+First import the library:
+
+```
+from urdf2webots.importer import convert2urdf
+```
+
+Then you will need to get the node where you will insert your robot. The most suitable place is at the last position in the scene tree.
+This can be obtained with:
+
+```
+root_node = robot.getRoot()
+children_field = root_node.getField('children')
+```
+
+Finally you can convert your URDF file and add its corresponding robot to the simulation (be sure to set `robotName`, otherwise the tool will convert the URDF into a PROTO file):
+
+```
+robot_string = convert2urdf(inFile=model.urdf, robotName="MyRobotName")
+children_field.importMFNodeFromString(-1, robot_string)
+```
