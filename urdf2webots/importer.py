@@ -59,7 +59,7 @@ def convert2urdf(inFile, outFile=None, robotName=None, normal=False, boxCollisio
         sys.exit('"%s" is not an URDF file.' % inFile)
 
     if not type(initTranslation) == str or len(initTranslation.split()) != 3:
-        sys.exit('--translation argument is not valid. it has to be of Type = str and contain 3 values.')
+        sys.exit('--translation argument is not valid. It has to be of Type = str and contain 3 values.')
     if not type(initRotation) == str or len(initRotation.split()) != 4:
         sys.exit('--rotation argument is not valid. It has to be of Type = str and contain 4 values.')
     if initPos is not None:

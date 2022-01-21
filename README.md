@@ -67,7 +67,7 @@ The command line arguments available from the terminal are also available from t
 |----------|-------------|
 | --input |  inFile |
 | --output |  outFile |
-| --robot-Name |  robotName |
+| --robot-name |  robotName |
 | --normal |  normal |
 | --box-collision |  boxCollision |
 | --tool-slot |  toolSlot |
