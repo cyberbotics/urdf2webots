@@ -180,7 +180,7 @@
   <link name="base"/>
   <joint name="base_link-base" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="base_link"/>
-    <child link="base"/>
+    <parent link="base"/>
+    <child link="base_link"/>
   </joint>
 </robot>
