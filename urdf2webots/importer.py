@@ -47,7 +47,7 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convert2urdf(inFile, outFile=None, isProto=True, robotName='', normal=False, boxCollision=False,
+def convert2urdf(inFile, outFile=None, robotName=None, normal=False, boxCollision=False,
                  disableMeshOptimization=False, enableMultiFile=False,
                  toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
                  initPos=None, linkToDef=False, jointToDef=False):
@@ -59,9 +59,9 @@ def convert2urdf(inFile, outFile=None, isProto=True, robotName='', normal=False,
         sys.exit('"%s" is not an URDF file.' % inFile)
 
     if not type(initTranslation) == str or len(initTranslation.split()) != 3:
-        sys.exit('--translation argument is not valid. Has to be of Type = str and contain 3 values.')
+        sys.exit('--translation argument is not valid. it has to be of Type = str and contain 3 values.')
     if not type(initRotation) == str or len(initRotation.split()) != 4:
-        sys.exit('--rotation argument is not valid. Has to be of Type = str and contain 4 values.')
+        sys.exit('--rotation argument is not valid. It has to be of Type = str and contain 4 values.')
     if initPos is not None:
         try:
             initPos = initPos.replace(",", ' ').replace("[", '').replace("]", '').replace("(", '').replace(")", '')
@@ -69,6 +69,14 @@ def convert2urdf(inFile, outFile=None, isProto=True, robotName='', normal=False,
         except Exception as e:
             sys.exit(e, '\n--init-pos argument is not valid. Your list has to be inside of quotation marks. '
                      'Example: --init-pos="1.0, 2, -0.4"')
+
+    if robotName:
+        if robotName == '':
+            sys.exit('--robot-name argument is not valid. It cannot be an empty string.')
+
+        isProto = False
+    else:
+        isProto = True
 
     urdf2webots.writeRobot.isProto = isProto
     urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
@@ -230,9 +238,8 @@ if __name__ == '__main__':
     optParser.add_option('--input', dest='inFile', default='', help='Specifies the urdf file to convert.')
     optParser.add_option('--output', dest='outFile', default='', help='Specifies the path and, if ending in ".proto", name '
                          'of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).')
-    optParser.add_option('--is-proto', dest='isProto', default=True, help='Specifies if the conversion tool will create a PROTO file or '
-                         'output a Webots VRML robot string.')
-    optParser.add_option('--robotName', dest='robotName', default='', help='Specifies the name of the robot (has to be specified if --is-proto is set to False).')
+    optParser.add_option('--robot-name', dest='robotName', default=None, help='Specifies the name of the robot '
+                         'and generate a Robot node string instead of a PROTO file (has to be unique).')
     optParser.add_option('--normal', dest='normal', action='store_true', default=False,
                          help='If set, the normals are exported if present in the URDF definition.')
     optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
@@ -257,5 +264,5 @@ if __name__ == '__main__':
     optParser.add_option('--joint-to-def', dest='jointToDef', action='store_true', default=False,
                          help='If set, urdf joint names are also used as DEF names as well as joint names.')
     options, args = optParser.parse_args()
-    convert2urdf(options.inFile, options.outFile, options.isProto, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
+    convert2urdf(options.inFile, options.outFile, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
                  options.enableMultiFile, options.toolSlot, options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)

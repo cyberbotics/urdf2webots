@@ -27,7 +27,7 @@ pip install --upgrade --editable urdf2webots
 ### From pip
 
 ```
-python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--box-collision] [--normal] [--static-base] [--tool-slot=linkName] [--name-to-def] [--help]
+python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--normal] [--box-collision] [--tool-slot=linkName] [--help]
 ```
 
 ### Arguments
@@ -36,8 +36,7 @@ The script accepts the following arguments:
   - **-h, --help**: Show the help message and exit.
   - **--input=INFILE**: Specifies the urdf file to convert.
   - **--output=OUTFILE**: If set, specifies the path and, if ending in ".proto", name of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).
-  - **--is-proto=True**: If set to false, the conversion will return a Webots Robot node string (default is `True`).
-  - **--robotName**: Specify the name of the robot (for Robot node string conversion only, in particular if you want to control multiple robots with external controllers).
+  - **--robot-name**: Specify the name of the robot and generate a Robot node string instead of a PROTO file (has to be unique).
   - **--normal**: If set, the normals are exported if present in the URDF definition.
   - **--box-collision**: If set, the bounding objects are approximated using boxes.
   - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from urdf, for PROTO conversion only).
@@ -68,8 +67,7 @@ The command line arguments available from the terminal are also available from t
 |----------|-------------|
 | --input |  inFile |
 | --output |  outFile |
-| --is-proto |  isProto |
-| --robotName |  robotName |
+| --robot-Name |  robotName |
 | --normal |  normal |
 | --box-collision |  boxCollision |
 | --tool-slot |  toolSlot |
