@@ -86,7 +86,7 @@ class TestScript(unittest.TestCase):
 
         print("Robot node strings tests...")
         for paths in modelPathsRobotString:
-            robot_string = convert2urdf(inFile=paths['input'], isProto=False, robotName=paths['robotName'],
+            robot_string = convert2urdf(inFile=paths['input'], robotName=paths['robotName'],
                                         initTranslation=paths['translation'], initRotation=paths['rotation'])
             f = open(paths['output'], "a")
             f.write(robot_string)
