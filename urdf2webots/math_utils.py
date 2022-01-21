@@ -26,8 +26,8 @@ def rotationFromQuaternion(q):
     if (v[3] < 0.0001):
         # if v[3] close to zero then direction of axis not important
         v[0] = 0.0
-        v[1] = 1.0
-        v[2] = 0.0
+        v[1] = 0.0
+        v[2] = 1.0
     else:
         # normalise axes
         n = math.sqrt(q[1] * q[1] + q[2] * q[2] + q[3] * q[3])
@@ -37,10 +37,8 @@ def rotationFromQuaternion(q):
     return v
 
 
-def convertRPYtoQuaternions(rpy, cylinder=False):
+def convertRPYtoQuaternions(rpy):
     """Convert RPY to quaternions."""
-    if cylinder:
-        rpy[0] += 0.5 * math.pi
     cy = math.cos(rpy[2] * 0.5)
     sy = math.sin(rpy[2] * 0.5)
     cp = math.cos(rpy[1] * 0.5)
@@ -56,9 +54,9 @@ def convertRPYtoQuaternions(rpy, cylinder=False):
     return q
 
 
-def convertRPYtoEulerAxis(rpy, cylinder=False):
+def convertRPYtoEulerAxis(rpy):
     """Convert RPY angles to Euler angles."""
-    return rotationFromQuaternion(convertRPYtoQuaternions(rpy, cylinder))
+    return rotationFromQuaternion(convertRPYtoQuaternions(rpy))
 
 
 def multiplyMatrix(mat1, mat2):
