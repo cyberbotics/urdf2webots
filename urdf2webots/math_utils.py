@@ -26,8 +26,8 @@ def rotationFromQuaternion(q):
     if (v[3] < 0.0001):
         # if v[3] close to zero then direction of axis not important
         v[0] = 0.0
-        v[1] = 0.0
-        v[2] = 1.0
+        v[1] = 1.0
+        v[2] = 0.0
     else:
         # normalise axes
         n = math.sqrt(q[1] * q[1] + q[2] * q[2] + q[3] * q[3])
