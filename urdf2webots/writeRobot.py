@@ -12,8 +12,6 @@ robotName = ''
 initPos = None
 linkToDef = False
 jointToDef = False
-enableMultiFile = False
-meshFilesPath = None
 indexSolid = 0
 
 
@@ -360,6 +358,19 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
 
                 robotFile.write((boundingLevel + 1) * indent + 'url ' + str(boundingObject.geometry.mesh.url) + '\n')
                 robotFile.write(boundingLevel * indent + '}\n')
+        elif boundingObject.geometry.colladaShape.url:
+            if boundingObject.geometry.defName is not None:
+                robotFile.write(initialIndent + 'USE %s\n' % boundingObject.geometry.defName)
+            else:
+                if boundingObject.geometry.name is not None:
+                    boundingObject.geometry.defName = computeDefName(boundingObject.geometry.name)
+                if boundingObject.geometry.defName is not None:
+                    robotFile.write(initialIndent + 'DEF %s ColladaShape {\n' % boundingObject.geometry.defName)
+                else:
+                    robotFile.write(initialIndent + 'ColladaShape {\n')
+
+                robotFile.write((boundingLevel + 1) * indent + 'url ' + str(boundingObject.geometry.colladaShape.url) + '\n')
+                robotFile.write(boundingLevel * indent + '}\n')
 
         else:
             robotFile.write(initialIndent + 'Box{\n')
@@ -574,6 +585,20 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
             robotFile.write((shapeLevel + 2) * indent + 'url ' + str(visualNode.geometry.mesh.url) + '\n')
             robotFile.write((shapeLevel + 1) * indent + '}\n')
 
+    elif visualNode.geometry.colladaShape.url:
+        if visualNode.geometry.defName is not None:
+            robotFile.write((shapeLevel + 1) * indent + 'geometry USE %s\n' % visualNode.geometry.defName)
+        else:
+            if visualNode.geometry.name is not None:
+                visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
+            if visualNode.geometry.defName is not None:
+                robotFile.write((shapeLevel + 1) * indent + 'geometry DEF %s ColladaShape {\n' % visualNode.geometry.defName)
+            else:
+                robotFile.write((shapeLevel + 1) * indent + 'geometry ColladaShape {\n')
+
+            robotFile.write((shapeLevel + 2) * indent + 'url ' + str(visualNode.geometry.colladaShape.url) + '\n')
+            robotFile.write((shapeLevel + 1) * indent + '}\n')
+
     robotFile.write(shapeLevel * indent + '}\n')
 
 
@@ -596,25 +621,7 @@ def URDFShape(robotFile, link, level, normal=False):
             robotFile.write((shapeLevel + 1) * indent + 'children [\n')
             shapeLevel += 2
             transform = True
-        if enableMultiFile and visualNode.geometry.trimesh.coord:
-            name = visualNode.geometry.defName
-            if name is None:
-                if visualNode.geometry.name is not None:
-                    name = computeDefName(visualNode.geometry.name)
-            name = robotName + '_' + name if robotName else name
-            if visualNode.geometry.defName is None:
-                print('Create meshFile: %sMesh.proto' % name)
-                filepath = '%s/%sMesh.proto' % (meshFilesPath, name)
-                meshProtoFile = open(filepath, 'w')
-                header(meshProtoFile, tags=['hidden'])
-                meshProtoFile.write('PROTO %sMesh [\n]\n{\n' % name)
-                visualNode.material.defName = None
-                URDFVisual(meshProtoFile, visualNode, 1, normal)
-                meshProtoFile.write('}\n')
-                meshProtoFile.close()
-            robotFile.write(shapeLevel * indent + '%sMesh {\n' % name + shapeLevel * indent + '}\n')
-        else:
-            URDFVisual(robotFile, visualNode, shapeLevel, normal)
+        URDFVisual(robotFile, visualNode, shapeLevel, normal)
         if transform:
             robotFile.write((shapeLevel - 1) * indent + ']\n')
             robotFile.write((shapeLevel - 2) * indent + '}\n')

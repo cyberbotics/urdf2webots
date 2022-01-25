@@ -1,4 +1,2 @@
-pycollada==0.6
 Pillow
 rospkg
-numpy

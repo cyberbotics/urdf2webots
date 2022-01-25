@@ -48,7 +48,6 @@ def mkdirSafe(directory):
 
 
 def convert2urdf(inFile, outFile=None, robotName=None, normal=False, boxCollision=False,
-                 disableMeshOptimization=False, enableMultiFile=False,
                  toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
                  initPos=None, linkToDef=False, jointToDef=False):
     if not inFile:
@@ -79,8 +78,6 @@ def convert2urdf(inFile, outFile=None, robotName=None, normal=False, boxCollisio
         isProto = True
 
     urdf2webots.writeRobot.isProto = isProto
-    urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
-    urdf2webots.writeRobot.enableMultiFile = enableMultiFile
     urdf2webots.writeRobot.initPos = initPos
     if isProto:
         urdf2webots.writeRobot.toolSlot = toolSlot
@@ -139,10 +136,6 @@ def convert2urdf(inFile, outFile=None, robotName=None, normal=False, boxCollisio
                         outputFile = outFile if outFile else robotName + '.proto'
 
                     mkdirSafe(outputFile.replace('.proto', '') + '_textures')  # make a dir called 'x_textures'
-
-                    if enableMultiFile:
-                        mkdirSafe(outputFile.replace('.proto', '') + '_meshes')  # make a dir called 'x_meshes'
-                        urdf2webots.writeRobot.meshFilesPath = outputFile.replace('.proto', '') + '_meshes'
 
                     protoFile = open(outputFile, 'w')
                     urdf2webots.writeRobot.header(protoFile, inFile, robotName)
@@ -244,11 +237,6 @@ if __name__ == '__main__':
                          help='If set, the normals are exported if present in the URDF definition.')
     optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
                          help='If set, the bounding objects are approximated using boxes.')
-    optParser.add_option('--disable-mesh-optimization', dest='disableMeshOptimization', action='store_true', default=False,
-                         help='If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the '
-                         'conversion).')
-    optParser.add_option('--multi-file', dest='enableMultiFile', action='store_true', default=False,
-                         help='If set, the mesh files are exported as separated PROTO files.')
     optParser.add_option('--tool-slot', dest='toolSlot', default=None,
                          help='Specify the link that you want to add a tool slot too (exact link name from urdf, for PROTO conversion only).')
     optParser.add_option('--translation', dest='initTranslation', default='0 0 0',
@@ -264,5 +252,5 @@ if __name__ == '__main__':
     optParser.add_option('--joint-to-def', dest='jointToDef', action='store_true', default=False,
                          help='If set, urdf joint names are also used as DEF names as well as joint names.')
     options, args = optParser.parse_args()
-    convert2urdf(options.inFile, options.outFile, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
-                 options.enableMultiFile, options.toolSlot, options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)
+    convert2urdf(options.inFile, options.outFile, options.robotName, options.normal, options.boxCollision,
+                 options.toolSlot, options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)
