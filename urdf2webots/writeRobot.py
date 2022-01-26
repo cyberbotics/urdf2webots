@@ -399,7 +399,21 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
     indent = '  '
     shapeLevel = level
 
-    robotFile.write(shapeLevel * indent + 'Shape {\n')
+    if visualNode.geometry.colladaShape.url:
+        if visualNode.geometry.defName is not None:
+            robotFile.write(shapeLevel * indent + 'USE %s\n' % visualNode.geometry.defName)
+        else:
+            if visualNode.geometry.name is not None:
+                visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
+            if visualNode.geometry.defName is not None:
+                robotFile.write(shapeLevel * indent + 'DEF %s ColladaShape {\n' % visualNode.geometry.defName)
+            else:
+                robotFile.write(shapeLevel * indent + 'ColladaShape {\n')
+
+            robotFile.write((shapeLevel + 1) * indent + 'url ' + str(visualNode.geometry.colladaShape.url) + '\n')
+    else:
+        robotFile.write(shapeLevel * indent + 'Shape {\n')
+
     if visualNode.material.defName is not None:
         robotFile.write((shapeLevel + 1) * indent + 'appearance USE %s\n' % visualNode.material.defName)
     else:
@@ -583,20 +597,6 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
                 robotFile.write((shapeLevel + 1) * indent + 'geometry Mesh {\n')
 
             robotFile.write((shapeLevel + 2) * indent + 'url ' + str(visualNode.geometry.mesh.url) + '\n')
-            robotFile.write((shapeLevel + 1) * indent + '}\n')
-
-    elif visualNode.geometry.colladaShape.url:
-        if visualNode.geometry.defName is not None:
-            robotFile.write((shapeLevel + 1) * indent + 'geometry USE %s\n' % visualNode.geometry.defName)
-        else:
-            if visualNode.geometry.name is not None:
-                visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
-            if visualNode.geometry.defName is not None:
-                robotFile.write((shapeLevel + 1) * indent + 'geometry DEF %s ColladaShape {\n' % visualNode.geometry.defName)
-            else:
-                robotFile.write((shapeLevel + 1) * indent + 'geometry ColladaShape {\n')
-
-            robotFile.write((shapeLevel + 2) * indent + 'url ' + str(visualNode.geometry.colladaShape.url) + '\n')
             robotFile.write((shapeLevel + 1) * indent + '}\n')
 
     robotFile.write(shapeLevel * indent + '}\n')
