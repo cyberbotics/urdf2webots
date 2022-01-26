@@ -84,8 +84,8 @@ class Mesh():
         self.url = ''
 
 
-class ColladaShape():
-    """Define colladaShape object."""
+class ColladaShapes():
+    """Define colladaShapes object."""
 
     def __init__(self):
         """Initializatization."""
@@ -104,7 +104,7 @@ class Geometry():
         self.sphere = Sphere()
         self.trimesh = Trimesh()
         self.mesh = Mesh()
-        self.colladaShape = ColladaShape()
+        self.colladaShapes = ColladaShapes()
         self.scale = [1.0, 1.0, 1.0]
         self.name = None
         self.defName = None
@@ -580,7 +580,7 @@ def getVisual(link, node, path):
                     visual.geometry = Geometry.reference[name]
                 else:
                     if extension == '.dae':
-                        visual.geometry.colladaShape.url = '"' + meshfile + '"'
+                        visual.geometry.colladaShapes.url = '"' + meshfile + '"'
                     else:
                         visual.geometry.mesh.url = '"' + meshfile + '"'
                     visual.geometry.name = name
@@ -637,7 +637,7 @@ def getCollision(link, node, path):
                     collision.geometry = Geometry.reference[name]
                 else:
                     if extension == '.dae':
-                        collision.geometry.colladaShape.url = '"' + meshfile + '"'
+                        collision.geometry.colladaShapes.url = '"' + meshfile + '"'
                     else:
                         collision.geometry.mesh.url = '"' + meshfile + '"'
                     collision.geometry.name = name
