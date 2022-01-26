@@ -358,19 +358,6 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
 
                 robotFile.write((boundingLevel + 1) * indent + 'url ' + str(boundingObject.geometry.mesh.url) + '\n')
                 robotFile.write(boundingLevel * indent + '}\n')
-        elif boundingObject.geometry.colladaShapes.url:
-            if boundingObject.geometry.defName is not None:
-                robotFile.write(initialIndent + 'USE %s\n' % boundingObject.geometry.defName)
-            else:
-                if boundingObject.geometry.name is not None:
-                    boundingObject.geometry.defName = computeDefName(boundingObject.geometry.name)
-                if boundingObject.geometry.defName is not None:
-                    robotFile.write(initialIndent + 'DEF %s ColladaShapes {\n' % boundingObject.geometry.defName)
-                else:
-                    robotFile.write(initialIndent + 'ColladaShapes {\n')
-
-                robotFile.write((boundingLevel + 1) * indent + 'url ' + str(boundingObject.geometry.colladaShapes.url) + '\n')
-                robotFile.write(boundingLevel * indent + '}\n')
 
         else:
             robotFile.write(initialIndent + 'Box{\n')
@@ -391,7 +378,7 @@ def computeDefName(name):
     defName = name.replace(' ', '_').replace('.', '_')
     if not defName:  # empty string
         return None
-    return name.replace(' ', '_').replace('.', '_')
+    return defName
 
 
 def URDFVisual(robotFile, visualNode, level, normal=False):

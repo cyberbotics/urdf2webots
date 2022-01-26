@@ -576,6 +576,8 @@ def getVisual(link, node, path):
             extension = os.path.splitext(meshfile)[1].lower()
             if extension in extensionListSingleAppearance or extension == '.dae':
                 name = os.path.splitext(os.path.basename(meshfile))[0]
+                if extension == '.dae':
+                        name += '_collada'
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
@@ -636,10 +638,7 @@ def getCollision(link, node, path):
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
                 else:
-                    if extension == '.dae':
-                        collision.geometry.colladaShapes.url = '"' + meshfile + '"'
-                    else:
-                        collision.geometry.mesh.url = '"' + meshfile + '"'
+                    collision.geometry.mesh.url = '"' + meshfile + '"'
                     collision.geometry.name = name
                     Geometry.reference[name] = collision.geometry
                 link.collision.append(collision)
