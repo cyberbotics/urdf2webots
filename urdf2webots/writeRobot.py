@@ -456,7 +456,7 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
                                                                                     emissiveColor.blue))
             if visualNode.material.texture != "":
                 robotFile.write((shapeLevel + 2) * indent + 'baseColorMap ImageTexture {\n')
-                robotFile.write((shapeLevel + 3) * indent + 'url [ "' + visualNode.material.texture + '" ]\n')
+                robotFile.write((shapeLevel + 3) * indent + 'url "' + visualNode.material.texture + '"\n')
                 robotFile.write((shapeLevel + 2) * indent + '}\n')
 
                 robotFile.write((shapeLevel + 2) * indent + 'textureTransform TextureTransform {\n')
