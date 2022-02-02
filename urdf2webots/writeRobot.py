@@ -271,80 +271,6 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
             robotFile.write((boundingLevel + 1) * indent + 'radius ' + str(boundingObject.geometry.sphere.radius) + '\n')
             robotFile.write(boundingLevel * indent + '}\n')
 
-        elif boundingObject.geometry.trimesh.coord and boxCollision:
-            aabb = {
-                'minimum': {'x': float('inf'),
-                            'y': float('inf'),
-                            'z': float('inf')},
-                'maximum': {'x': float('-inf'),
-                            'y': float('-inf'),
-                            'z': float('-inf')}
-            }
-            for value in boundingObject.geometry.trimesh.coord:
-                x = value[0] * boundingObject.geometry.scale[0]
-                y = value[1] * boundingObject.geometry.scale[1]
-                z = value[2] * boundingObject.geometry.scale[2]
-                aabb['minimum']['x'] = min(aabb['minimum']['x'], x)
-                aabb['maximum']['x'] = max(aabb['maximum']['x'], x)
-                aabb['minimum']['y'] = min(aabb['minimum']['y'], y)
-                aabb['maximum']['y'] = max(aabb['maximum']['y'], y)
-                aabb['minimum']['z'] = min(aabb['minimum']['z'], z)
-                aabb['maximum']['z'] = max(aabb['maximum']['z'], z)
-
-            robotFile.write(initialIndent + 'Transform {\n')
-            robotFile.write((boundingLevel + 1) * indent + 'translation %f %f %f\n' % (
-                        0.5 * (aabb['maximum']['x'] + aabb['minimum']['x']) + boundingObject.position[0],
-                        0.5 * (aabb['maximum']['y'] + aabb['minimum']['y']) + boundingObject.position[1],
-                        0.5 * (aabb['maximum']['z'] + aabb['minimum']['z']) + boundingObject.position[2],))
-            robotFile.write((boundingLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (boundingObject.rotation[0],
-                                                                                       boundingObject.rotation[1],
-                                                                                       boundingObject.rotation[2],
-                                                                                       boundingObject.rotation[3]))
-            robotFile.write((boundingLevel + 1) * indent + 'children [\n')
-            robotFile.write((boundingLevel + 2) * indent + 'Box {\n')
-            robotFile.write((boundingLevel + 3) * indent + 'size %f %f %f\n' % (
-                        aabb['maximum']['x'] - aabb['minimum']['x'],
-                        aabb['maximum']['y'] - aabb['minimum']['y'],
-                        aabb['maximum']['z'] - aabb['minimum']['z'],))
-            robotFile.write((boundingLevel + 2) * indent + '}\n')
-            robotFile.write((boundingLevel + 1) * indent + ']\n')
-            robotFile.write(boundingLevel * indent + '}\n')
-
-        elif boundingObject.geometry.trimesh.coord:
-            if boundingObject.geometry.defName is not None:
-                robotFile.write(initialIndent + 'USE %s\n' % boundingObject.geometry.defName)
-            else:
-                if boundingObject.geometry.name is not None:
-                    boundingObject.geometry.defName = computeDefName(boundingObject.geometry.name)
-                    robotFile.write(initialIndent + 'DEF %s IndexedFaceSet {\n' % boundingObject.geometry.defName)
-                else:
-                    robotFile.write(initialIndent + 'IndexedFaceSet {\n')
-
-                robotFile.write((boundingLevel + 1) * indent + 'coord Coordinate {\n')
-                robotFile.write((boundingLevel + 2) * indent + 'point [\n' + (boundingLevel + 3) * indent)
-                for value in boundingObject.geometry.trimesh.coord:
-                    robotFile.write('%lf %lf %lf, ' % (value[0] * boundingObject.geometry.scale[0],
-                                                   value[1] * boundingObject.geometry.scale[1],
-                                                   value[2] * boundingObject.geometry.scale[2]))
-                robotFile.write('\n' + (boundingLevel + 2) * indent + ']\n')
-                robotFile.write((boundingLevel + 1) * indent + '}\n')
-
-                robotFile.write((boundingLevel + 1) * indent + 'coordIndex [\n' + (boundingLevel + 2) * indent)
-                if isinstance(boundingObject.geometry.trimesh.coordIndex[0], np.ndarray) \
-                   or type(boundingObject.geometry.trimesh.coordIndex[0]) == list:
-                    for value in boundingObject.geometry.trimesh.coordIndex:
-                        if len(value) == 3:
-                            robotFile.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
-                elif isinstance(boundingObject.geometry.trimesh.coordIndex[0], np.int32):
-                    for i in range(len(boundingObject.geometry.trimesh.coordIndex) / 3):
-                        robotFile.write('%d %d %d -1 ' % (boundingObject.geometry.trimesh.coordIndex[3 * i + 0],
-                                                      boundingObject.geometry.trimesh.coordIndex[3 * i + 1],
-                                                      boundingObject.geometry.trimesh.coordIndex[3 * i + 2]))
-                else:
-                    print('Unsupported "%s" coordinate type' % type(boundingObject.geometry.trimesh.coordIndex[0]))
-                robotFile.write('\n' + (boundingLevel + 1) * indent + ']\n')
-                robotFile.write(boundingLevel * indent + '}\n')
-
         elif boundingObject.geometry.mesh.url:
             if boundingObject.geometry.defName is not None:
                 robotFile.write(initialIndent + 'USE %s\n' % boundingObject.geometry.defName)
@@ -406,64 +332,36 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
         else:
             if visualNode.material.name is not None:
                 visualNode.material.defName = computeDefName(visualNode.material.name)
-            if visualNode.geometry.lineset:
-                if visualNode.material.defName is not None:
-                    robotFile.write((shapeLevel + 1) * indent + 'appearance DEF %s Appearance {\n' % visualNode.material.defName)
-                else:
-                    robotFile.write((shapeLevel + 1) * indent + 'appearance Appearance {\n')
-
-                robotFile.write((shapeLevel + 2) * indent + 'material Material {\n')
-
-                ambientColor = RGBA2RGB(visualNode.material.ambient)
-                diffuseColor = RGBA2RGB(visualNode.material.diffuse, RGB_background=ambientColor)
-                emissiveColor = RGBA2RGB(visualNode.material.emission, RGB_background=ambientColor)
-                specularColor = RGBA2RGB(visualNode.material.specular, RGB_background=ambientColor)
-
-                robotFile.write((shapeLevel + 3) * indent + 'diffuseColor %lf %lf %lf\n' % (diffuseColor.red,
-                                                                                    diffuseColor.green,
-                                                                                    diffuseColor.blue))
-                robotFile.write((shapeLevel + 3) * indent + 'emissiveColor %lf %lf %lf\n' % (emissiveColor.red,
-                                                                                        emissiveColor.green,
-                                                                                        emissiveColor.blue))
-                if visualNode.material.shininess:
-                    robotFile.write((shapeLevel + 3) * indent + 'shininess %lf\n' % (visualNode.material.shininess))
-                robotFile.write((shapeLevel + 3) * indent + 'specularColor %lf %lf %lf\n' % (specularColor.red,
-                                                                                        specularColor.green,
-                                                                                        specularColor.blue))
-                robotFile.write((shapeLevel + 3) * indent + 'transparency %lf\n' % (1.0 - visualNode.material.diffuse.alpha))
-                robotFile.write((shapeLevel + 2) * indent + '}\n')
-                robotFile.write((shapeLevel + 1) * indent + '}\n')
+            if visualNode.material.defName is not None:
+                robotFile.write((shapeLevel + 1) * indent + 'appearance DEF %s PBRAppearance {\n' % visualNode.material.defName)
             else:
-                if visualNode.material.defName is not None:
-                    robotFile.write((shapeLevel + 1) * indent + 'appearance DEF %s PBRAppearance {\n' % visualNode.material.defName)
-                else:
-                    robotFile.write((shapeLevel + 1) * indent + 'appearance PBRAppearance {\n')
-                ambientColor = RGBA2RGB(visualNode.material.ambient)
-                diffuseColor = RGBA2RGB(visualNode.material.diffuse, RGB_background=ambientColor)
-                emissiveColor = RGBA2RGB(visualNode.material.emission, RGB_background=ambientColor)
-                roughness = 1.0 - visualNode.material.specular.alpha * (visualNode.material.specular.red +
-                                                                        visualNode.material.specular.green +
-                                                                        visualNode.material.specular.blue) / 3.0
-                if visualNode.material.shininess:
-                    roughness *= (1.0 - 0.5 * visualNode.material.shininess)
-                robotFile.write((shapeLevel + 2) * indent + 'baseColor %lf %lf %lf\n' % (diffuseColor.red,
-                                                                                    diffuseColor.green,
-                                                                                    diffuseColor.blue))
-                robotFile.write((shapeLevel + 2) * indent + 'transparency %lf\n' % (1.0 - visualNode.material.diffuse.alpha))
-                robotFile.write((shapeLevel + 2) * indent + 'roughness %lf\n' % roughness)
-                robotFile.write((shapeLevel + 2) * indent + 'metalness 0\n')
-                robotFile.write((shapeLevel + 2) * indent + 'emissiveColor %lf %lf %lf\n' % (emissiveColor.red,
-                                                                                        emissiveColor.green,
-                                                                                        emissiveColor.blue))
-                if visualNode.material.texture != "":
-                    robotFile.write((shapeLevel + 2) * indent + 'baseColorMap ImageTexture {\n')
-                    robotFile.write((shapeLevel + 3) * indent + 'url "' + visualNode.material.texture + '"\n')
-                    robotFile.write((shapeLevel + 2) * indent + '}\n')
+                robotFile.write((shapeLevel + 1) * indent + 'appearance PBRAppearance {\n')
+            ambientColor = RGBA2RGB(visualNode.material.ambient)
+            diffuseColor = RGBA2RGB(visualNode.material.diffuse, RGB_background=ambientColor)
+            emissiveColor = RGBA2RGB(visualNode.material.emission, RGB_background=ambientColor)
+            roughness = 1.0 - visualNode.material.specular.alpha * (visualNode.material.specular.red +
+                                                                    visualNode.material.specular.green +
+                                                                    visualNode.material.specular.blue) / 3.0
+            if visualNode.material.shininess:
+                roughness *= (1.0 - 0.5 * visualNode.material.shininess)
+            robotFile.write((shapeLevel + 2) * indent + 'baseColor %lf %lf %lf\n' % (diffuseColor.red,
+                                                                                diffuseColor.green,
+                                                                                diffuseColor.blue))
+            robotFile.write((shapeLevel + 2) * indent + 'transparency %lf\n' % (1.0 - visualNode.material.diffuse.alpha))
+            robotFile.write((shapeLevel + 2) * indent + 'roughness %lf\n' % roughness)
+            robotFile.write((shapeLevel + 2) * indent + 'metalness 0\n')
+            robotFile.write((shapeLevel + 2) * indent + 'emissiveColor %lf %lf %lf\n' % (emissiveColor.red,
+                                                                                    emissiveColor.green,
+                                                                                    emissiveColor.blue))
+            if visualNode.material.texture != "":
+                robotFile.write((shapeLevel + 2) * indent + 'baseColorMap ImageTexture {\n')
+                robotFile.write((shapeLevel + 3) * indent + 'url "' + visualNode.material.texture + '"\n')
+                robotFile.write((shapeLevel + 2) * indent + '}\n')
 
-                    robotFile.write((shapeLevel + 2) * indent + 'textureTransform TextureTransform {\n')
-                    robotFile.write((shapeLevel + 3) * indent + 'scale 1 -1\n')
-                    robotFile.write((shapeLevel + 2) * indent + '}\n')
-                robotFile.write((shapeLevel + 1) * indent + '}\n')
+                robotFile.write((shapeLevel + 2) * indent + 'textureTransform TextureTransform {\n')
+                robotFile.write((shapeLevel + 3) * indent + 'scale 1 -1\n')
+                robotFile.write((shapeLevel + 2) * indent + '}\n')
+            robotFile.write((shapeLevel + 1) * indent + '}\n')
 
         if visualNode.geometry.box.x != 0:
             robotFile.write((shapeLevel + 1) * indent + 'geometry Box {\n')
@@ -483,94 +381,6 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
             robotFile.write((shapeLevel + 1) * indent + 'geometry Sphere {\n')
             robotFile.write((shapeLevel + 2) * indent + 'radius ' + str(visualNode.geometry.sphere.radius) + '\n')
             robotFile.write((shapeLevel + 1) * indent + '}\n')
-
-        elif visualNode.geometry.trimesh.coord:
-            meshType = 'IndexedLineSet' if visualNode.geometry.lineset else 'IndexedFaceSet'
-            if visualNode.geometry.defName is not None:
-                robotFile.write((shapeLevel + 1) * indent + 'geometry USE %s\n' % visualNode.geometry.defName)
-            else:
-                if visualNode.geometry.name is not None:
-                    visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
-                if visualNode.geometry.defName is not None:
-                    robotFile.write((shapeLevel + 1) * indent + 'geometry DEF %s %s {\n' % (visualNode.geometry.defName, meshType))
-                else:
-                    robotFile.write((shapeLevel + 1) * indent + 'geometry %s {\n' % meshType)
-                robotFile.write((shapeLevel + 2) * indent + 'coord Coordinate {\n')
-                robotFile.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
-                for value in visualNode.geometry.trimesh.coord:
-                    robotFile.write('%lf %lf %lf, ' % (value[0] * visualNode.geometry.scale[0],
-                                                value[1] * visualNode.geometry.scale[1],
-                                                value[2] * visualNode.geometry.scale[2]))
-                robotFile.write('\n' + (shapeLevel + 3) * indent + ']\n')
-                robotFile.write((shapeLevel + 2) * indent + '}\n')
-
-                robotFile.write((shapeLevel + 2) * indent + 'coordIndex [\n' + (shapeLevel + 3) * indent)
-                if (isinstance(visualNode.geometry.trimesh.coordIndex[0], np.ndarray) or
-                        type(visualNode.geometry.trimesh.coordIndex[0]) == list):
-                    for value in visualNode.geometry.trimesh.coordIndex:
-                        if len(value) == 3:
-                            robotFile.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
-                        elif len(value) == 2:
-                            assert visualNode.geometry.lineset
-                            robotFile.write('%d %d -1 ' % (value[0], value[1]))
-                elif isinstance(visualNode.geometry.trimesh.coordIndex[0], np.int32):
-                    for i in range(int(len(visualNode.geometry.trimesh.coordIndex) / 3)):
-                        robotFile.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.coordIndex[3 * i + 0],
-                                                    visualNode.geometry.trimesh.coordIndex[3 * i + 1],
-                                                    visualNode.geometry.trimesh.coordIndex[3 * i + 2]))
-                else:
-                    print('Unsupported "%s" coordinate type' % type(visualNode.geometry.trimesh.coordIndex[0]))
-                robotFile.write('\n' + (shapeLevel + 2) * indent + ']\n')
-
-                if normal and visualNode.geometry.trimesh.normal and visualNode.geometry.trimesh.normalIndex:
-                    robotFile.write((shapeLevel + 2) * indent + 'normal Normal {\n')
-                    robotFile.write((shapeLevel + 3) * indent + 'vector [\n' + (shapeLevel + 4) * indent)
-                    for value in visualNode.geometry.trimesh.normal:
-                        robotFile.write('%lf %lf %lf, ' % (value[0], value[1], value[2]))
-                    robotFile.write('\n' + (shapeLevel + 3) * indent + ']\n')
-                    robotFile.write((shapeLevel + 2) * indent + '}\n')
-
-                    robotFile.write((shapeLevel + 2) * indent + 'normalIndex [\n' + (shapeLevel + 3) * indent)
-                    if (isinstance(visualNode.geometry.trimesh.normalIndex[0], np.ndarray) or
-                            type(visualNode.geometry.trimesh.normalIndex[0]) == list):
-                        for value in visualNode.geometry.trimesh.normalIndex:
-                            if len(value) == 3:
-                                robotFile.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
-                    elif isinstance(visualNode.geometry.trimesh.normalIndex[0], np.int32):
-                        for i in range(len(visualNode.geometry.trimesh.normalIndex) / 3):
-                            robotFile.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.normalIndex[3 * i + 0],
-                                                        visualNode.geometry.trimesh.normalIndex[3 * i + 1],
-                                                        visualNode.geometry.trimesh.normalIndex[3 * i + 2]))
-                    else:
-                        print('Unsupported "%s" normal type' % type(visualNode.geometry.trimesh.normalIndex[0]))
-                    robotFile.write('\n' + (shapeLevel + 2) * indent + ']\n')
-
-                if visualNode.geometry.trimesh.texCoord:
-                    robotFile.write((shapeLevel + 2) * indent + 'texCoord TextureCoordinate {\n')
-                    robotFile.write((shapeLevel + 3) * indent + 'point [\n' + (shapeLevel + 4) * indent)
-                    for value in visualNode.geometry.trimesh.texCoord:
-                        robotFile.write('%lf %lf, ' % (value[0], value[1]))
-                    robotFile.write('\n' + (shapeLevel + 3) * indent + ']\n')
-                    robotFile.write((shapeLevel + 2) * indent + '}\n')
-
-                    robotFile.write((shapeLevel + 2) * indent + 'texCoordIndex [\n' + (shapeLevel + 3) * indent)
-                    if (isinstance(visualNode.geometry.trimesh.texCoordIndex[0], np.ndarray) or
-                            type(visualNode.geometry.trimesh.texCoordIndex[0]) == list):
-                        for value in visualNode.geometry.trimesh.texCoordIndex:
-                            if len(value) == 3:
-                                robotFile.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
-                    elif isinstance(visualNode.geometry.trimesh.texCoordIndex[0], np.int32):
-                        for i in range(len(visualNode.geometry.trimesh.texCoordIndex) / 3):
-                            robotFile.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.texCoordIndex[3 * i + 0],
-                                                        visualNode.geometry.trimesh.texCoordIndex[3 * i + 1],
-                                                        visualNode.geometry.trimesh.texCoordIndex[3 * i + 2]))
-                    else:
-                        print('Unsupported "%s" coordinate type' % type(visualNode.geometry.trimesh.texCoordIndex[0]))
-                    robotFile.write('\n' + (shapeLevel + 2) * indent + ']\n')
-
-                if not visualNode.geometry.lineset:
-                    robotFile.write((shapeLevel + 2) * indent + 'creaseAngle 1\n')
-                robotFile.write((shapeLevel + 1) * indent + '}\n')
 
         elif visualNode.geometry.mesh.url:
             if visualNode.geometry.defName is not None:

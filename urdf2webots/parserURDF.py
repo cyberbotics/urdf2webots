@@ -20,19 +20,6 @@ robotName = ''
 extensionListSingleAppearance = ['.stl', '.obj']
 
 
-class Trimesh():
-    """Define triangular mesh object."""
-
-    def __init__(self):
-        """Initializatization."""
-        self.coord = []  # list of coordinate points
-        self.coordIndex = []  # list of index of points
-        self.texCoord = []  # list of coordinate points for texture
-        self.texCoordIndex = []  # list of index for texture
-        self.normal = []  # list of normals
-        self.normalIndex = []  # list of index of normals
-
-
 class Inertia():
     """Define inertia object."""
 
@@ -102,13 +89,11 @@ class Geometry():
         self.box = Box()
         self.cylinder = Cylinder()
         self.sphere = Sphere()
-        self.trimesh = Trimesh()
         self.mesh = Mesh()
         self.colladaShapes = ColladaShapes()
         self.scale = [1.0, 1.0, 1.0]
         self.name = None
         self.defName = None
-        self.lineset = False
 
 
 class Color():
