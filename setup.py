@@ -22,6 +22,7 @@ setuptools.setup(
     ],
     install_requires=[
         "Pillow",
+        "numpy",
         "rospkg"
     ]
 )
