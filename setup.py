@@ -21,7 +21,6 @@ setuptools.setup(
         'Topic :: Software Development'
     ],
     install_requires=[
-        "pycollada >= 0.6",
         "Pillow",
         "numpy",
         "rospkg"
