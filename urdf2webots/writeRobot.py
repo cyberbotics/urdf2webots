@@ -449,7 +449,7 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
                 robotFile.write((shapeLevel + 2) * indent + '}\n')
 
                 robotFile.write((shapeLevel + 2) * indent + 'textureTransform TextureTransform {\n')
-                robotFile.write((shapeLevel + 3) * indent + 'scale 1 -1\n')
+                robotFile.write((shapeLevel + 3) * indent + 'scale 1 1\n')
                 robotFile.write((shapeLevel + 2) * indent + '}\n')
             robotFile.write((shapeLevel + 1) * indent + '}\n')
 
