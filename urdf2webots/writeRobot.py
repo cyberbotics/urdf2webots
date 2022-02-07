@@ -548,7 +548,7 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
                         if len(value) == 3:
                             robotFile.write('%d %d %d -1 ' % (value[0], value[1], value[2]))
                 elif isinstance(visualNode.geometry.trimesh.texCoordIndex[0], np.int32):
-                    for i in range(len(visualNode.geometry.trimesh.texCoordIndex) / 3):
+                    for i in range(int(len(visualNode.geometry.trimesh.texCoordIndex) / 3)):
                         robotFile.write('%d %d %d -1 ' % (visualNode.geometry.trimesh.texCoordIndex[3 * i + 0],
                                                       visualNode.geometry.trimesh.texCoordIndex[3 * i + 1],
                                                       visualNode.geometry.trimesh.texCoordIndex[3 * i + 2]))
