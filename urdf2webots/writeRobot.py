@@ -283,6 +283,10 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
                     robotFile.write(initialIndent + 'Mesh {\n')
 
                 robotFile.write((boundingLevel + 1) * indent + 'url ' + str(boundingObject.geometry.mesh.url) + '\n')
+                if boundingObject.geometry.scale[0]:
+                    robotFile.write((boundingLevel + 1) * indent + 'scale %lf %lf %lf\n' % (boundingObject.geometry.scale[0],
+                                                                                      boundingObject.geometry.scale[1],
+                                                                                      boundingObject.geometry.scale[2]))
                 robotFile.write(boundingLevel * indent + '}\n')
 
         else:
@@ -324,6 +328,10 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
                 robotFile.write(shapeLevel * indent + 'ColladaShapes {\n')
 
             robotFile.write((shapeLevel + 1) * indent + 'url ' + str(visualNode.geometry.colladaShapes.url) + '\n')
+            if visualNode.geometry.scale[0]:
+                    robotFile.write((shapeLevel + 1) * indent + 'scale %lf %lf %lf\n' % (visualNode.geometry.scale[0],
+                                                                                      visualNode.geometry.scale[1],
+                                                                                      visualNode.geometry.scale[2]))
     else:
         robotFile.write(shapeLevel * indent + 'Shape {\n')
 
@@ -394,6 +402,10 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
                     robotFile.write((shapeLevel + 1) * indent + 'geometry Mesh {\n')
 
                 robotFile.write((shapeLevel + 2) * indent + 'url ' + str(visualNode.geometry.mesh.url) + '\n')
+                if visualNode.geometry.scale[0]:
+                    robotFile.write((shapeLevel + 2) * indent + 'scale %lf %lf %lf\n' % (visualNode.geometry.scale[0],
+                                                                                      visualNode.geometry.scale[1],
+                                                                                      visualNode.geometry.scale[2]))
                 robotFile.write((shapeLevel + 1) * indent + '}\n')
 
     robotFile.write(shapeLevel * indent + '}\n')

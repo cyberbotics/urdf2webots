@@ -91,7 +91,7 @@ class Geometry():
         self.sphere = Sphere()
         self.mesh = Mesh()
         self.colladaShapes = ColladaShapes()
-        self.scale = [1.0, 1.0, 1.0]
+        self.scale = [None, None, None]
         self.name = None
         self.defName = None
 
@@ -563,6 +563,15 @@ def getVisual(link, node, path):
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if extension == '.dae':
                         name += '_collada'
+                if visual.geometry.scale[0]:
+                    name += '_scale'
+                    for i in range(3):
+                        name += '_'
+                        if visual.geometry.scale[i] < 0.0:
+                            name += 'n_'
+                        else:
+                            name += 'p_'
+                        name += str(visual.geometry.scale[i]).replace('.', '_')
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
@@ -620,6 +629,15 @@ def getCollision(link, node, path):
             extension = os.path.splitext(meshfile)[1].lower()
             if extension in extensionListSingleAppearance or extension == '.dae':
                 name = os.path.splitext(os.path.basename(meshfile))[0]
+                if collision.geometry.scale[0]:
+                    name += '_scale'
+                    for i in range(3):
+                        name += '_'
+                        if collision.geometry.scale[i] < 0.0:
+                            name += 'n_'
+                        else:
+                            name += 'p_'
+                        name += str(collision.geometry.scale[i]).replace('.', '_')
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
                 else:
