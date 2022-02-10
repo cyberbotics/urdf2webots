@@ -135,6 +135,6 @@ children_field = root_node.getField('children')
 Finally you can convert your URDF file and add its corresponding robot to the simulation (be sure to set `robotName`, otherwise the tool will convert the URDF into a PROTO file):
 
 ```
-robot_string = convert2urdf(inFile=model.urdf, robotName="MyRobotName")
+robot_string = convert2urdf(input=model.urdf, robotName="MyRobotName")
 children_field.importMFNodeFromString(-1, robot_string)
 ```

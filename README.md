@@ -34,12 +34,12 @@ python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--n
 
 The script accepts the following arguments:
   - **-h, --help**: Show the help message and exit.
-  - **--input=INFILE**: Specifies the urdf file to convert.
+  - **--input=INPUT**: Specifies the URDF file or the URDF content string to convert.
   - **--output=OUTFILE**: If set, specifies the path and, if ending in ".proto", name of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).
   - **--robot-name**: Specify the name of the robot and generate a Robot node string instead of a PROTO file (has to be unique).
   - **--normal**: If set, the normals are exported if present in the URDF definition.
   - **--box-collision**: If set, the bounding objects are approximated using boxes.
-  - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from urdf, for PROTO conversion only).
+  - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from URDF, for PROTO conversion only).
   - **--translation="0 0 0"**: Set the translation field of the PROTO file or Webots Robot node string.
   - **--rotation="0 0 1 0"**: Set the rotation field of the PROTO file or Webots Robot node string.
   - **--init-pos=JointPositions**: Set the initial positions of your robot joints. Example: `--init-pos="[1.2, 0.5, -1.5]"` would set the first 3 joints of your robot to the specified values, and leave the rest with their default value.
@@ -65,7 +65,7 @@ The command line arguments available from the terminal are also available from t
 
 | Terminal   |      Python      |
 |----------|-------------|
-| --input |  inFile |
+| --input |  input |
 | --output |  outFile |
 | --robot-name |  robotName |
 | --normal |  normal |
@@ -81,14 +81,32 @@ The command line arguments available from the terminal are also available from t
 
 ```
 from urdf2webots.importer import convert2urdf
-convert2urdf('MY_PATH/MY_URDF.urdf')
+convert2urdf(input = 'MY_PATH/MY_URDF.urdf')
+```
+
+or
+
+```
+import pathlib
+from urdf2webots.importer import convert2urdf
+robot_description = pathlib.Path('MY_PATH/MY_URDF.urdf').read_text()
+convert2urdf(input = robot_description)
 ```
 
 #### Convert into Webots Robot node strings
 
 ```
 from urdf2webots.importer import convert2urdf
-convert2urdf('MY_PATH/MY_URDF.urdf', isProto=False)
+convert2urdf(input = 'MY_PATH/MY_URDF.urdf', robotName="myRobot")
+```
+
+or
+
+```
+import pathlib
+from urdf2webots.importer import convert2urdf
+robot_description = pathlib.Path('MY_PATH/MY_URDF.urdf').read_text()
+convert2urdf(input = robot_description, robotName="myRobot")
 ```
 
 ### In-Depth Tutorial
@@ -96,6 +114,7 @@ Check out [this tutorial](./docs/tutorial.md) for a more in-depth, step by step 
 - Generate a URDF file from a ROS repository.
 - Convert your URDF file to a Webots PROTO file.
 - Load your converted model into Webots and make final adjustments.
+- Convert your URDF file to a Webots Robot string and import it.
 
 
 ## Notes
