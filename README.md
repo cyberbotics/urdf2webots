@@ -34,7 +34,7 @@ python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--n
 
 The script accepts the following arguments:
   - **-h, --help**: Show the help message and exit.
-  - **--input=INPUT**: Specifies the URDF file or the URDF content string to convert.
+  - **--input=INPUT**: Specifies the URDF file to convert or the URDF content string.
   - **--output=OUTFILE**: If set, specifies the path and, if ending in ".proto", name of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).
   - **--robot-name**: Specify the name of the robot and generate a Robot node string instead of a PROTO file (has to be unique).
   - **--normal**: If set, the normals are exported if present in the URDF definition.
@@ -45,6 +45,8 @@ The script accepts the following arguments:
   - **--init-pos=JointPositions**: Set the initial positions of your robot joints. Example: `--init-pos="[1.2, 0.5, -1.5]"` would set the first 3 joints of your robot to the specified values, and leave the rest with their default value.
   - **--link-to-def**: Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
   - **--joint-to-def**: Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
+
+> In case of a conversion from a URDF content string, it is easier to do it in [Python](#in-your-python-code).
 
 > Previously the **--static-base** argument was supported in order to set the base link to be static (disabled physics). It has been removed as there is a better way to do it by adding the following to your URDF file (assuming **base_link** is the root link of your robot):
 >

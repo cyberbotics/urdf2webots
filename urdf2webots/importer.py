@@ -128,21 +128,21 @@ def convert2urdf(input, outFile=None, robotName=None, normal=False, boxCollision
         while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
             directory = os.path.dirname(directory)
         if not os.path.split(directory)[1]:
-            if 'ROS_VERSION' in os.environ and os.environ['ROS_VERSION'] == '1':
-                try:
-                    rospack = rospkg.RosPack()
-                    print(str(rospack.list()))
-                    directory = rospack.get_path(packageName)
-                except rospkg.common.ResourceNotFound:
-                    sys.stderr.write('Package "%s" not found.\n' % packageName)
-                except NameError:
-                    sys.stderr.write('Impossible to find location of "%s" package, installing "rospkg" might help.\n'
-                                    % packageName)
-            else:
-                try:
-                    directory = get_package_share_directory(packageName)
-                except PackageNotFoundError:
-                    sys.stderr.write('Package "%s" not found.\n' % packageName)
+            if 'ROS_VERSION' in os.environ:
+                if os.environ['ROS_VERSION'] == '1':
+                    try:
+                        rospack = rospkg.RosPack()
+                        directory = rospack.get_path(packageName)
+                    except rospkg.common.ResourceNotFound:
+                        sys.stderr.write('Package "%s" not found.\n' % packageName)
+                    except NameError:
+                        sys.stderr.write('Impossible to find location of "%s" package, installing "rospkg" might help.\n'
+                                        % packageName)
+                else:
+                    try:
+                        directory = get_package_share_directory(packageName)
+                    except PackageNotFoundError:
+                        sys.stderr.write('Package "%s" not found.\n' % packageName)
         if os.path.split(directory)[1]:
             packagePath = os.path.split(directory)[0]
             content = content.replace('package://'+packageName, packagePath+'/'+packageName)
@@ -292,5 +292,5 @@ if __name__ == '__main__':
     optParser.add_option('--joint-to-def', dest='jointToDef', action='store_true', default=False,
                          help='Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).')
     options, args = optParser.parse_args()
-    convert2urdf(options.inFile, options.outFile, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
+    convert2urdf(options.input, options.outFile, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
                  options.enableMultiFile, options.toolSlot, options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)

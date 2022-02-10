@@ -1,8 +1,11 @@
 """Test module of the urdf2webots script."""
 import os
+import pathlib
+import pipes
+import shutil
 import sys
 import unittest
-import shutil
+
 from urdf2webots.importer import convert2urdf
 
 testDirectory = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
@@ -11,9 +14,12 @@ resultDirectory = os.path.join(testDirectory, 'results')
 expectedDirectory = os.path.join(testDirectory, 'expected')
 urdf2webotsPath = os.path.abspath(os.path.join(testDirectory, '..', 'urdf2webots/importer.py'))
 
+motoman_file_path = os.path.join(sourceDirectory, 'motoman/motoman_sia20d_support/urdf/sia20d.urdf')
+motoman_urdf_content = pathlib.Path(motoman_file_path).read_text()
+
 modelPathsProto = [
     {
-        'input': os.path.join(sourceDirectory, 'motoman/motoman_sia20d_support/urdf/sia20d.urdf'),
+        'input': motoman_file_path,
         'output': os.path.join(resultDirectory, 'MotomanSia20d.proto'),
         'expected': [os.path.join(expectedDirectory, 'MotomanSia20d.proto')],
         'arguments': '--multi-file --tool-slot=tool0 --rotation="1 0 0 0" --init-pos="[0.1, -0.1, 0.2]"'
@@ -28,6 +34,12 @@ modelPathsProto = [
         'input': os.path.join(sourceDirectory, 'kuka_lbr_iiwa_support/urdf/model.urdf'),
         'output': os.path.join(resultDirectory, 'KukaLbrIiwa14R820.proto'),
         'expected': [os.path.join(expectedDirectory, 'KukaLbrIiwa14R820.proto')],
+        'arguments': '--box-collision --tool-slot=tool0 --rotation="1 0 0 -1.5708"'
+    },
+    {
+        'input': pipes.quote(motoman_urdf_content),
+        'output': os.path.join(resultDirectory, 'MotomanSia20d_content.proto'),
+        'expected': [os.path.join(expectedDirectory, 'MotomanSia20d.proto')],
         'arguments': '--box-collision --tool-slot=tool0 --rotation="1 0 0 -1.5708"'
     }
 ]
@@ -86,7 +98,7 @@ class TestScript(unittest.TestCase):
 
         print("Robot node strings tests...")
         for paths in modelPathsRobotString:
-            robot_string = convert2urdf(inFile=paths['input'], robotName=paths['robotName'],
+            robot_string = convert2urdf(input=paths['input'], robotName=paths['robotName'],
                                         initTranslation=paths['translation'], initRotation=paths['rotation'])
             f = open(paths['output'], "a")
             f.write(robot_string)
