@@ -34,8 +34,8 @@ python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--n
 
 The script accepts the following arguments:
   - **-h, --help**: Show the help message and exit.
-  - **--input=INPUT**: Specifies the URDF file to convert or the URDF content string.
-  - **--output=OUTFILE**: If set, specifies the path and, if ending in ".proto", name of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).
+  - **--input=INPUT**: Specifies the URDF file to convert.
+  - **--output=OUTPUT**: If set, specifies the path and, if ending in ".proto", name of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).
   - **--robot-name**: Specify the name of the robot and generate a Robot node string instead of a PROTO file (has to be unique).
   - **--normal**: If set, the normals are exported if present in the URDF definition.
   - **--box-collision**: If set, the bounding objects are approximated using boxes.
@@ -46,7 +46,7 @@ The script accepts the following arguments:
   - **--link-to-def**: Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
   - **--joint-to-def**: Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
 
-> In case of a conversion from a URDF content string, it is easier to do it in [Python](#in-your-python-code).
+In case of the **--input** command line is missing, the conversion tool will read the content of `stdin`. You might simply copy-past the content of your URDF file in the terminal. Unfortunately the conversion tool will not be able to deal with relative paths present in your URDF file if you chose to not specify **--input**.
 
 > Previously the **--static-base** argument was supported in order to set the base link to be static (disabled physics). It has been removed as there is a better way to do it by adding the following to your URDF file (assuming **base_link** is the root link of your robot):
 >
@@ -63,12 +63,12 @@ The script accepts the following arguments:
 
 #### Arguments
 
-The command line arguments available from the terminal are also available from the python interface, but some have different names:
+The command line arguments available from the terminal are also available from the Python interface, but some have different names:
 
 | Terminal   |      Python      |
 |----------|-------------|
 | --input |  input |
-| --output |  outFile |
+| --output |  output |
 | --robot-name |  robotName |
 | --normal |  normal |
 | --box-collision |  boxCollision |
@@ -79,36 +79,40 @@ The command line arguments available from the terminal are also available from t
 | --link-to-def |  linkToDef |
 | --joint-to-def |  jointToDef |
 
+In Python, you are able to convert your URDF file by using its path as input to the `convertUrdfFile()` function or directly by giving its content as input to the `convertUrdfContent()` function.
+
+Once again, the conversion tool will not be able to deal with relative paths present in your URDF file if you work with the `convertUrdfContent()` function.
+
 #### Convert into Webots PROTO files
 
 ```
-from urdf2webots.importer import convert2urdf
-convert2urdf(input = 'MY_PATH/MY_URDF.urdf')
+from urdf2webots.importer import convertUrdfFile
+convertUrdfFile(input = 'MY_PATH/MY_URDF.urdf')
 ```
 
 or
 
 ```
 import pathlib
-from urdf2webots.importer import convert2urdf
+from urdf2webots.importer import convertUrdfContent
 robot_description = pathlib.Path('MY_PATH/MY_URDF.urdf').read_text()
-convert2urdf(input = robot_description)
+convertUrdfContent(input = robot_description)
 ```
 
 #### Convert into Webots Robot node strings
 
 ```
-from urdf2webots.importer import convert2urdf
-convert2urdf(input = 'MY_PATH/MY_URDF.urdf', robotName="myRobot")
+from urdf2webots.importer import convertUrdfFile
+convertUrdfFile(input = 'MY_PATH/MY_URDF.urdf', robotName="myRobot")
 ```
 
 or
 
 ```
 import pathlib
-from urdf2webots.importer import convert2urdf
+from urdf2webots.importer import convertUrdfContent
 robot_description = pathlib.Path('MY_PATH/MY_URDF.urdf').read_text()
-convert2urdf(input = robot_description, robotName="myRobot")
+convertUrdfContent(input = robot_description, robotName="myRobot")
 ```
 
 ### In-Depth Tutorial

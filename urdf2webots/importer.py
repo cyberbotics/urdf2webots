@@ -54,18 +54,60 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convert2urdf(input, outFile=None, robotName=None, normal=False, boxCollision=False,
+def convertUrdfFile(input = None, output=None, robotName=None, normal=False, boxCollision=False,
                  disableMeshOptimization=False, enableMultiFile=False,
                  toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
                  initPos=None, linkToDef=False, jointToDef=False):
-    inputFile = None
+    """Convert a URDF file into a Webots PROTO file or Robot node string."""
+    urdfContent = None
     if not input:
-        sys.exit('Input not specified (should be specified with the "--input" argument).')
-    if os.path.isfile(input):
-        print('convert2urdf will interpret input "%s" as a URDF file.' % input)
-        inputFile = input
+        print('''"--input" not specified, a URDF content will be read in the in stdin.\n
+            You might copy-past your URDF content in the terminal.\n
+            The "</robot>" tag will stop the lecture.''')
+        urdfContent = ""
+        for line in sys.stdin:
+            urdfContent += line
+            if "</robot>" == line.strip():
+                break
+        print("URDF lecture is finished!")
     else:
-        print('convert2urdf will interpret input as a URDF content string.')
+        if not os.path.isfile(input):
+            sys.exit('Input file "%s" does not exists.' % input)
+        if not input.endswith('.urdf'):
+            sys.exit('"%s" is not a URDF file.' % input)
+
+        with open(input, 'r') as file:
+            urdfContent = file.read()
+        if urdfContent is None:
+            sys.exit('Could not read the URDF file.')
+
+        # Set urdfPath for replacing "package://(.*)" occurences later
+        convertUrdfFile.urdfPath = os.path.abspath(input)
+
+    return convertUrdfContent(urdfContent, output, robotName, normal, boxCollision,
+                 disableMeshOptimization, enableMultiFile,
+                 toolSlot, initTranslation, initRotation,
+                 initPos, linkToDef, jointToDef)
+
+
+convertUrdfFile.urdfPath = None
+
+
+def convertUrdfContent(input, output=None, robotName=None, normal=False, boxCollision=False,
+                 disableMeshOptimization=False, enableMultiFile=False,
+                 toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
+                 initPos=None, linkToDef=False, jointToDef=False):
+    """
+    Convert a URDF content string into a Webots PROTO file or Robot node string.
+    Relative paths to your URDF file will not work, but "package://" and "webots://" paths will work.
+    If you have relative paths in your URDF file, please use the convertUrdfFile() function.
+    """
+    # Retrieve urdfPath if this function has been called from convertUrdfFile()
+    if convertUrdfFile.urdfPath is not None:
+        urdfPath = convertUrdfFile.urdfPath
+        convertUrdfFile.urdfPath = None
+    else:
+        urdfPath = ""
 
     if not type(initTranslation) == str or len(initTranslation.split()) != 3:
         sys.exit('--translation argument is not valid. It has to be of Type = str and contain 3 values.')
@@ -82,7 +124,6 @@ def convert2urdf(input, outFile=None, robotName=None, normal=False, boxCollision
     if robotName:
         if robotName == '':
             sys.exit('--robot-name argument is not valid. It cannot be an empty string.')
-
         isProto = False
     else:
         isProto = True
@@ -106,25 +147,10 @@ def convert2urdf(input, outFile=None, robotName=None, normal=False, boxCollision
     urdf2webots.parserURDF.Material.namedMaterial.clear()
     urdf2webots.parserURDF.Geometry.reference.clear()
 
-    # Define the content according to the type of the input
-    content = None
-    if inputFile is not None:
-        with open(inputFile, 'r') as file:
-            content = file.read()
-        if content is None:
-            sys.exit('Could not read the URDF file.')
-    else:
-        content = input
-
     # Replace "package://(.*)" occurences
-    if inputFile is None:
-        inPath = ""
-    else:
-        inPath = os.path.dirname(os.path.abspath(inputFile))
-
-    for match in re.finditer('"package://(.*)"', content):
+    for match in re.finditer('"package://(.*)"', input):
         packageName = match.group(1).split('/')[0]
-        directory = inPath
+        directory = os.path.dirname(urdfPath)
         while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
             directory = os.path.dirname(directory)
         if not os.path.split(directory)[1]:
@@ -143,28 +169,30 @@ def convert2urdf(input, outFile=None, robotName=None, normal=False, boxCollision
                         directory = get_package_share_directory(packageName)
                     except PackageNotFoundError:
                         sys.stderr.write('Package "%s" not found.\n' % packageName)
+            else:
+                sys.stderr.write('ROS not sourced, package "%s" will not be found.\n' % packageName)
         if os.path.split(directory)[1]:
             packagePath = os.path.split(directory)[0]
-            content = content.replace('package://'+packageName, packagePath+'/'+packageName)
+            input = input.replace('package://'+packageName, packagePath+'/'+packageName)
         else:
             sys.stderr.write('Can\'t determine package root path.\n')
 
     # Convert the content into Webots robot
-    domFile = minidom.parseString(content)
+    domFile = minidom.parseString(input)
     for child in domFile.childNodes:
         if child.localName == 'robot':
             if isProto:
-                if outFile:
-                    if os.path.splitext(os.path.basename(outFile))[1] == '.proto':
-                        robotName = os.path.splitext(os.path.basename(outFile))[0]
-                        outputFile = outFile
+                if output:
+                    if os.path.splitext(os.path.basename(output))[1] == '.proto':
+                        robotName = os.path.splitext(os.path.basename(output))[0]
+                        outputFile = output
                     else:
-                        # treat outFile as directory and construct filename
+                        # treat output as directory and construct filename
                         robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize
-                        outputFile = os.path.join(outFile, robotName + '.proto')
+                        outputFile = os.path.join(output, robotName + '.proto')
                 else:
                     robotName = convertLUtoUN(urdf2webots.parserURDF.getRobotName(child))  # capitalize
-                    outputFile = outFile if outFile else robotName + '.proto'
+                    outputFile = output if output else robotName + '.proto'
 
                 mkdirSafe(outputFile.replace('.proto', '') + '_textures')  # make a dir called 'x_textures'
 
@@ -173,7 +201,7 @@ def convert2urdf(input, outFile=None, robotName=None, normal=False, boxCollision
                     urdf2webots.writeRobot.meshFilesPath = outputFile.replace('.proto', '') + '_meshes'
 
                 protoFile = open(outputFile, 'w')
-                urdf2webots.writeRobot.header(protoFile, inputFile, robotName)
+                urdf2webots.writeRobot.header(protoFile, urdfPath, robotName)
             else:
                 tmp_robot_file = tempfile.NamedTemporaryFile(mode="w+", prefix='tempRobotURDFStringWebots')
 
@@ -201,7 +229,7 @@ def convert2urdf(input, outFile=None, robotName=None, normal=False, boxCollision
             rootLink = urdf2webots.parserURDF.Link()
 
             for link in linkElementList:
-                linkList.append(urdf2webots.parserURDF.getLink(link, inPath))
+                linkList.append(urdf2webots.parserURDF.getLink(link, os.path.dirname(urdfPath)))
             for joint in jointElementList:
                 jointList.append(urdf2webots.parserURDF.getJoint(joint))
             if not isProto:
@@ -263,8 +291,8 @@ def convert2urdf(input, outFile=None, robotName=None, normal=False, boxCollision
 
 if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
-    optParser.add_option('--input', dest='input', default='', help='Specifies the URDF file or the URDF content string to convert.')
-    optParser.add_option('--output', dest='outFile', default='', help='Specifies the path and, if ending in ".proto", name '
+    optParser.add_option('--input', dest='input', default='', help='Specifies the URDF file.')
+    optParser.add_option('--output', dest='output', default='', help='Specifies the path and, if ending in ".proto", name '
                          'of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).')
     optParser.add_option('--robot-name', dest='robotName', default=None, help='Specifies the name of the robot '
                          'and generate a Robot node string instead of a PROTO file (has to be unique).')
@@ -292,5 +320,5 @@ if __name__ == '__main__':
     optParser.add_option('--joint-to-def', dest='jointToDef', action='store_true', default=False,
                          help='Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).')
     options, args = optParser.parse_args()
-    convert2urdf(options.input, options.outFile, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
+    convertUrdfFile(options.input, options.output, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
                  options.enableMultiFile, options.toolSlot, options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)

@@ -121,7 +121,7 @@ You can achieve the exact same result as above by converting the URDF to a Webot
 First import the library:
 
 ```
-from urdf2webots.importer import convert2urdf
+from urdf2webots.importer import convertUrdfFile
 ```
 
 Then you will need to get the node where you will insert your robot. The most suitable place is at the last position in the scene tree.
@@ -135,6 +135,17 @@ children_field = root_node.getField('children')
 Finally you can convert your URDF file and add its corresponding robot to the simulation (be sure to set `robotName`, otherwise the tool will convert the URDF into a PROTO file):
 
 ```
-robot_string = convert2urdf(input=model.urdf, robotName="MyRobotName")
+robot_string = convertUrdfFile(input="model.urdf", robotName="MyRobotName")
 children_field.importMFNodeFromString(-1, robot_string)
 ```
+
+Note that you can also convert directly the content of your URDF file instead with:
+
+```
+import pathlib
+from urdf2webots.importer import convertUrdfContent
+robot_description = pathlib.Path("model.urdf").read_text()
+convertUrdfContent(input=robot_description, robotName="myRobot")
+```
+
+Be cautious, with this last method the converter tool can not deal with relative paths present in your URDF file!
