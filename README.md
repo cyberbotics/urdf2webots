@@ -45,10 +45,11 @@ The script accepts the following arguments:
   - **--init-pos=JointPositions**: Set the initial positions of your robot joints. Example: `--init-pos="[1.2, 0.5, -1.5]"` would set the first 3 joints of your robot to the specified values, and leave the rest with their default value.
   - **--link-to-def**: Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
   - **--joint-to-def**: Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
+  - **--relative-path-prefix**: If set and **--input** not specified, relative paths present in your URDF file will get this prefix. Example: `filename="head.obj"` with `--relative-path-prefix="/home/user/myRobot/"` will became `filename="/home/user/myRobot/head.obj"`.
 
 In case the **--input** option is missing, the script will read the URDF content from `stdin`.
 In that case, you can pipe the content of your URDF file into the script: `cat my_robot.urdf | urdf2proto.py`.
-Relative paths present in your URDF file will be treated relatively to the current directory from which the script is called.
+Relative paths present in your URDF file will be treated relatively to the current directory from which the script is called unless **--relative-path-prefix** is set.
 
 > Previously the **--static-base** argument was supported in order to set the base link to be static (disabled physics). It has been removed as there is a better way to do it by adding the following to your URDF file (assuming **base_link** is the root link of your robot):
 >
@@ -80,6 +81,7 @@ The command line arguments available from the terminal are also available from t
 | --init-pos |  initPos |
 | --link-to-def |  linkToDef |
 | --joint-to-def |  jointToDef |
+| --relative-path-prefix |  relativePathPrefix |
 
 In Python, you can convert a URDF file by passing its path as an argument to the `convertUrdfFile()` function or directly by passing its content as an argument to the `convertUrdfContent()` function.
 

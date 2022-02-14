@@ -42,7 +42,7 @@ modelContentProto = [
         'input': pathlib.Path(human_file_path).read_text(),
         'output': os.path.join(resultDirectory, 'Human.proto'),
         'expected': [os.path.join(expectedDirectory, 'Human.proto')],
-        'arguments': ''
+        'relativePathPrefix': '/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/urdf',
     }
 ]
 
@@ -103,9 +103,9 @@ class TestScript(unittest.TestCase):
         """Test that urdf2webots produces an expected PROTO file using URDF content as input."""
         print('Start tests with input "URDF content" and output "PROTO file"...')
         for paths in modelContentProto:
-            convertUrdfContent(input=paths['input'], output=paths['output'])
+            convertUrdfContent(input=paths['input'], output=paths['output'], relativePathPrefix=paths['relativePathPrefix'])
             for expected in paths['expected']:
-                self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected, checkPaths=False),
+                self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected, checkPaths=True),
                                 msg='Expected result mismatch when exporting input to "%s"' % paths['output'])
 
     def testInputContentStdinOutputProto(self):
@@ -113,9 +113,9 @@ class TestScript(unittest.TestCase):
         print('Start tests with input "URDF content" and output "PROTO file"...')
         for paths in modelContentProto:
             sys.stdin = io.StringIO(paths['input'])
-            convertUrdfFile(output=paths['output'])
+            convertUrdfFile(output=paths['output'], relativePathPrefix=paths['relativePathPrefix'])
             for expected in paths['expected']:
-                self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected, checkPaths=False),
+                self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected, checkPaths=True),
                                 msg='Expected result mismatch when exporting input to "%s"' % paths['output'])
 
     def testInputFileOutputRobotString(self):
@@ -123,7 +123,7 @@ class TestScript(unittest.TestCase):
         print('Start tests with input "URDF file" and output "Robot node strings"...')
         for paths in modelPathsRobotString:
             robot_string = convertUrdfFile(input=paths['input'], robotName=paths['robotName'], initTranslation=paths['translation'], initRotation=paths['rotation'])
-            f = open(paths['output'], 'w')
+            f = open(paths['output'], 'a+')
             f.write(robot_string)
             f.close()
             for expected in paths['expected']:
