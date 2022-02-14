@@ -46,7 +46,9 @@ The script accepts the following arguments:
   - **--link-to-def**: Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
   - **--joint-to-def**: Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
 
-In case of the **--input** command line is missing, the conversion tool will read the content of `stdin`. You might simply copy-past the content of your URDF file in the terminal. Unfortunately the conversion tool will not be able to deal with relative paths present in your URDF file if you chose to not specify **--input**.
+In case the **--input** option is missing, the script will read the URDF content from `stdin`.
+In that case, you can pipe the content of your URDF file into the script: `cat my_robot.urdf | urdf2proto.py`.
+Relative paths present in your URDF file will be treated relatively to the current directory from which the script is called.
 
 > Previously the **--static-base** argument was supported in order to set the base link to be static (disabled physics). It has been removed as there is a better way to do it by adding the following to your URDF file (assuming **base_link** is the root link of your robot):
 >
