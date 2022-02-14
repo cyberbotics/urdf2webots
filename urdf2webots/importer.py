@@ -62,7 +62,6 @@ def convertUrdfFile(input = None, output=None, robotName=None, normal=False, box
     urdfContent = None
     if not input:
         print('''"--input" not specified, a URDF content will be read in the in stdin.\n
-            You might copy-past your URDF content in the terminal.\n
             The "</robot>" tag will stop the lecture.''')
         urdfContent = ""
         for line in sys.stdin:
@@ -99,15 +98,15 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
                  initPos=None, linkToDef=False, jointToDef=False):
     """
     Convert a URDF content string into a Webots PROTO file or Robot node string.
-    Relative paths to your URDF file will not work, but "package://" and "webots://" paths will work.
-    If you have relative paths in your URDF file, please use the convertUrdfFile() function.
+    The current working directory will be used for relative paths in your URDF file.
+    To use the location of your URDF file for relative paths, please use the convertUrdfFile() function.
     """
     # Retrieve urdfPath if this function has been called from convertUrdfFile()
     if convertUrdfFile.urdfPath is not None:
         urdfPath = convertUrdfFile.urdfPath
         convertUrdfFile.urdfPath = None
     else:
-        urdfPath = ""
+        urdfPath = os.getcwd()
 
     if not type(initTranslation) == str or len(initTranslation.split()) != 3:
         sys.exit('--translation argument is not valid. It has to be of Type = str and contain 3 values.')
