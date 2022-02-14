@@ -50,7 +50,10 @@ def header(robotFile, srcFile=None, protoName=None, tags=[]):
     if protoName:
         robotFile.write('# This is a proto file for Webots for the ' + protoName + '\n')
     if srcFile:
-        robotFile.write('# Extracted from: ' + srcFile + '\n\n')
+        robotFile.write('# Extracted from: ' + srcFile + '\n')
+    else:
+        robotFile.write('# Extracted from a URDF content string\n')
+    robotFile.write('\n')
 
 
 def declaration(robotFile, robotName, initTranslation, initRotation):
