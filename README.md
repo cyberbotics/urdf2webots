@@ -81,9 +81,7 @@ The command line arguments available from the terminal are also available from t
 | --link-to-def |  linkToDef |
 | --joint-to-def |  jointToDef |
 
-In Python, you are able to convert your URDF file by using its path as input to the `convertUrdfFile()` function or directly by giving its content as input to the `convertUrdfContent()` function.
-
-Once again, the conversion tool will not be able to deal with relative paths present in your URDF file if you work with the `convertUrdfContent()` function.
+In Python, you can convert a URDF file by passing its path as an argument to the `convertUrdfFile()` function or directly by passing its content as an argument to the `convertUrdfContent()` function.
 
 #### Convert into Webots PROTO files
 

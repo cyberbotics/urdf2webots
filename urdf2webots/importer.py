@@ -62,7 +62,7 @@ def convertUrdfFile(input = None, output=None, robotName=None, normal=False, box
     urdfContent = None
     if not input:
         print('''"--input" not specified, a URDF content will be read in the in stdin.\n
-            The "</robot>" tag will stop the lecture.''')
+            The "</robot>" tag will stop the reading.''')
         urdfContent = ""
         for line in sys.stdin:
             urdfContent += line

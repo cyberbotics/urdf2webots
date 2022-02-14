@@ -147,5 +147,3 @@ from urdf2webots.importer import convertUrdfContent
 robot_description = pathlib.Path("model.urdf").read_text()
 convertUrdfContent(input=robot_description, robotName="myRobot")
 ```
-
-Be cautious, with this last method the converter tool can not deal with relative paths present in your URDF file!
