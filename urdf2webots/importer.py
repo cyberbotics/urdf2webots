@@ -327,8 +327,8 @@ if __name__ == '__main__':
                          help='Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) '
                          '(for PROTO conversion only).')
     optParser.add_option('--relative-path-prefix', dest='relativePathPrefix', default=None,
-                         help='If set and --input not specified, relative paths present in your URDF file will be treated relatively to it '
-                         'rather than relative to the current directory from which the script is called.')
+                         help='If set and --input not specified, relative paths in your URDF file will be treated relatively to it '
+                         'rather than relatively to the current directory from which the script is called.')
     options, args = optParser.parse_args()
     convertUrdfFile(options.input, options.output, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
                  options.enableMultiFile, options.toolSlot, options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef, options.relativePathPrefix)

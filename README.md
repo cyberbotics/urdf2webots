@@ -45,7 +45,7 @@ The script accepts the following arguments:
   - **--init-pos=JointPositions**: Set the initial positions of your robot joints. Example: `--init-pos="[1.2, 0.5, -1.5]"` would set the first 3 joints of your robot to the specified values, and leave the rest with their default value.
   - **--link-to-def**: Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
   - **--joint-to-def**: Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
-  - **--relative-path-prefix**: If set and **--input** not specified, relative paths present in your URDF file will get this prefix. Example: `filename="head.obj"` with `--relative-path-prefix="/home/user/myRobot/"` will became `filename="/home/user/myRobot/head.obj"`.
+  - **--relative-path-prefix**: If **--input** is not set, the relative paths in your URDF file sent through stdin will use this prefix. For example: `filename="head.obj"` with `--relative-path-prefix="/home/user/myRobot/"` will become `filename="/home/user/myRobot/head.obj"`.
 
 In case the **--input** option is missing, the script will read the URDF content from `stdin`.
 In that case, you can pipe the content of your URDF file into the script: `cat my_robot.urdf | urdf2proto.py`.
