@@ -9,7 +9,6 @@ import os
 import re
 import sys
 import tempfile
-from tkinter.messagebox import NO
 from xml.dom import minidom
 
 import urdf2webots.parserURDF
@@ -153,7 +152,7 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
     urdf2webots.parserURDF.Geometry.reference.clear()
 
     # Replace "package://(.*)" occurences
-    for match in re.finditer('"package://(.*)"', input):
+    for match in re.finditer('"package://(.*?)"', input):
         packageName = match.group(1).split('/')[0]
         directory = urdfDirectory
         while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
