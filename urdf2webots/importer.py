@@ -54,10 +54,10 @@ def mkdirSafe(directory):
             print('Directory "' + directory + '" already exists!')
 
 
-def convertUrdfFile(input = None, output=None, robotName=None, normal=False, boxCollision=False,
+def convertUrdfFile(input=None, output=None, robotName=None, normal=False, boxCollision=False,
                  disableMeshOptimization=False, enableMultiFile=False,
                  toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
-                 initPos=None, linkToDef=False, jointToDef=False):
+                 initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None):
     """Convert a URDF file into a Webots PROTO file or Robot node string."""
     urdfContent = None
     if not input:
@@ -86,7 +86,7 @@ def convertUrdfFile(input = None, output=None, robotName=None, normal=False, box
     return convertUrdfContent(urdfContent, output, robotName, normal, boxCollision,
                  disableMeshOptimization, enableMultiFile,
                  toolSlot, initTranslation, initRotation,
-                 initPos, linkToDef, jointToDef)
+                 initPos, linkToDef, jointToDef, relativePathPrefix)
 
 
 convertUrdfFile.urdfPath = None
@@ -95,18 +95,23 @@ convertUrdfFile.urdfPath = None
 def convertUrdfContent(input, output=None, robotName=None, normal=False, boxCollision=False,
                  disableMeshOptimization=False, enableMultiFile=False,
                  toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
-                 initPos=None, linkToDef=False, jointToDef=False):
+                 initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None):
     """
     Convert a URDF content string into a Webots PROTO file or Robot node string.
     The current working directory will be used for relative paths in your URDF file.
     To use the location of your URDF file for relative paths, please use the convertUrdfFile() function.
     """
     # Retrieve urdfPath if this function has been called from convertUrdfFile()
+    # And set urdfDirectory accordingly
+    urdfPath = None
     if convertUrdfFile.urdfPath is not None:
         urdfPath = convertUrdfFile.urdfPath
+        urdfDirectory = os.path.dirname(urdfPath)
         convertUrdfFile.urdfPath = None
+    elif relativePathPrefix is not None:
+        urdfDirectory = relativePathPrefix
     else:
-        urdfPath = os.getcwd()
+        urdfDirectory = os.getcwd()
 
     if not type(initTranslation) == str or len(initTranslation.split()) != 3:
         sys.exit('--translation argument is not valid. It has to be of Type = str and contain 3 values.')
@@ -147,9 +152,9 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
     urdf2webots.parserURDF.Geometry.reference.clear()
 
     # Replace "package://(.*)" occurences
-    for match in re.finditer('"package://(.*)"', input):
+    for match in re.finditer('"package://(.*?)"', input):
         packageName = match.group(1).split('/')[0]
-        directory = os.path.dirname(urdfPath)
+        directory = urdfDirectory
         while packageName != os.path.split(directory)[1] and os.path.split(directory)[1]:
             directory = os.path.dirname(directory)
         if not os.path.split(directory)[1]:
@@ -228,7 +233,7 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
             rootLink = urdf2webots.parserURDF.Link()
 
             for link in linkElementList:
-                linkList.append(urdf2webots.parserURDF.getLink(link, os.path.dirname(urdfPath)))
+                linkList.append(urdf2webots.parserURDF.getLink(link, urdfDirectory))
             for joint in jointElementList:
                 jointList.append(urdf2webots.parserURDF.getJoint(joint))
             if not isProto:
@@ -292,7 +297,8 @@ if __name__ == '__main__':
     optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
     optParser.add_option('--input', dest='input', default='', help='Specifies the URDF file.')
     optParser.add_option('--output', dest='output', default='', help='Specifies the path and, if ending in ".proto", name '
-                         'of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).')
+                         'of the resulting PROTO file. The filename minus the .proto extension will be the robot name '
+                         '(for PROTO conversion only).')
     optParser.add_option('--robot-name', dest='robotName', default=None, help='Specifies the name of the robot '
                          'and generate a Robot node string instead of a PROTO file (has to be unique).')
     optParser.add_option('--normal', dest='normal', action='store_true', default=False,
@@ -315,9 +321,14 @@ if __name__ == '__main__':
                          'set the first 3 joints of your robot to the specified values, and leave the rest with their '
                          'default value.')
     optParser.add_option('--link-to-def', dest='linkToDef', action='store_true', default=False,
-                         help='Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).')
+                         help='Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName) '
+                         '(for PROTO conversion only).')
     optParser.add_option('--joint-to-def', dest='jointToDef', action='store_true', default=False,
-                         help='Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).')
+                         help='Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) '
+                         '(for PROTO conversion only).')
+    optParser.add_option('--relative-path-prefix', dest='relativePathPrefix', default=None,
+                         help='If set and --input not specified, relative paths in your URDF file will be treated relatively to it '
+                         'rather than relatively to the current directory from which the script is called.')
     options, args = optParser.parse_args()
     convertUrdfFile(options.input, options.output, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
-                 options.enableMultiFile, options.toolSlot, options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef)
+                 options.enableMultiFile, options.toolSlot, options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef, options.relativePathPrefix)
