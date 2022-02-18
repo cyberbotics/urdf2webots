@@ -69,6 +69,7 @@ class Mesh():
     def __init__(self):
         """Initializatization."""
         self.url = ''
+        self.ccw = True
 
 
 class ColladaShapes():
@@ -91,7 +92,6 @@ class Geometry():
         self.sphere = Sphere()
         self.mesh = Mesh()
         self.colladaShapes = ColladaShapes()
-        self.scale = [None, None, None]
         self.name = None
         self.defName = None
 
@@ -148,6 +148,7 @@ class Visual():
         """Initializatization."""
         self.position = [0.0, 0.0, 0.0]
         self.rotation = [0.0, 0.0, 1.0, 0.0]
+        self.scale = [1.0, 1.0, 1.0]
         self.geometry = Geometry()
         self.material = Material()
 
@@ -159,6 +160,7 @@ class Collision():
         """Initializatization."""
         self.position = [0.0, 0.0, 0.0]
         self.rotation = [0.0, 0.0, 1.0, 0.0]
+        self.scale = [1.0, 1.0, 1.0]
         self.geometry = Geometry()
 
 
@@ -555,23 +557,18 @@ def getVisual(link, node, path):
                 meshfile = meshfile[idx0 + len('package://'):]
             if geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale'):
                 meshScale = geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale').split()
-                visual.geometry.scale[0] = float(meshScale[0])
-                visual.geometry.scale[1] = float(meshScale[1])
-                visual.geometry.scale[2] = float(meshScale[2])
+                visual.scale[0] = float(meshScale[0])
+                visual.scale[1] = float(meshScale[1])
+                visual.scale[2] = float(meshScale[2])
+                if visual.scale[0] * visual.scale[1] * visual.scale[2] < 0.0:
+                    visual.geometry.mesh.ccw = False
             extension = os.path.splitext(meshfile)[1].lower()
             if extension in extensionListSingleAppearance or extension == '.dae':
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if extension == '.dae':
                         name += '_collada'
-                if visual.geometry.scale[0]:
-                    name += '_scale'
-                    for i in range(3):
-                        name += '_'
-                        if visual.geometry.scale[i] < 0.0:
-                            name += 'n_'
-                        else:
-                            name += 'p_'
-                        name += str(visual.geometry.scale[i]).replace('.', '_')
+                if not visual.geometry.mesh.ccw:
+                    name += '_cw'
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
@@ -619,9 +616,11 @@ def getCollision(link, node, path):
                                                      geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')))
             if geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale'):
                 meshScale = geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale').split()
-                collision.geometry.scale[0] = float(meshScale[0])
-                collision.geometry.scale[1] = float(meshScale[1])
-                collision.geometry.scale[2] = float(meshScale[2])
+                collision.scale[0] = float(meshScale[0])
+                collision.scale[1] = float(meshScale[1])
+                collision.scale[2] = float(meshScale[2])
+                if collision.scale[0] * collision.scale[1] * collision.scale[2] < 0.0:
+                    collision.geometry.mesh.ccw = False
             # hack for gazebo mesh database
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
@@ -629,15 +628,8 @@ def getCollision(link, node, path):
             extension = os.path.splitext(meshfile)[1].lower()
             if extension in extensionListSingleAppearance or extension == '.dae':
                 name = os.path.splitext(os.path.basename(meshfile))[0]
-                if collision.geometry.scale[0]:
-                    name += '_scale'
-                    for i in range(3):
-                        name += '_'
-                        if collision.geometry.scale[i] < 0.0:
-                            name += 'n_'
-                        else:
-                            name += 'p_'
-                        name += str(collision.geometry.scale[i]).replace('.', '_')
+                if not collision.geometry.mesh.ccw:
+                    name += '_cw'
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
                 else:

@@ -239,15 +239,18 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
 
     for boundingObject in link.collision:
         initialIndent = boundingLevel * indent if hasGroup else ''
-        if not boxCollision and boundingObject.position != [0.0, 0.0, 0.0] or boundingObject.rotation[3] != 0.0:
+        if not boxCollision and (boundingObject.position != [0.0, 0.0, 0.0] or boundingObject.rotation[3] != 0.0 or boundingObject.scale != [1.0, 1.0, 1.0]):
             robotFile.write(initialIndent + 'Transform {\n')
             robotFile.write((boundingLevel + 1) * indent + 'translation %lf %lf %lf\n' % (boundingObject.position[0],
-                                                                                      boundingObject.position[1],
-                                                                                      boundingObject.position[2]))
+                                                                                        boundingObject.position[1],
+                                                                                        boundingObject.position[2]))
             robotFile.write((boundingLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (boundingObject.rotation[0],
-                                                                                       boundingObject.rotation[1],
-                                                                                       boundingObject.rotation[2],
-                                                                                       boundingObject.rotation[3]))
+                                                                                        boundingObject.rotation[1],
+                                                                                        boundingObject.rotation[2],
+                                                                                        boundingObject.rotation[3]))
+            robotFile.write((boundingLevel + 1) * indent + 'scale %lf %lf %lf\n' % (boundingObject.scale[0],
+                                                                                    boundingObject.scale[1],
+                                                                                    boundingObject.scale[2]))
             robotFile.write((boundingLevel + 1) * indent + 'children [\n')
             boundingLevel = boundingLevel + 2
             hasGroup = True
@@ -283,10 +286,8 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
                     robotFile.write(initialIndent + 'Mesh {\n')
 
                 robotFile.write((boundingLevel + 1) * indent + 'url ' + str(boundingObject.geometry.mesh.url) + '\n')
-                if boundingObject.geometry.scale[0]:
-                    robotFile.write((boundingLevel + 1) * indent + 'scale %lf %lf %lf\n' % (boundingObject.geometry.scale[0],
-                                                                                      boundingObject.geometry.scale[1],
-                                                                                      boundingObject.geometry.scale[2]))
+                if not boundingObject.geometry.mesh.ccw:
+                    robotFile.write((boundingLevel + 1) * indent + 'ccw FALSE\n')
                 robotFile.write(boundingLevel * indent + '}\n')
 
         else:
@@ -328,10 +329,7 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
                 robotFile.write(shapeLevel * indent + 'ColladaShapes {\n')
 
             robotFile.write((shapeLevel + 1) * indent + 'url ' + str(visualNode.geometry.colladaShapes.url) + '\n')
-            if visualNode.geometry.scale[0]:
-                    robotFile.write((shapeLevel + 1) * indent + 'scale %lf %lf %lf\n' % (visualNode.geometry.scale[0],
-                                                                                      visualNode.geometry.scale[1],
-                                                                                      visualNode.geometry.scale[2]))
+
     else:
         robotFile.write(shapeLevel * indent + 'Shape {\n')
 
@@ -402,10 +400,8 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
                     robotFile.write((shapeLevel + 1) * indent + 'geometry Mesh {\n')
 
                 robotFile.write((shapeLevel + 2) * indent + 'url ' + str(visualNode.geometry.mesh.url) + '\n')
-                if visualNode.geometry.scale[0]:
-                    robotFile.write((shapeLevel + 2) * indent + 'scale %lf %lf %lf\n' % (visualNode.geometry.scale[0],
-                                                                                      visualNode.geometry.scale[1],
-                                                                                      visualNode.geometry.scale[2]))
+                if not visualNode.geometry.mesh.ccw:
+                    robotFile.write((shapeLevel + 2) * indent + 'ccw FALSE\n')
                 robotFile.write((shapeLevel + 1) * indent + '}\n')
 
     robotFile.write(shapeLevel * indent + '}\n')
@@ -418,15 +414,18 @@ def URDFShape(robotFile, link, level, normal=False):
     transform = False
 
     for visualNode in link.visual:
-        if visualNode.position != [0.0, 0.0, 0.0] or visualNode.rotation[3] != 0:
+        if visualNode.position != [0.0, 0.0, 0.0] or visualNode.rotation[3] != 0 or visualNode.scale != [1.0, 1.0, 1.0]:
             robotFile.write(shapeLevel * indent + 'Transform {\n')
             robotFile.write((shapeLevel + 1) * indent + 'translation %lf %lf %lf\n' % (visualNode.position[0],
-                                                                                   visualNode.position[1],
-                                                                                   visualNode.position[2]))
+                                                                                    visualNode.position[1],
+                                                                                    visualNode.position[2]))
             robotFile.write((shapeLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (visualNode.rotation[0],
                                                                                     visualNode.rotation[1],
                                                                                     visualNode.rotation[2],
                                                                                     visualNode.rotation[3]))
+            robotFile.write((shapeLevel + 1) * indent + 'scale %lf %lf %lf\n' % (visualNode.scale[0],
+                                                                                visualNode.scale[1],
+                                                                                visualNode.scale[2]))
             robotFile.write((shapeLevel + 1) * indent + 'children [\n')
             shapeLevel += 2
             transform = True

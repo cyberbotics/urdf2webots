@@ -66,6 +66,7 @@ PROTO MotomanSia20d [
             Transform {
               translation 0.000000 0.000000 0.000000
               rotation -0.000000 0.000000 1.000000 3.141600
+              scale 1.000000 1.000000 1.000000
               children [
                 Shape {
                   appearance DEF silver PBRAppearance {
@@ -108,6 +109,7 @@ PROTO MotomanSia20d [
                   Transform {
                     translation 0.000000 0.000000 0.000000
                     rotation -1.000000 -0.000007 -0.000000 1.571593
+                    scale 1.000000 1.000000 1.000000
                     children [
                       Shape {
                         appearance USE blue
@@ -173,6 +175,7 @@ PROTO MotomanSia20d [
                               Transform {
                                 translation 0.000000 0.000000 0.000000
                                 rotation 1.000000 0.000050 0.000043 4.711593
+                                scale 1.000000 1.000000 1.000000
                                 children [
                                   Shape {
                                     appearance USE blue
@@ -237,6 +240,7 @@ PROTO MotomanSia20d [
                                           Transform {
                                             translation 0.000000 0.000000 0.000000
                                             rotation -1.000000 0.000000 0.000000 1.570000
+                                            scale 1.000000 1.000000 1.000000
                                             children [
                                               Shape {
                                                 appearance USE blue
@@ -302,6 +306,7 @@ PROTO MotomanSia20d [
                                         boundingObject Transform {
                                           translation 0.000000 0.000000 0.000000
                                           rotation -1.000000 0.000000 0.000000 1.570000
+                                          scale 1.000000 1.000000 1.000000
                                           children [
                                             USE MOTOMAN_AXIS_B
                                           ]
@@ -322,6 +327,7 @@ PROTO MotomanSia20d [
                             boundingObject Transform {
                               translation 0.000000 0.000000 0.000000
                               rotation 1.000000 0.000050 0.000043 4.711593
+                              scale 1.000000 1.000000 1.000000
                               children [
                                 USE MOTOMAN_AXIS_U
                               ]
@@ -342,6 +348,7 @@ PROTO MotomanSia20d [
                 boundingObject Transform {
                   translation 0.000000 0.000000 0.000000
                   rotation -1.000000 -0.000007 -0.000000 1.571593
+                  scale 1.000000 1.000000 1.000000
                   children [
                     USE MOTOMAN_AXIS_L
                   ]
@@ -355,6 +362,7 @@ PROTO MotomanSia20d [
           boundingObject Transform {
             translation 0.000000 0.000000 0.000000
             rotation -0.000000 0.000000 1.000000 3.141600
+            scale 1.000000 1.000000 1.000000
             children [
               USE MOTOMAN_AXIS_S
             ]
