@@ -364,11 +364,11 @@ class RangeFinder():
         self.fov = None
         self.width = None
         self.height = None
-        self.noise = None
         self.near = None
         self.minRange = None
         self.maxRange = None
         self.resolution = None
+        self.noise = None
 
     def export(self, file, indentationLevel):
         """Export this range finder."""
@@ -386,10 +386,7 @@ class RangeFinder():
         if self.near:
             file.write(indentationLevel * indent + '  near %lf\n' % self.near)
         if self.minRange:
-            if self.minRange < self.near:
-                file.write(indentationLevel * indent + '  minRange %lf\n' % self.near)
-            else:
-                file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
+            file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
         if self.maxRange:
             file.write(indentationLevel * indent + '  maxRange %lf\n' % self.maxRange)
         if self.resolution:
@@ -949,6 +946,14 @@ def parseGazeboElement(element, parentLink, linkList):
                     rangefinder.maxRange = float(rangeElement.getElementsByTagName('max')[0].firstChild.nodeValue)
                 if hasElement(rangeElement, 'resolution'):
                     rangefinder.resolution = float(rangeElement.getElementsByTagName('resolution')[0].firstChild.nodeValue)
+            # minRange and near default values are 0.01 in Webots; ensure constraint near <= minRange
+            if rangefinder.near and rangefinder.minRange and rangefinder.near > rangefinder.minRange:
+                rangefinder.minRange = rangefinder.near
+                print('The "minRange" value cannot be strictly inferior to the "near" value for a rangefinder, "minRange" has been set to the value of "near".')
+            elif not rangefinder.near and rangefinder.minRange < 0.01:
+                rangefinder.near = rangefinder.minRange
+            elif not rangefinder.minRange and rangefinder.near > 0.01:
+                rangefinder.minRange = rangefinder.near
             RangeFinder.list.append(rangefinder)
         elif sensorElement.getAttribute('type') == 'ray' or sensorElement.getAttribute('type') == 'gpu_ray':
             lidar = Lidar()
