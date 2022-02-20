@@ -382,10 +382,7 @@ class Lidar():
         if self.numberOfLayers:
             file.write(indentationLevel * indent + '  numberOfLayers %d\n' % self.numberOfLayers)
         if self.minRange:
-            if self.near and self.minRange < self.near:
-                file.write(indentationLevel * indent + '  minRange %lf\n' % self.near)
-            else:
-                file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
+            file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
         if self.maxRange:
             file.write(indentationLevel * indent + '  maxRange %lf\n' % self.maxRange)
         if self.noise:
@@ -885,4 +882,9 @@ def parseGazeboElement(element, parentLink, linkList):
                         lidar.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
                         if lidar.maxRange:
                             lidar.noise /= lidar.maxRange
+                # minRange and near default values are 0.01 in Webots; ensure constraint near <= minRange
+                if not lidar.near and lidar.minRange < 0.01:
+                    lidar.near = lidar.minRange
+                if not lidar.minRange and lidar.near > 0.01:
+                    lidar.minRange = lidar.near
             Lidar.list.append(lidar)
