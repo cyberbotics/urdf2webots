@@ -883,8 +883,11 @@ def parseGazeboElement(element, parentLink, linkList):
                         if lidar.maxRange:
                             lidar.noise /= lidar.maxRange
                 # minRange and near default values are 0.01 in Webots; ensure constraint near <= minRange
-                if not lidar.near and lidar.minRange < 0.01:
+                if lidar.near and lidar.minRange and lidar.near > lidar.minRange:
+                    lidar.minRange = lidar.near
+                    print('The "minRange" value cannot be strictly inferior to the "near" value for a lidar, "minRange" has been set to the value of "near".')
+                elif not lidar.near and lidar.minRange < 0.01:
                     lidar.near = lidar.minRange
-                if not lidar.minRange and lidar.near > 0.01:
+                elif not lidar.minRange and lidar.near > 0.01:
                     lidar.minRange = lidar.near
             Lidar.list.append(lidar)
