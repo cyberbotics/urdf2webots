@@ -131,7 +131,16 @@ def URDFLink(robotFile, link, level, parentList,
                 if not haveChild:
                     haveChild = True
                     robotFile.write((level + 1) * indent + 'children [\n')
-                sensor.export(robotFile, level + 2)
+                if hasattr(sensor, 'isImager') and sensor.isImager:
+                    robotFile.write((level + 2) * indent + 'Transform {\n')
+                    robotFile.write((level + 3) * indent + 'translation 0 0 0\n')
+                    robotFile.write((level + 3) * indent + 'rotation 0.577350 -0.577350 0.577350 2.094395\n')
+                    robotFile.write((level + 3) * indent + 'children [\n')
+                    sensor.export(robotFile, level + 4)
+                    robotFile.write((level + 3) * indent + ']\n')
+                    robotFile.write((level + 2) * indent + '}\n')
+                else:
+                    sensor.export(robotFile, level + 2)
         # 3: export Joints
         for joint in jointList:
             if joint.parent == link.name:

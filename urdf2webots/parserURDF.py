@@ -348,6 +348,7 @@ class Camera():
         self.width = None
         self.height = None
         self.noise = None
+        self.isImager = True
 
     def export(self, file, indentationLevel):
         """Export this camera."""
