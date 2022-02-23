@@ -366,6 +366,7 @@ class Lidar():
         self.maxRange = None
         self.resolution = None
         self.noise = None
+        self.near = None
 
     def export(self, file, indentationLevel):
         """Export this lidar."""
@@ -381,8 +382,6 @@ class Lidar():
         if self.numberOfLayers:
             file.write(indentationLevel * indent + '  numberOfLayers %d\n' % self.numberOfLayers)
         if self.minRange:
-            if self.minRange < 0.01:
-                file.write(indentationLevel * indent + '  near %lf\n' % self.minRange)
             file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
         if self.maxRange:
             file.write(indentationLevel * indent + '  maxRange %lf\n' % self.maxRange)
@@ -390,6 +389,8 @@ class Lidar():
             file.write(indentationLevel * indent + '  noise %lf\n' % self.noise)
         if self.resolution:
             file.write(indentationLevel * indent + '  resolution %lf\n' % self.resolution)
+        if self.near:
+            file.write(indentationLevel * indent + '  near %lf\n' % self.near)
         file.write(indentationLevel * indent + '}\n')
 
 
@@ -863,6 +864,10 @@ def parseGazeboElement(element, parentLink, linkList):
                             minAngle = float(verticalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
                             maxAngle = float(verticalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
                             lidar.verticalFieldOfView = maxAngle - minAngle
+                if hasElement(rayElement, 'clip'):
+                    clipElement = rayElement.getElementsByTagName('clip')[0]
+                    if hasElement(clipElement, 'near'):
+                        lidar.near = float(clipElement.getElementsByTagName('near')[0].firstChild.nodeValue)
                 if hasElement(rayElement, 'range'):
                     rangeElement = rayElement.getElementsByTagName('range')[0]
                     if hasElement(rangeElement, 'min'):
@@ -877,4 +882,12 @@ def parseGazeboElement(element, parentLink, linkList):
                         lidar.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
                         if lidar.maxRange:
                             lidar.noise /= lidar.maxRange
+                # minRange and near default values are 0.01 in Webots; ensure constraint near <= minRange
+                if lidar.near and lidar.minRange and lidar.near > lidar.minRange:
+                    lidar.minRange = lidar.near
+                    print('The "minRange" value cannot be strictly inferior to the "near" value for a lidar, "minRange" has been set to the value of "near".')
+                elif not lidar.near and lidar.minRange < 0.01:
+                    lidar.near = lidar.minRange
+                elif not lidar.minRange and lidar.near > 0.01:
+                    lidar.minRange = lidar.near
             Lidar.list.append(lidar)
