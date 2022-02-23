@@ -369,6 +369,7 @@ class RangeFinder():
         self.maxRange = None
         self.resolution = None
         self.noise = None
+        self.isImager = True
 
     def export(self, file, indentationLevel):
         """Export this range finder."""
