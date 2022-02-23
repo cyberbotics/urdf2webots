@@ -63,7 +63,7 @@ Convert the model.urdf with the following command. I recommend the added paramet
 **--tool-slot=tool0** is more specific for robotic arms. Have a look at all options and explanations below. To figure out, what the **--tool-slot=LinkName** is called for your robotic arm, you will have to open the model.urdf and figure out what the link is called.
 
 ```
-python -m urdf2webots.importer --input=model.urdf --box-collision --tool-slot=tool0
+python3 -m urdf2webots.importer --input=model.urdf --box-collision --tool-slot=tool0
 ```
 
 Check the [main README](../README.md) for a list of all options.

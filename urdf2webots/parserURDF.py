@@ -444,7 +444,7 @@ def getColladaMesh(filename, node, link):
     """Read collada file."""
     if not colladaIsAvailable:
         sys.stderr.write('Collada module not found, please install it with:\n')
-        sys.stderr.write('  python -m pip install pycollada\n')
+        sys.stderr.write('  python3 -m pip install pycollada\n')
         sys.stderr.write('Skipping "%s"\n' % filename)
         return
     print('Parsing Mesh: ' + filename)
