@@ -4,6 +4,7 @@
 [![PyPI version](https://badge.fury.io/py/urdf2webots.svg)](https://badge.fury.io/py/urdf2webots)
 
 This tool converts URDF files into Webots PROTO files or into Webots Robot node strings.
+Python 3.5 or higher is required.
 
 ## Install
 

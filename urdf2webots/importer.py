@@ -3,11 +3,16 @@
 """URDF files to Webots PROTO or Robot node converter."""
 
 
+import sys
+
+# Check version of Python
+if sys.version_info < (3,5):
+    sys.exit('urdf2webots requires Python 3.5 or higher.')
+
 import errno
 import optparse
 import os
 import re
-import sys
 import tempfile
 from xml.dom import minidom
 
