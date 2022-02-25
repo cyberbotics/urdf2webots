@@ -29,10 +29,8 @@ PROTO Human [
       Shape {
         appearance DEF mat_pelvis_visual PBRAppearance {
           baseColor 0.500000 0.500000 0.500000
-          transparency 0.000000
           roughness 1.000000
           metalness 0
-          emissiveColor 0.000000 0.000000 0.000000
         }
         geometry DEF Pelvis Mesh {
           url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Pelvis.obj"
@@ -61,10 +59,8 @@ PROTO Human [
             Shape {
               appearance DEF mat_femur_l_visual PBRAppearance {
                 baseColor 0.500000 0.500000 0.500000
-                transparency 0.000000
                 roughness 1.000000
                 metalness 0
-                emissiveColor 0.000000 0.000000 0.000000
               }
               geometry DEF Femur_L Mesh {
                 url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Femur L.obj"
@@ -93,10 +89,8 @@ PROTO Human [
                   Shape {
                     appearance DEF mat_tibia_l_visual PBRAppearance {
                       baseColor 0.500000 0.500000 0.500000
-                      transparency 0.000000
                       roughness 1.000000
                       metalness 0
-                      emissiveColor 0.000000 0.000000 0.000000
                     }
                     geometry DEF Tibia_L Mesh {
                       url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Tibia L.obj"
@@ -125,10 +119,8 @@ PROTO Human [
                         Shape {
                           appearance DEF mat_talus_l_visual PBRAppearance {
                             baseColor 0.500000 0.500000 0.500000
-                            transparency 0.000000
                             roughness 1.000000
                             metalness 0
-                            emissiveColor 0.000000 0.000000 0.000000
                           }
                           geometry DEF Talus_L Mesh {
                             url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Talus L.obj"
@@ -157,10 +149,8 @@ PROTO Human [
                               Shape {
                                 appearance DEF mat_calcn_l_visual PBRAppearance {
                                   baseColor 0.500000 0.500000 0.500000
-                                  transparency 0.000000
                                   roughness 1.000000
                                   metalness 0
-                                  emissiveColor 0.000000 0.000000 0.000000
                                 }
                                 geometry DEF Calcn_L Mesh {
                                   url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Calcn L.obj"
@@ -189,10 +179,8 @@ PROTO Human [
                                     Shape {
                                       appearance DEF mat_toes_l_visual PBRAppearance {
                                         baseColor 0.500000 0.500000 0.500000
-                                        transparency 0.000000
                                         roughness 1.000000
                                         metalness 0
-                                        emissiveColor 0.000000 0.000000 0.000000
                                       }
                                       geometry DEF Toes_L Mesh {
                                         url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Toes L.obj"
@@ -300,10 +288,8 @@ PROTO Human [
             Shape {
               appearance DEF mat_femur_r_visual PBRAppearance {
                 baseColor 0.500000 0.500000 0.500000
-                transparency 0.000000
                 roughness 1.000000
                 metalness 0
-                emissiveColor 0.000000 0.000000 0.000000
               }
               geometry DEF Femur_R Mesh {
                 url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Femur R.obj"
@@ -332,10 +318,8 @@ PROTO Human [
                   Shape {
                     appearance DEF mat_tibia_r_visual PBRAppearance {
                       baseColor 0.500000 0.500000 0.500000
-                      transparency 0.000000
                       roughness 1.000000
                       metalness 0
-                      emissiveColor 0.000000 0.000000 0.000000
                     }
                     geometry DEF Tibia_R Mesh {
                       url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Tibia R.obj"
@@ -364,10 +348,8 @@ PROTO Human [
                         Shape {
                           appearance DEF mat_talus_r_visual PBRAppearance {
                             baseColor 0.500000 0.500000 0.500000
-                            transparency 0.000000
                             roughness 1.000000
                             metalness 0
-                            emissiveColor 0.000000 0.000000 0.000000
                           }
                           geometry DEF Talus_R Mesh {
                             url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Talus R.obj"
@@ -399,10 +381,8 @@ PROTO Human [
                                   Shape {
                                     appearance DEF mat_calcn_r_visual PBRAppearance {
                                       baseColor 0.500000 0.500000 0.500000
-                                      transparency 0.000000
                                       roughness 1.000000
                                       metalness 0
-                                      emissiveColor 0.000000 0.000000 0.000000
                                     }
                                     geometry DEF Calcn_L_cw Mesh {
                                       url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Calcn L.obj"
@@ -434,10 +414,8 @@ PROTO Human [
                                     Shape {
                                       appearance DEF mat_toes_r_visual PBRAppearance {
                                         baseColor 0.500000 0.500000 0.500000
-                                        transparency 0.000000
                                         roughness 1.000000
                                         metalness 0
-                                        emissiveColor 0.000000 0.000000 0.000000
                                       }
                                       geometry DEF Toes_R Mesh {
                                         url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Toes R.obj"
@@ -552,10 +530,8 @@ PROTO Human [
             Shape {
               appearance DEF mat_torso_visual PBRAppearance {
                 baseColor 0.500000 0.500000 0.500000
-                transparency 0.000000
                 roughness 1.000000
                 metalness 0
-                emissiveColor 0.000000 0.000000 0.000000
               }
               geometry DEF Torso Mesh {
                 url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Torso.obj"
@@ -584,10 +560,8 @@ PROTO Human [
                   Shape {
                     appearance DEF mat_humerus_l_visual PBRAppearance {
                       baseColor 0.500000 0.500000 0.500000
-                      transparency 0.000000
                       roughness 1.000000
                       metalness 0
-                      emissiveColor 0.000000 0.000000 0.000000
                     }
                     geometry DEF Humerus_L Mesh {
                       url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Humerus L.obj"
@@ -616,10 +590,8 @@ PROTO Human [
                         Shape {
                           appearance DEF mat_ulna_l_visual PBRAppearance {
                             baseColor 0.500000 0.500000 0.500000
-                            transparency 0.000000
                             roughness 1.000000
                             metalness 0
-                            emissiveColor 0.000000 0.000000 0.000000
                           }
                           geometry DEF Ulna_L Mesh {
                             url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Ulna L.obj"
@@ -648,10 +620,8 @@ PROTO Human [
                               Shape {
                                 appearance DEF mat_radius_l_visual PBRAppearance {
                                   baseColor 0.500000 0.500000 0.500000
-                                  transparency 0.000000
                                   roughness 1.000000
                                   metalness 0
-                                  emissiveColor 0.000000 0.000000 0.000000
                                 }
                                 geometry DEF Radius_L Mesh {
                                   url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Radius L.obj"
@@ -680,10 +650,8 @@ PROTO Human [
                                     Shape {
                                       appearance DEF mat_hand_l_visual PBRAppearance {
                                         baseColor 0.500000 0.500000 0.500000
-                                        transparency 0.000000
                                         roughness 1.000000
                                         metalness 0
-                                        emissiveColor 0.000000 0.000000 0.000000
                                       }
                                       geometry DEF Hand_L Mesh {
                                         url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Hand L.obj"
@@ -776,10 +744,8 @@ PROTO Human [
                   Shape {
                     appearance DEF mat_humerus_r_visual PBRAppearance {
                       baseColor 0.500000 0.500000 0.500000
-                      transparency 0.000000
                       roughness 1.000000
                       metalness 0
-                      emissiveColor 0.000000 0.000000 0.000000
                     }
                     geometry DEF Humerus_R Mesh {
                       url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Humerus R.obj"
@@ -808,10 +774,8 @@ PROTO Human [
                         Shape {
                           appearance DEF mat_ulna_r_visual PBRAppearance {
                             baseColor 0.500000 0.500000 0.500000
-                            transparency 0.000000
                             roughness 1.000000
                             metalness 0
-                            emissiveColor 0.000000 0.000000 0.000000
                           }
                           geometry DEF Ulna_R Mesh {
                             url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Ulna R.obj"
@@ -840,10 +804,8 @@ PROTO Human [
                               Shape {
                                 appearance DEF mat_radius_r_visual PBRAppearance {
                                   baseColor 0.500000 0.500000 0.500000
-                                  transparency 0.000000
                                   roughness 1.000000
                                   metalness 0
-                                  emissiveColor 0.000000 0.000000 0.000000
                                 }
                                 geometry DEF Radius_R Mesh {
                                   url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Radius R.obj"
@@ -872,10 +834,8 @@ PROTO Human [
                                     Shape {
                                       appearance DEF mat_hand_r_visual PBRAppearance {
                                         baseColor 0.500000 0.500000 0.500000
-                                        transparency 0.000000
                                         roughness 1.000000
                                         metalness 0
-                                        emissiveColor 0.000000 0.000000 0.000000
                                       }
                                       geometry DEF Hand_R Mesh {
                                         url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Hand R.obj"

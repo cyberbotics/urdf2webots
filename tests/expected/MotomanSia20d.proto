@@ -30,10 +30,8 @@ PROTO MotomanSia20d [
       Shape {
         appearance DEF blue PBRAppearance {
           baseColor 0.000000 0.000000 1.000000
-          transparency 0.000000
           roughness 1.000000
           metalness 0
-          emissiveColor 0.000000 0.000000 0.000000
         }
         geometry DEF MOTOMAN_BASE Mesh {
           url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_BASE.stl"
@@ -67,10 +65,8 @@ PROTO MotomanSia20d [
                 Shape {
                   appearance DEF silver PBRAppearance {
                     baseColor 0.800000 0.800000 0.800000
-                    transparency 0.000000
                     roughness 1.000000
                     metalness 0
-                    emissiveColor 0.000000 0.000000 0.000000
                   }
                   geometry DEF MOTOMAN_AXIS_S Mesh {
                     url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_S.stl"
