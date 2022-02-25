@@ -52,7 +52,7 @@ class Cylinder():
     def __init__(self):
         """Initializatization."""
         self.radius = 0.0
-        self.length = 0.0
+        self.height = 0.0
 
 
 class Sphere():
