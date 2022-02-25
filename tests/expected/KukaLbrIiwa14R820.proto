@@ -28,8 +28,6 @@ PROTO KukaLbrIiwa14R820 [
     selfCollision IS selfCollision
     children [
       Solid {
-        translation 0.000000 0.000000 0.000000
-        rotation 0.000000 0.000000 1.000000 0.000000
         children [
           DEF base_link_collada ColladaShapes {
             url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae"
@@ -37,9 +35,6 @@ PROTO KukaLbrIiwa14R820 [
           HingeJoint {
             jointParameters HingeJointParameters {
               axis 0.000000 0.000000 1.000000
-              anchor 0.000000 0.000000 0.000000
-              dampingConstant 0.0
-              staticFriction 0.0
             }
             device [
               RotationalMotor {
@@ -54,8 +49,6 @@ PROTO KukaLbrIiwa14R820 [
               }
             ]
             endPoint Solid {
-              translation 0.000000 0.000000 0.000000
-              rotation 0.000000 0.000000 1.000000 0.000000
               children [
                 DEF link_1_collada ColladaShapes {
                   url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_1.dae"
@@ -64,8 +57,6 @@ PROTO KukaLbrIiwa14R820 [
                   jointParameters HingeJointParameters {
                     axis 0.000000 1.000000 0.000000
                     anchor -0.000436 0.000000 0.360000
-                    dampingConstant 0.0
-                    staticFriction 0.0
                   }
                   device [
                     RotationalMotor {
@@ -81,7 +72,6 @@ PROTO KukaLbrIiwa14R820 [
                   ]
                   endPoint Solid {
                     translation -0.000436 0.000000 0.360000
-                    rotation 0.000000 0.000000 1.000000 0.000000
                     children [
                       DEF link_2_collada ColladaShapes {
                         url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_2.dae"
@@ -89,9 +79,6 @@ PROTO KukaLbrIiwa14R820 [
                       HingeJoint {
                         jointParameters HingeJointParameters {
                           axis 0.000000 0.000000 1.000000
-                          anchor 0.000000 0.000000 0.000000
-                          dampingConstant 0.0
-                          staticFriction 0.0
                         }
                         device [
                           RotationalMotor {
@@ -106,8 +93,6 @@ PROTO KukaLbrIiwa14R820 [
                           }
                         ]
                         endPoint Solid {
-                          translation 0.000000 0.000000 0.000000
-                          rotation 0.000000 0.000000 1.000000 0.000000
                           children [
                             DEF link_3_collada ColladaShapes {
                               url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_3.dae"
@@ -116,8 +101,6 @@ PROTO KukaLbrIiwa14R820 [
                               jointParameters HingeJointParameters {
                                 axis 0.000000 -1.000000 0.000000
                                 anchor 0.000436 0.000000 0.420000
-                                dampingConstant 0.0
-                                staticFriction 0.0
                               }
                               device [
                                 RotationalMotor {
@@ -133,7 +116,6 @@ PROTO KukaLbrIiwa14R820 [
                               ]
                               endPoint Solid {
                                 translation 0.000436 0.000000 0.420000
-                                rotation 0.000000 0.000000 1.000000 0.000000
                                 children [
                                   DEF link_4_collada ColladaShapes {
                                     url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_4.dae"
@@ -141,9 +123,6 @@ PROTO KukaLbrIiwa14R820 [
                                   HingeJoint {
                                     jointParameters HingeJointParameters {
                                       axis 0.000000 0.000000 1.000000
-                                      anchor 0.000000 0.000000 0.000000
-                                      dampingConstant 0.0
-                                      staticFriction 0.0
                                     }
                                     device [
                                       RotationalMotor {
@@ -158,8 +137,6 @@ PROTO KukaLbrIiwa14R820 [
                                       }
                                     ]
                                     endPoint Solid {
-                                      translation 0.000000 0.000000 0.000000
-                                      rotation 0.000000 0.000000 1.000000 0.000000
                                       children [
                                         DEF link_5_collada ColladaShapes {
                                           url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_5.dae"
@@ -168,8 +145,6 @@ PROTO KukaLbrIiwa14R820 [
                                           jointParameters HingeJointParameters {
                                             axis 0.000000 1.000000 0.000000
                                             anchor 0.000000 0.000000 0.400000
-                                            dampingConstant 0.0
-                                            staticFriction 0.0
                                           }
                                           device [
                                             RotationalMotor {
@@ -185,7 +160,6 @@ PROTO KukaLbrIiwa14R820 [
                                           ]
                                           endPoint Solid {
                                             translation 0.000000 0.000000 0.400000
-                                            rotation 0.000000 0.000000 1.000000 0.000000
                                             children [
                                               DEF link_6_collada ColladaShapes {
                                                 url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_6.dae"
@@ -193,9 +167,6 @@ PROTO KukaLbrIiwa14R820 [
                                               HingeJoint {
                                                 jointParameters HingeJointParameters {
                                                   axis 0.000000 0.000000 1.000000
-                                                  anchor 0.000000 0.000000 0.000000
-                                                  dampingConstant 0.0
-                                                  staticFriction 0.0
                                                 }
                                                 device [
                                                   RotationalMotor {
@@ -210,15 +181,12 @@ PROTO KukaLbrIiwa14R820 [
                                                   }
                                                 ]
                                                 endPoint Solid {
-                                                  translation 0.000000 0.000000 0.000000
-                                                  rotation 0.000000 0.000000 1.000000 0.000000
                                                   children [
                                                     DEF link_7_collada ColladaShapes {
                                                       url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_7.dae"
                                                     }
                                                     Solid {
                                                       translation 0.000000 0.000000 0.126000
-                                                      rotation 0.000000 0.000000 1.000000 0.000000
                                                       children [
                                                         Group {
                                                           children IS toolSlot

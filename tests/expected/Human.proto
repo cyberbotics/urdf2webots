@@ -2,7 +2,7 @@
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # This is a proto file for Webots for the Human
-# Extracted from: /home/benja/urdf2webots/tests/sources/gait2392_simbody/urdf/human.urdf
+# Extracted from: /home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/urdf/human.urdf
 
 PROTO Human [
   field  SFVec3f     translation     0 0 0
@@ -29,10 +29,8 @@ PROTO Human [
       Shape {
         appearance DEF mat_pelvis_visual PBRAppearance {
           baseColor 0.500000 0.500000 0.500000
-          transparency 0.000000
           roughness 1.000000
           metalness 0
-          emissiveColor 0.000000 0.000000 0.000000
         }
         geometry DEF Pelvis Mesh {
           url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Pelvis.obj"
@@ -42,8 +40,6 @@ PROTO Human [
         jointParameters HingeJointParameters {
           axis 0.000000 1.000000 0.000000
           anchor -0.070700 0.083500 -0.066100
-          dampingConstant 0.0
-          staticFriction 0.0
         }
         device [
           RotationalMotor {
@@ -59,15 +55,12 @@ PROTO Human [
         ]
         endPoint Solid {
           translation -0.070700 0.083500 -0.066100
-          rotation 0.000000 0.000000 1.000000 0.000000
           children [
             Shape {
               appearance DEF mat_femur_l_visual PBRAppearance {
                 baseColor 0.500000 0.500000 0.500000
-                transparency 0.000000
                 roughness 1.000000
                 metalness 0
-                emissiveColor 0.000000 0.000000 0.000000
               }
               geometry DEF Femur_L Mesh {
                 url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Femur L.obj"
@@ -77,8 +70,6 @@ PROTO Human [
               jointParameters HingeJointParameters {
                 axis 0.000000 1.000000 0.000000
                 anchor -0.004500 0.000000 -0.395821
-                dampingConstant 0.0
-                staticFriction 0.0
               }
               device [
                 RotationalMotor {
@@ -94,15 +85,12 @@ PROTO Human [
               ]
               endPoint Solid {
                 translation -0.004500 0.000000 -0.395821
-                rotation 0.000000 0.000000 1.000000 0.000000
                 children [
                   Shape {
                     appearance DEF mat_tibia_l_visual PBRAppearance {
                       baseColor 0.500000 0.500000 0.500000
-                      transparency 0.000000
                       roughness 1.000000
                       metalness 0
-                      emissiveColor 0.000000 0.000000 0.000000
                     }
                     geometry DEF Tibia_L Mesh {
                       url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Tibia L.obj"
@@ -112,8 +100,6 @@ PROTO Human [
                     jointParameters HingeJointParameters {
                       axis 0.000000 1.000000 0.000000
                       anchor 0.000000 0.000000 -0.430000
-                      dampingConstant 0.0
-                      staticFriction 0.0
                     }
                     device [
                       RotationalMotor {
@@ -129,15 +115,12 @@ PROTO Human [
                     ]
                     endPoint Solid {
                       translation 0.000000 0.000000 -0.430000
-                      rotation 0.000000 0.000000 1.000000 0.000000
                       children [
                         Shape {
                           appearance DEF mat_talus_l_visual PBRAppearance {
                             baseColor 0.500000 0.500000 0.500000
-                            transparency 0.000000
                             roughness 1.000000
                             metalness 0
-                            emissiveColor 0.000000 0.000000 0.000000
                           }
                           geometry DEF Talus_L Mesh {
                             url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Talus L.obj"
@@ -147,8 +130,6 @@ PROTO Human [
                           jointParameters HingeJointParameters {
                             axis 0.000000 1.000000 0.000000
                             anchor -0.048770 0.007920 -0.041950
-                            dampingConstant 0.0
-                            staticFriction 0.0
                           }
                           device [
                             RotationalMotor {
@@ -164,15 +145,12 @@ PROTO Human [
                           ]
                           endPoint Solid {
                             translation -0.048770 0.007920 -0.041950
-                            rotation 0.000000 0.000000 1.000000 0.000000
                             children [
                               Shape {
                                 appearance DEF mat_calcn_l_visual PBRAppearance {
                                   baseColor 0.500000 0.500000 0.500000
-                                  transparency 0.000000
                                   roughness 1.000000
                                   metalness 0
-                                  emissiveColor 0.000000 0.000000 0.000000
                                 }
                                 geometry DEF Calcn_L Mesh {
                                   url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Calcn L.obj"
@@ -182,8 +160,6 @@ PROTO Human [
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 1.000000 0.000000
                                   anchor 0.178800 0.001080 -0.002000
-                                  dampingConstant 0.0
-                                  staticFriction 0.0
                                 }
                                 device [
                                   RotationalMotor {
@@ -199,15 +175,12 @@ PROTO Human [
                                 ]
                                 endPoint Solid {
                                   translation 0.178800 0.001080 -0.002000
-                                  rotation 0.000000 0.000000 1.000000 0.000000
                                   children [
                                     Shape {
                                       appearance DEF mat_toes_l_visual PBRAppearance {
                                         baseColor 0.500000 0.500000 0.500000
-                                        transparency 0.000000
                                         roughness 1.000000
                                         metalness 0
-                                        emissiveColor 0.000000 0.000000 0.000000
                                       }
                                       geometry DEF Toes_L Mesh {
                                         url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Toes L.obj"
@@ -295,10 +268,7 @@ PROTO Human [
       }
       HingeJoint {
         jointParameters HingeJointParameters {
-          axis 1.000000 0.000000 0.000000
           anchor -0.070700 -0.083500 -0.066100
-          dampingConstant 0.0
-          staticFriction 0.0
         }
         device [
           RotationalMotor {
@@ -314,15 +284,12 @@ PROTO Human [
         ]
         endPoint Solid {
           translation -0.070700 -0.083500 -0.066100
-          rotation 0.000000 0.000000 1.000000 0.000000
           children [
             Shape {
               appearance DEF mat_femur_r_visual PBRAppearance {
                 baseColor 0.500000 0.500000 0.500000
-                transparency 0.000000
                 roughness 1.000000
                 metalness 0
-                emissiveColor 0.000000 0.000000 0.000000
               }
               geometry DEF Femur_R Mesh {
                 url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Femur R.obj"
@@ -332,8 +299,6 @@ PROTO Human [
               jointParameters HingeJointParameters {
                 axis 0.000000 -1.000000 0.000000
                 anchor -0.004500 0.000000 -0.395821
-                dampingConstant 0.0
-                staticFriction 0.0
               }
               device [
                 RotationalMotor {
@@ -349,15 +314,12 @@ PROTO Human [
               ]
               endPoint Solid {
                 translation -0.004500 0.000000 -0.395821
-                rotation 0.000000 0.000000 1.000000 0.000000
                 children [
                   Shape {
                     appearance DEF mat_tibia_r_visual PBRAppearance {
                       baseColor 0.500000 0.500000 0.500000
-                      transparency 0.000000
                       roughness 1.000000
                       metalness 0
-                      emissiveColor 0.000000 0.000000 0.000000
                     }
                     geometry DEF Tibia_R Mesh {
                       url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Tibia R.obj"
@@ -367,8 +329,6 @@ PROTO Human [
                     jointParameters HingeJointParameters {
                       axis 0.000000 -1.000000 0.000000
                       anchor 0.000000 0.000000 -0.430000
-                      dampingConstant 0.0
-                      staticFriction 0.0
                     }
                     device [
                       RotationalMotor {
@@ -384,15 +344,12 @@ PROTO Human [
                     ]
                     endPoint Solid {
                       translation 0.000000 0.000000 -0.430000
-                      rotation 0.000000 0.000000 1.000000 0.000000
                       children [
                         Shape {
                           appearance DEF mat_talus_r_visual PBRAppearance {
                             baseColor 0.500000 0.500000 0.500000
-                            transparency 0.000000
                             roughness 1.000000
                             metalness 0
-                            emissiveColor 0.000000 0.000000 0.000000
                           }
                           geometry DEF Talus_R Mesh {
                             url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Talus R.obj"
@@ -402,8 +359,6 @@ PROTO Human [
                           jointParameters HingeJointParameters {
                             axis 0.000000 -1.000000 0.000000
                             anchor -0.048770 -0.007920 -0.041950
-                            dampingConstant 0.0
-                            staticFriction 0.0
                           }
                           device [
                             RotationalMotor {
@@ -419,26 +374,27 @@ PROTO Human [
                           ]
                           endPoint Solid {
                             translation -0.048770 -0.007920 -0.041950
-                            rotation 0.000000 0.000000 1.000000 0.000000
                             children [
-                              Shape {
-                                appearance DEF mat_calcn_r_visual PBRAppearance {
-                                  baseColor 0.500000 0.500000 0.500000
-                                  transparency 0.000000
-                                  roughness 1.000000
-                                  metalness 0
-                                  emissiveColor 0.000000 0.000000 0.000000
-                                }
-                                geometry DEF Calcn_R Mesh {
-                                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Calcn R.obj"
-                                }
+                              Transform {
+                                scale 1.000000 -1.000000 1.000000
+                                children [
+                                  Shape {
+                                    appearance DEF mat_calcn_r_visual PBRAppearance {
+                                      baseColor 0.500000 0.500000 0.500000
+                                      roughness 1.000000
+                                      metalness 0
+                                    }
+                                    geometry DEF Calcn_L_cw Mesh {
+                                      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Calcn L.obj"
+                                      ccw FALSE
+                                    }
+                                  }
+                                ]
                               }
                               HingeJoint {
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 -1.000000 0.000000
                                   anchor 0.178800 -0.001080 -0.002000
-                                  dampingConstant 0.0
-                                  staticFriction 0.0
                                 }
                                 device [
                                   RotationalMotor {
@@ -454,15 +410,12 @@ PROTO Human [
                                 ]
                                 endPoint Solid {
                                   translation 0.178800 -0.001080 -0.002000
-                                  rotation 0.000000 0.000000 1.000000 0.000000
                                   children [
                                     Shape {
                                       appearance DEF mat_toes_r_visual PBRAppearance {
                                         baseColor 0.500000 0.500000 0.500000
-                                        transparency 0.000000
                                         roughness 1.000000
                                         metalness 0
-                                        emissiveColor 0.000000 0.000000 0.000000
                                       }
                                       geometry DEF Toes_R Mesh {
                                         url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Toes R.obj"
@@ -486,8 +439,14 @@ PROTO Human [
                               }
                             ]
                             name "calcn_r"
-                            boundingObject DEF Calcn_R_001 Mesh {
-                              url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Calcn R.001.obj"
+                            boundingObject Transform {
+                              scale 1.000000 -1.000000 1.000000
+                              children [
+                                DEF Calcn_L_001_cw Mesh {
+                                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Calcn L.001.obj"
+                                  ccw FALSE
+                                }
+                              ]
                             }
                             physics Physics {
                               density -1
@@ -552,8 +511,6 @@ PROTO Human [
         jointParameters HingeJointParameters {
           axis 0.000000 1.000000 0.000000
           anchor -0.100700 0.000000 0.081500
-          dampingConstant 0.0
-          staticFriction 0.0
         }
         device [
           RotationalMotor {
@@ -569,15 +526,12 @@ PROTO Human [
         ]
         endPoint Solid {
           translation -0.100700 0.000000 0.081500
-          rotation 0.000000 0.000000 1.000000 0.000000
           children [
             Shape {
               appearance DEF mat_torso_visual PBRAppearance {
                 baseColor 0.500000 0.500000 0.500000
-                transparency 0.000000
                 roughness 1.000000
                 metalness 0
-                emissiveColor 0.000000 0.000000 0.000000
               }
               geometry DEF Torso Mesh {
                 url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Torso.obj"
@@ -587,8 +541,6 @@ PROTO Human [
               jointParameters HingeJointParameters {
                 axis 0.000000 1.000000 0.000000
                 anchor 0.003155 0.170000 0.371500
-                dampingConstant 0.0
-                staticFriction 0.0
               }
               device [
                 RotationalMotor {
@@ -604,15 +556,12 @@ PROTO Human [
               ]
               endPoint Solid {
                 translation 0.003155 0.170000 0.371500
-                rotation 0.000000 0.000000 1.000000 0.000000
                 children [
                   Shape {
                     appearance DEF mat_humerus_l_visual PBRAppearance {
                       baseColor 0.500000 0.500000 0.500000
-                      transparency 0.000000
                       roughness 1.000000
                       metalness 0
-                      emissiveColor 0.000000 0.000000 0.000000
                     }
                     geometry DEF Humerus_L Mesh {
                       url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Humerus L.obj"
@@ -622,8 +571,6 @@ PROTO Human [
                     jointParameters HingeJointParameters {
                       axis 0.000000 1.000000 0.000000
                       anchor 0.013144 -0.009595 -0.286273
-                      dampingConstant 0.0
-                      staticFriction 0.0
                     }
                     device [
                       RotationalMotor {
@@ -639,15 +586,12 @@ PROTO Human [
                     ]
                     endPoint Solid {
                       translation 0.013144 -0.009595 -0.286273
-                      rotation 0.000000 0.000000 1.000000 0.000000
                       children [
                         Shape {
                           appearance DEF mat_ulna_l_visual PBRAppearance {
                             baseColor 0.500000 0.500000 0.500000
-                            transparency 0.000000
                             roughness 1.000000
                             metalness 0
-                            emissiveColor 0.000000 0.000000 0.000000
                           }
                           geometry DEF Ulna_L Mesh {
                             url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Ulna L.obj"
@@ -657,8 +601,6 @@ PROTO Human [
                           jointParameters HingeJointParameters {
                             axis 0.000000 1.000000 0.000000
                             anchor -0.006727 0.026083 -0.013007
-                            dampingConstant 0.0
-                            staticFriction 0.0
                           }
                           device [
                             RotationalMotor {
@@ -674,15 +616,12 @@ PROTO Human [
                           ]
                           endPoint Solid {
                             translation -0.006727 0.026083 -0.013007
-                            rotation 0.000000 0.000000 1.000000 0.000000
                             children [
                               Shape {
                                 appearance DEF mat_radius_l_visual PBRAppearance {
                                   baseColor 0.500000 0.500000 0.500000
-                                  transparency 0.000000
                                   roughness 1.000000
                                   metalness 0
-                                  emissiveColor 0.000000 0.000000 0.000000
                                 }
                                 geometry DEF Radius_L Mesh {
                                   url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Radius L.obj"
@@ -692,8 +631,6 @@ PROTO Human [
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 1.000000 0.000000
                                   anchor -0.008797 0.013610 -0.235841
-                                  dampingConstant 0.0
-                                  staticFriction 0.0
                                 }
                                 device [
                                   RotationalMotor {
@@ -709,15 +646,12 @@ PROTO Human [
                                 ]
                                 endPoint Solid {
                                   translation -0.008797 0.013610 -0.235841
-                                  rotation 0.000000 0.000000 1.000000 0.000000
                                   children [
                                     Shape {
                                       appearance DEF mat_hand_l_visual PBRAppearance {
                                         baseColor 0.500000 0.500000 0.500000
-                                        transparency 0.000000
                                         roughness 1.000000
                                         metalness 0
-                                        emissiveColor 0.000000 0.000000 0.000000
                                       }
                                       geometry DEF Hand_L Mesh {
                                         url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Hand L.obj"
@@ -791,8 +725,6 @@ PROTO Human [
               jointParameters HingeJointParameters {
                 axis 0.000000 -1.000000 0.000000
                 anchor 0.003155 -0.170000 0.371500
-                dampingConstant 0.0
-                staticFriction 0.0
               }
               device [
                 RotationalMotor {
@@ -808,15 +740,12 @@ PROTO Human [
               ]
               endPoint Solid {
                 translation 0.003155 -0.170000 0.371500
-                rotation 0.000000 0.000000 1.000000 0.000000
                 children [
                   Shape {
                     appearance DEF mat_humerus_r_visual PBRAppearance {
                       baseColor 0.500000 0.500000 0.500000
-                      transparency 0.000000
                       roughness 1.000000
                       metalness 0
-                      emissiveColor 0.000000 0.000000 0.000000
                     }
                     geometry DEF Humerus_R Mesh {
                       url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Humerus R.obj"
@@ -826,8 +755,6 @@ PROTO Human [
                     jointParameters HingeJointParameters {
                       axis 0.000000 -1.000000 0.000000
                       anchor 0.013144 0.009595 -0.286273
-                      dampingConstant 0.0
-                      staticFriction 0.0
                     }
                     device [
                       RotationalMotor {
@@ -843,15 +770,12 @@ PROTO Human [
                     ]
                     endPoint Solid {
                       translation 0.013144 0.009595 -0.286273
-                      rotation 0.000000 0.000000 1.000000 0.000000
                       children [
                         Shape {
                           appearance DEF mat_ulna_r_visual PBRAppearance {
                             baseColor 0.500000 0.500000 0.500000
-                            transparency 0.000000
                             roughness 1.000000
                             metalness 0
-                            emissiveColor 0.000000 0.000000 0.000000
                           }
                           geometry DEF Ulna_R Mesh {
                             url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Ulna R.obj"
@@ -861,8 +785,6 @@ PROTO Human [
                           jointParameters HingeJointParameters {
                             axis 0.000000 -1.000000 0.000000
                             anchor -0.006727 -0.026083 -0.013007
-                            dampingConstant 0.0
-                            staticFriction 0.0
                           }
                           device [
                             RotationalMotor {
@@ -878,15 +800,12 @@ PROTO Human [
                           ]
                           endPoint Solid {
                             translation -0.006727 -0.026083 -0.013007
-                            rotation 0.000000 0.000000 1.000000 0.000000
                             children [
                               Shape {
                                 appearance DEF mat_radius_r_visual PBRAppearance {
                                   baseColor 0.500000 0.500000 0.500000
-                                  transparency 0.000000
                                   roughness 1.000000
                                   metalness 0
-                                  emissiveColor 0.000000 0.000000 0.000000
                                 }
                                 geometry DEF Radius_R Mesh {
                                   url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Radius R.obj"
@@ -896,8 +815,6 @@ PROTO Human [
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 -1.000000 0.000000
                                   anchor -0.008797 -0.013610 -0.235841
-                                  dampingConstant 0.0
-                                  staticFriction 0.0
                                 }
                                 device [
                                   RotationalMotor {
@@ -913,15 +830,12 @@ PROTO Human [
                                 ]
                                 endPoint Solid {
                                   translation -0.008797 -0.013610 -0.235841
-                                  rotation 0.000000 0.000000 1.000000 0.000000
                                   children [
                                     Shape {
                                       appearance DEF mat_hand_r_visual PBRAppearance {
                                         baseColor 0.500000 0.500000 0.500000
-                                        transparency 0.000000
                                         roughness 1.000000
                                         metalness 0
-                                        emissiveColor 0.000000 0.000000 0.000000
                                       }
                                       geometry DEF Hand_R Mesh {
                                         url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Hand R.obj"
