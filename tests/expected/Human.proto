@@ -42,8 +42,6 @@ PROTO Human [
         jointParameters HingeJointParameters {
           axis 0.000000 1.000000 0.000000
           anchor -0.070700 0.083500 -0.066100
-          dampingConstant 0.0
-          staticFriction 0.0
         }
         device [
           RotationalMotor {
@@ -59,7 +57,6 @@ PROTO Human [
         ]
         endPoint Solid {
           translation -0.070700 0.083500 -0.066100
-          rotation 0.000000 0.000000 1.000000 0.000000
           children [
             Shape {
               appearance DEF mat_femur_l_visual PBRAppearance {
@@ -77,8 +74,6 @@ PROTO Human [
               jointParameters HingeJointParameters {
                 axis 0.000000 1.000000 0.000000
                 anchor -0.004500 0.000000 -0.395821
-                dampingConstant 0.0
-                staticFriction 0.0
               }
               device [
                 RotationalMotor {
@@ -94,7 +89,6 @@ PROTO Human [
               ]
               endPoint Solid {
                 translation -0.004500 0.000000 -0.395821
-                rotation 0.000000 0.000000 1.000000 0.000000
                 children [
                   Shape {
                     appearance DEF mat_tibia_l_visual PBRAppearance {
@@ -112,8 +106,6 @@ PROTO Human [
                     jointParameters HingeJointParameters {
                       axis 0.000000 1.000000 0.000000
                       anchor 0.000000 0.000000 -0.430000
-                      dampingConstant 0.0
-                      staticFriction 0.0
                     }
                     device [
                       RotationalMotor {
@@ -129,7 +121,6 @@ PROTO Human [
                     ]
                     endPoint Solid {
                       translation 0.000000 0.000000 -0.430000
-                      rotation 0.000000 0.000000 1.000000 0.000000
                       children [
                         Shape {
                           appearance DEF mat_talus_l_visual PBRAppearance {
@@ -147,8 +138,6 @@ PROTO Human [
                           jointParameters HingeJointParameters {
                             axis 0.000000 1.000000 0.000000
                             anchor -0.048770 0.007920 -0.041950
-                            dampingConstant 0.0
-                            staticFriction 0.0
                           }
                           device [
                             RotationalMotor {
@@ -164,7 +153,6 @@ PROTO Human [
                           ]
                           endPoint Solid {
                             translation -0.048770 0.007920 -0.041950
-                            rotation 0.000000 0.000000 1.000000 0.000000
                             children [
                               Shape {
                                 appearance DEF mat_calcn_l_visual PBRAppearance {
@@ -182,8 +170,6 @@ PROTO Human [
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 1.000000 0.000000
                                   anchor 0.178800 0.001080 -0.002000
-                                  dampingConstant 0.0
-                                  staticFriction 0.0
                                 }
                                 device [
                                   RotationalMotor {
@@ -199,7 +185,6 @@ PROTO Human [
                                 ]
                                 endPoint Solid {
                                   translation 0.178800 0.001080 -0.002000
-                                  rotation 0.000000 0.000000 1.000000 0.000000
                                   children [
                                     Shape {
                                       appearance DEF mat_toes_l_visual PBRAppearance {
@@ -295,10 +280,7 @@ PROTO Human [
       }
       HingeJoint {
         jointParameters HingeJointParameters {
-          axis 1.000000 0.000000 0.000000
           anchor -0.070700 -0.083500 -0.066100
-          dampingConstant 0.0
-          staticFriction 0.0
         }
         device [
           RotationalMotor {
@@ -314,7 +296,6 @@ PROTO Human [
         ]
         endPoint Solid {
           translation -0.070700 -0.083500 -0.066100
-          rotation 0.000000 0.000000 1.000000 0.000000
           children [
             Shape {
               appearance DEF mat_femur_r_visual PBRAppearance {
@@ -332,8 +313,6 @@ PROTO Human [
               jointParameters HingeJointParameters {
                 axis 0.000000 -1.000000 0.000000
                 anchor -0.004500 0.000000 -0.395821
-                dampingConstant 0.0
-                staticFriction 0.0
               }
               device [
                 RotationalMotor {
@@ -349,7 +328,6 @@ PROTO Human [
               ]
               endPoint Solid {
                 translation -0.004500 0.000000 -0.395821
-                rotation 0.000000 0.000000 1.000000 0.000000
                 children [
                   Shape {
                     appearance DEF mat_tibia_r_visual PBRAppearance {
@@ -367,8 +345,6 @@ PROTO Human [
                     jointParameters HingeJointParameters {
                       axis 0.000000 -1.000000 0.000000
                       anchor 0.000000 0.000000 -0.430000
-                      dampingConstant 0.0
-                      staticFriction 0.0
                     }
                     device [
                       RotationalMotor {
@@ -384,7 +360,6 @@ PROTO Human [
                     ]
                     endPoint Solid {
                       translation 0.000000 0.000000 -0.430000
-                      rotation 0.000000 0.000000 1.000000 0.000000
                       children [
                         Shape {
                           appearance DEF mat_talus_r_visual PBRAppearance {
@@ -402,8 +377,6 @@ PROTO Human [
                           jointParameters HingeJointParameters {
                             axis 0.000000 -1.000000 0.000000
                             anchor -0.048770 -0.007920 -0.041950
-                            dampingConstant 0.0
-                            staticFriction 0.0
                           }
                           device [
                             RotationalMotor {
@@ -419,11 +392,8 @@ PROTO Human [
                           ]
                           endPoint Solid {
                             translation -0.048770 -0.007920 -0.041950
-                            rotation 0.000000 0.000000 1.000000 0.000000
                             children [
                               Transform {
-                                translation 0.000000 0.000000 0.000000
-                                rotation 0.000000 0.000000 1.000000 0.000000
                                 scale 1.000000 -1.000000 1.000000
                                 children [
                                   Shape {
@@ -445,8 +415,6 @@ PROTO Human [
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 -1.000000 0.000000
                                   anchor 0.178800 -0.001080 -0.002000
-                                  dampingConstant 0.0
-                                  staticFriction 0.0
                                 }
                                 device [
                                   RotationalMotor {
@@ -462,7 +430,6 @@ PROTO Human [
                                 ]
                                 endPoint Solid {
                                   translation 0.178800 -0.001080 -0.002000
-                                  rotation 0.000000 0.000000 1.000000 0.000000
                                   children [
                                     Shape {
                                       appearance DEF mat_toes_r_visual PBRAppearance {
@@ -495,8 +462,6 @@ PROTO Human [
                             ]
                             name "calcn_r"
                             boundingObject Transform {
-                              translation 0.000000 0.000000 0.000000
-                              rotation 0.000000 0.000000 1.000000 0.000000
                               scale 1.000000 -1.000000 1.000000
                               children [
                                 DEF Calcn_L_001_cw Mesh {
@@ -568,8 +533,6 @@ PROTO Human [
         jointParameters HingeJointParameters {
           axis 0.000000 1.000000 0.000000
           anchor -0.100700 0.000000 0.081500
-          dampingConstant 0.0
-          staticFriction 0.0
         }
         device [
           RotationalMotor {
@@ -585,7 +548,6 @@ PROTO Human [
         ]
         endPoint Solid {
           translation -0.100700 0.000000 0.081500
-          rotation 0.000000 0.000000 1.000000 0.000000
           children [
             Shape {
               appearance DEF mat_torso_visual PBRAppearance {
@@ -603,8 +565,6 @@ PROTO Human [
               jointParameters HingeJointParameters {
                 axis 0.000000 1.000000 0.000000
                 anchor 0.003155 0.170000 0.371500
-                dampingConstant 0.0
-                staticFriction 0.0
               }
               device [
                 RotationalMotor {
@@ -620,7 +580,6 @@ PROTO Human [
               ]
               endPoint Solid {
                 translation 0.003155 0.170000 0.371500
-                rotation 0.000000 0.000000 1.000000 0.000000
                 children [
                   Shape {
                     appearance DEF mat_humerus_l_visual PBRAppearance {
@@ -638,8 +597,6 @@ PROTO Human [
                     jointParameters HingeJointParameters {
                       axis 0.000000 1.000000 0.000000
                       anchor 0.013144 -0.009595 -0.286273
-                      dampingConstant 0.0
-                      staticFriction 0.0
                     }
                     device [
                       RotationalMotor {
@@ -655,7 +612,6 @@ PROTO Human [
                     ]
                     endPoint Solid {
                       translation 0.013144 -0.009595 -0.286273
-                      rotation 0.000000 0.000000 1.000000 0.000000
                       children [
                         Shape {
                           appearance DEF mat_ulna_l_visual PBRAppearance {
@@ -673,8 +629,6 @@ PROTO Human [
                           jointParameters HingeJointParameters {
                             axis 0.000000 1.000000 0.000000
                             anchor -0.006727 0.026083 -0.013007
-                            dampingConstant 0.0
-                            staticFriction 0.0
                           }
                           device [
                             RotationalMotor {
@@ -690,7 +644,6 @@ PROTO Human [
                           ]
                           endPoint Solid {
                             translation -0.006727 0.026083 -0.013007
-                            rotation 0.000000 0.000000 1.000000 0.000000
                             children [
                               Shape {
                                 appearance DEF mat_radius_l_visual PBRAppearance {
@@ -708,8 +661,6 @@ PROTO Human [
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 1.000000 0.000000
                                   anchor -0.008797 0.013610 -0.235841
-                                  dampingConstant 0.0
-                                  staticFriction 0.0
                                 }
                                 device [
                                   RotationalMotor {
@@ -725,7 +676,6 @@ PROTO Human [
                                 ]
                                 endPoint Solid {
                                   translation -0.008797 0.013610 -0.235841
-                                  rotation 0.000000 0.000000 1.000000 0.000000
                                   children [
                                     Shape {
                                       appearance DEF mat_hand_l_visual PBRAppearance {
@@ -807,8 +757,6 @@ PROTO Human [
               jointParameters HingeJointParameters {
                 axis 0.000000 -1.000000 0.000000
                 anchor 0.003155 -0.170000 0.371500
-                dampingConstant 0.0
-                staticFriction 0.0
               }
               device [
                 RotationalMotor {
@@ -824,7 +772,6 @@ PROTO Human [
               ]
               endPoint Solid {
                 translation 0.003155 -0.170000 0.371500
-                rotation 0.000000 0.000000 1.000000 0.000000
                 children [
                   Shape {
                     appearance DEF mat_humerus_r_visual PBRAppearance {
@@ -842,8 +789,6 @@ PROTO Human [
                     jointParameters HingeJointParameters {
                       axis 0.000000 -1.000000 0.000000
                       anchor 0.013144 0.009595 -0.286273
-                      dampingConstant 0.0
-                      staticFriction 0.0
                     }
                     device [
                       RotationalMotor {
@@ -859,7 +804,6 @@ PROTO Human [
                     ]
                     endPoint Solid {
                       translation 0.013144 0.009595 -0.286273
-                      rotation 0.000000 0.000000 1.000000 0.000000
                       children [
                         Shape {
                           appearance DEF mat_ulna_r_visual PBRAppearance {
@@ -877,8 +821,6 @@ PROTO Human [
                           jointParameters HingeJointParameters {
                             axis 0.000000 -1.000000 0.000000
                             anchor -0.006727 -0.026083 -0.013007
-                            dampingConstant 0.0
-                            staticFriction 0.0
                           }
                           device [
                             RotationalMotor {
@@ -894,7 +836,6 @@ PROTO Human [
                           ]
                           endPoint Solid {
                             translation -0.006727 -0.026083 -0.013007
-                            rotation 0.000000 0.000000 1.000000 0.000000
                             children [
                               Shape {
                                 appearance DEF mat_radius_r_visual PBRAppearance {
@@ -912,8 +853,6 @@ PROTO Human [
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 -1.000000 0.000000
                                   anchor -0.008797 -0.013610 -0.235841
-                                  dampingConstant 0.0
-                                  staticFriction 0.0
                                 }
                                 device [
                                   RotationalMotor {
@@ -929,7 +868,6 @@ PROTO Human [
                                 ]
                                 endPoint Solid {
                                   translation -0.008797 -0.013610 -0.235841
-                                  rotation 0.000000 0.000000 1.000000 0.000000
                                   children [
                                     Shape {
                                       appearance DEF mat_hand_r_visual PBRAppearance {

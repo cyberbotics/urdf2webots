@@ -44,8 +44,6 @@ PROTO MotomanSia20d [
           position 0.100000
           axis 0.000000 0.000000 1.000000
           anchor 0.000000 0.000000 0.410000
-          dampingConstant 0.0
-          staticFriction 0.0
         }
         device [
           RotationalMotor {
@@ -64,9 +62,7 @@ PROTO MotomanSia20d [
           rotation 0.000000 0.000000 1.000000 0.100000
           children [
             Transform {
-              translation 0.000000 0.000000 0.000000
               rotation -0.000000 0.000000 1.000000 3.141600
-              scale 1.000000 1.000000 1.000000
               children [
                 Shape {
                   appearance DEF silver PBRAppearance {
@@ -86,9 +82,6 @@ PROTO MotomanSia20d [
               jointParameters HingeJointParameters {
                 position -0.100000
                 axis 0.000000 1.000000 0.000000
-                anchor 0.000000 0.000000 0.000000
-                dampingConstant 0.0
-                staticFriction 0.0
               }
               device [
                 RotationalMotor {
@@ -103,13 +96,10 @@ PROTO MotomanSia20d [
                 }
               ]
               endPoint Solid {
-                translation 0.000000 0.000000 0.000000
                 rotation 0.000000 -1.000000 0.000000 0.100000
                 children [
                   Transform {
-                    translation 0.000000 0.000000 0.000000
                     rotation -1.000000 -0.000007 -0.000000 1.571593
-                    scale 1.000000 1.000000 1.000000
                     children [
                       Shape {
                         appearance USE blue
@@ -124,8 +114,6 @@ PROTO MotomanSia20d [
                       position 0.200000
                       axis 0.000000 0.000000 1.000000
                       anchor 0.000000 0.000000 0.490000
-                      dampingConstant 0.0
-                      staticFriction 0.0
                     }
                     device [
                       RotationalMotor {
@@ -152,9 +140,6 @@ PROTO MotomanSia20d [
                         HingeJoint {
                           jointParameters HingeJointParameters {
                             axis 0.000000 -1.000000 0.000000
-                            anchor 0.000000 0.000000 0.000000
-                            dampingConstant 0.0
-                            staticFriction 0.0
                           }
                           device [
                             RotationalMotor {
@@ -169,13 +154,9 @@ PROTO MotomanSia20d [
                             }
                           ]
                           endPoint Solid {
-                            translation 0.000000 0.000000 0.000000
-                            rotation 0.000000 0.000000 1.000000 0.000000
                             children [
                               Transform {
-                                translation 0.000000 0.000000 0.000000
                                 rotation 1.000000 0.000050 0.000043 4.711593
-                                scale 1.000000 1.000000 1.000000
                                 children [
                                   Shape {
                                     appearance USE blue
@@ -189,8 +170,6 @@ PROTO MotomanSia20d [
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 0.000000 -1.000000
                                   anchor 0.000000 0.000000 0.420000
-                                  dampingConstant 0.0
-                                  staticFriction 0.0
                                 }
                                 device [
                                   RotationalMotor {
@@ -206,7 +185,6 @@ PROTO MotomanSia20d [
                                 ]
                                 endPoint Solid {
                                   translation 0.000000 0.000000 0.420000
-                                  rotation 0.000000 0.000000 1.000000 0.000000
                                   children [
                                     Shape {
                                       appearance USE silver
@@ -217,9 +195,6 @@ PROTO MotomanSia20d [
                                     HingeJoint {
                                       jointParameters HingeJointParameters {
                                         axis 0.000000 -1.000000 0.000000
-                                        anchor 0.000000 0.000000 0.000000
-                                        dampingConstant 0.0
-                                        staticFriction 0.0
                                       }
                                       device [
                                         RotationalMotor {
@@ -234,13 +209,9 @@ PROTO MotomanSia20d [
                                         }
                                       ]
                                       endPoint Solid {
-                                        translation 0.000000 0.000000 0.000000
-                                        rotation 0.000000 0.000000 1.000000 0.000000
                                         children [
                                           Transform {
-                                            translation 0.000000 0.000000 0.000000
                                             rotation -1.000000 0.000000 0.000000 1.570000
-                                            scale 1.000000 1.000000 1.000000
                                             children [
                                               Shape {
                                                 appearance USE blue
@@ -254,8 +225,6 @@ PROTO MotomanSia20d [
                                             jointParameters HingeJointParameters {
                                               axis 0.000000 0.000000 -1.000000
                                               anchor 0.000000 0.000000 0.180000
-                                              dampingConstant 0.0
-                                              staticFriction 0.0
                                             }
                                             device [
                                               RotationalMotor {
@@ -271,7 +240,6 @@ PROTO MotomanSia20d [
                                             ]
                                             endPoint Solid {
                                               translation 0.000000 0.000000 0.180000
-                                              rotation 0.000000 0.000000 1.000000 0.000000
                                               children [
                                                 Shape {
                                                   appearance USE silver
@@ -280,7 +248,6 @@ PROTO MotomanSia20d [
                                                   }
                                                 }
                                                 Solid {
-                                                  translation 0.000000 0.000000 0.000000
                                                   rotation 0.000000 -0.000000 -1.000000 3.141600
                                                   children [
                                                     Group {
@@ -304,9 +271,7 @@ PROTO MotomanSia20d [
                                         ]
                                         name "link_b"
                                         boundingObject Transform {
-                                          translation 0.000000 0.000000 0.000000
                                           rotation -1.000000 0.000000 0.000000 1.570000
-                                          scale 1.000000 1.000000 1.000000
                                           children [
                                             USE MOTOMAN_AXIS_B
                                           ]
@@ -325,9 +290,7 @@ PROTO MotomanSia20d [
                             ]
                             name "link_u"
                             boundingObject Transform {
-                              translation 0.000000 0.000000 0.000000
                               rotation 1.000000 0.000050 0.000043 4.711593
-                              scale 1.000000 1.000000 1.000000
                               children [
                                 USE MOTOMAN_AXIS_U
                               ]
@@ -346,9 +309,7 @@ PROTO MotomanSia20d [
                 ]
                 name "link_l"
                 boundingObject Transform {
-                  translation 0.000000 0.000000 0.000000
                   rotation -1.000000 -0.000007 -0.000000 1.571593
-                  scale 1.000000 1.000000 1.000000
                   children [
                     USE MOTOMAN_AXIS_L
                   ]
@@ -360,9 +321,7 @@ PROTO MotomanSia20d [
           ]
           name "link_s"
           boundingObject Transform {
-            translation 0.000000 0.000000 0.000000
             rotation -0.000000 0.000000 1.000000 3.141600
-            scale 1.000000 1.000000 1.000000
             children [
               USE MOTOMAN_AXIS_S
             ]
@@ -373,7 +332,6 @@ PROTO MotomanSia20d [
       }
       Solid {
         translation 0.000000 0.000000 0.410000
-        rotation 0.000000 0.000000 1.000000 0.000000
         name "base"
       }
     ]

@@ -76,7 +76,7 @@ def declaration(robotFile, robotName, initTranslation, initRotation):
 
 def URDFLink(robotFile, link, level, parentList,
              childList, linkList, jointList, sensorList, jointPosition=[0.0, 0.0, 0.0],
-             jointRotation=[1.0, 0.0, 0.0, 0.0], boxCollision=False, normal=False,
+             jointRotation=[0.0, 0.0, 1.0, 0.0], boxCollision=False, normal=False,
              dummy=False, robot=False, endpoint=False, initTranslation='', initRotation=''):
     """Write a link iteratively."""
     indent = '  '
@@ -109,10 +109,12 @@ def URDFLink(robotFile, link, level, parentList,
                 defaultSolidName = 'solid' + str(indexSolid)
                 indexSolid += 1
 
-        robotFile.write((level + 1) * indent + 'translation %lf %lf %lf\n' % (jointPosition[0],
+        if jointPosition != [0.0, 0.0, 0.0]:
+            robotFile.write((level + 1) * indent + 'translation %lf %lf %lf\n' % (jointPosition[0],
                                                                           jointPosition[1],
                                                                           jointPosition[2]))
-        robotFile.write((level + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (jointRotation[0],
+        if jointRotation[3] != 0.0:
+            robotFile.write((level + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (jointRotation[0],
                                                                            jointRotation[1],
                                                                            jointRotation[2],
                                                                            jointRotation[3]))
@@ -241,14 +243,17 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
         initialIndent = boundingLevel * indent if hasGroup else ''
         if not boxCollision and (boundingObject.position != [0.0, 0.0, 0.0] or boundingObject.rotation[3] != 0.0 or boundingObject.scale != [1.0, 1.0, 1.0]):
             robotFile.write(initialIndent + 'Transform {\n')
-            robotFile.write((boundingLevel + 1) * indent + 'translation %lf %lf %lf\n' % (boundingObject.position[0],
+            if boundingObject.position != [0.0, 0.0, 0.0]:
+                robotFile.write((boundingLevel + 1) * indent + 'translation %lf %lf %lf\n' % (boundingObject.position[0],
                                                                                         boundingObject.position[1],
                                                                                         boundingObject.position[2]))
-            robotFile.write((boundingLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (boundingObject.rotation[0],
+            if boundingObject.rotation[3] != 0.0:
+                robotFile.write((boundingLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (boundingObject.rotation[0],
                                                                                         boundingObject.rotation[1],
                                                                                         boundingObject.rotation[2],
                                                                                         boundingObject.rotation[3]))
-            robotFile.write((boundingLevel + 1) * indent + 'scale %lf %lf %lf\n' % (boundingObject.scale[0],
+            if boundingObject.scale != [1.0, 1.0, 1.0]:
+                robotFile.write((boundingLevel + 1) * indent + 'scale %lf %lf %lf\n' % (boundingObject.scale[0],
                                                                                     boundingObject.scale[1],
                                                                                     boundingObject.scale[2]))
             robotFile.write((boundingLevel + 1) * indent + 'children [\n')
@@ -263,10 +268,10 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
                                                                                 boundingObject.geometry.box.z))
             robotFile.write(boundingLevel * indent + '}\n')
 
-        elif boundingObject.geometry.cylinder.radius != 0 and boundingObject.geometry.cylinder.length != 0:
+        elif boundingObject.geometry.cylinder.radius != 0 and boundingObject.geometry.cylinder.height != 0:
             robotFile.write(initialIndent + 'Cylinder {\n')
             robotFile.write((boundingLevel + 1) * indent + 'radius ' + str(boundingObject.geometry.cylinder.radius) + '\n')
-            robotFile.write((boundingLevel + 1) * indent + 'height ' + str(boundingObject.geometry.cylinder.length) + '\n')
+            robotFile.write((boundingLevel + 1) * indent + 'height ' + str(boundingObject.geometry.cylinder.height) + '\n')
             robotFile.write(boundingLevel * indent + '}\n')
 
         elif boundingObject.geometry.sphere.radius != 0:
@@ -380,7 +385,7 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
         elif visualNode.geometry.cylinder.radius != 0:
             robotFile.write((shapeLevel + 1) * indent + 'geometry Cylinder {\n')
             robotFile.write((shapeLevel + 2) * indent + 'radius ' + str(visualNode.geometry.cylinder.radius) + '\n')
-            robotFile.write((shapeLevel + 2) * indent + 'height ' + str(visualNode.geometry.cylinder.length) + '\n')
+            robotFile.write((shapeLevel + 2) * indent + 'height ' + str(visualNode.geometry.cylinder.height) + '\n')
             robotFile.write((shapeLevel + 1) * indent + '}\n')
 
         elif visualNode.geometry.sphere.radius != 0:
@@ -414,16 +419,19 @@ def URDFShape(robotFile, link, level, normal=False):
     transform = False
 
     for visualNode in link.visual:
-        if visualNode.position != [0.0, 0.0, 0.0] or visualNode.rotation[3] != 0 or visualNode.scale != [1.0, 1.0, 1.0]:
+        if visualNode.position != [0.0, 0.0, 0.0] or visualNode.rotation[3] != 0.0 or visualNode.scale != [1.0, 1.0, 1.0]:
             robotFile.write(shapeLevel * indent + 'Transform {\n')
-            robotFile.write((shapeLevel + 1) * indent + 'translation %lf %lf %lf\n' % (visualNode.position[0],
+            if visualNode.position != [0.0, 0.0, 0.0]:
+                robotFile.write((shapeLevel + 1) * indent + 'translation %lf %lf %lf\n' % (visualNode.position[0],
                                                                                     visualNode.position[1],
                                                                                     visualNode.position[2]))
-            robotFile.write((shapeLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (visualNode.rotation[0],
+            if visualNode.rotation[3] != 0.0:
+                robotFile.write((shapeLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (visualNode.rotation[0],
                                                                                     visualNode.rotation[1],
                                                                                     visualNode.rotation[2],
                                                                                     visualNode.rotation[3]))
-            robotFile.write((shapeLevel + 1) * indent + 'scale %lf %lf %lf\n' % (visualNode.scale[0],
+            if visualNode.scale != [1.0, 1.0, 1.0]:
+                robotFile.write((shapeLevel + 1) * indent + 'scale %lf %lf %lf\n' % (visualNode.scale[0],
                                                                                 visualNode.scale[1],
                                                                                 visualNode.scale[2]))
             robotFile.write((shapeLevel + 1) * indent + 'children [\n')
@@ -471,10 +479,14 @@ def URDFJoint(robotFile, joint, level, parentList, childList, linkList, jointLis
             mat2 = matrixFromRotation([axis[0], axis[1], axis[2], position])
             mat3 = multiplyMatrix(mat2, mat1)
             endpointRotation = rotationFromMatrix(mat3)
-        robotFile.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
-        robotFile.write((level + 2) * indent + 'anchor %lf %lf %lf\n' % (joint.position[0], joint.position[1], joint.position[2]))
-        robotFile.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
-        robotFile.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
+        if axis != [1.0, 0.0, 0.0]:
+            robotFile.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
+        if joint.position != [0.0, 0.0, 0.0]:
+            robotFile.write((level + 2) * indent + 'anchor %lf %lf %lf\n' % (joint.position[0], joint.position[1], joint.position[2]))
+        if joint.dynamics.damping != 0.0:
+            robotFile.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
+        if joint.dynamics.friction != 0.0:
+            robotFile.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         robotFile.write((level + 1) * indent + '}\n')
         robotFile.write((level + 1) * indent + 'device [\n')
         robotFile.write((level + 2) * indent + 'RotationalMotor {\n')
@@ -492,9 +504,12 @@ def URDFJoint(robotFile, joint, level, parentList, childList, linkList, jointLis
                 endpointPosition[0] += axis[0] / length * position
                 endpointPosition[0] += axis[1] / length * position
                 endpointPosition[0] += axis[2] / length * position
-        robotFile.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
-        robotFile.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
-        robotFile.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
+        if axis != [1.0, 0.0, 0.0]:
+            robotFile.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
+        if joint.dynamics.damping != 0.0:
+            robotFile.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
+        if joint.dynamics.friction != 0.0:
+            robotFile.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
         robotFile.write((level + 1) * indent + '}\n')
         robotFile.write((level + 1) * indent + 'device [\n')
         robotFile.write((level + 2) * indent + 'LinearMotor {\n')

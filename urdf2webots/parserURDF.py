@@ -542,7 +542,7 @@ def getVisual(link, node, path):
             link.visual.append(visual)
         elif hasElement(geometryElement, 'cylinder'):
             visual.geometry.cylinder.radius = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('radius'))
-            visual.geometry.cylinder.length = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('length'))
+            visual.geometry.cylinder.height = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('length'))
             link.visual.append(visual)
         elif hasElement(geometryElement, 'sphere'):
             visual.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
@@ -606,7 +606,7 @@ def getCollision(link, node, path):
         elif hasElement(geometryElement, 'cylinder'):
             element = geometryElement.getElementsByTagName('cylinder')[0]
             collision.geometry.cylinder.radius = float(element.getAttribute('radius'))
-            collision.geometry.cylinder.length = float(element.getAttribute('length'))
+            collision.geometry.cylinder.height = float(element.getAttribute('length'))
             link.collision.append(collision)
         elif hasElement(geometryElement, 'sphere'):
             collision.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
