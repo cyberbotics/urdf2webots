@@ -885,7 +885,7 @@ def removeDummyLinks(linkList, jointList):
             if parentJointIndex:
                 if childJointIndex:
                     jointList[parentJointIndex].child = jointList[childJointIndex].child
-                    jointList[parentJointIndex].position = combineTranslations(jointList[parentJointIndex].position, rotateVector(jointList[childJointIndex].position, jointList[childJointIndex].rotation))
+                    jointList[parentJointIndex].position = combineTranslations(jointList[parentJointIndex].position, rotateVector(jointList[childJointIndex].position, jointList[parentJointIndex].rotation))
                     jointList[parentJointIndex].rotation = combineRotations(jointList[childJointIndex].rotation, jointList[parentJointIndex].rotation)
                     jointList[parentJointIndex].name = jointList[parentJointIndex].parent + "-" + jointList[parentJointIndex].child
                     jointList.remove(jointList[childJointIndex])
