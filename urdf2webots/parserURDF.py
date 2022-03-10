@@ -853,8 +853,10 @@ def isRootLink(link, childList):
             return False
     return True
 
-def removeDummyLinks(linkList, jointList):
-    """Remove the dummy links used for tool slots"""
+def removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot):
+    """Remove the dummy links (links without masses) and return true in case a dummy link should
+    set the base of the robot as static. """
+    staticBase = False
     linkIndex = 0
     childList = []
     for joint in jointList:
@@ -863,15 +865,13 @@ def removeDummyLinks(linkList, jointList):
     while linkIndex < len(linkList):
         link = linkList[linkIndex]
 
-        # We want to skip links between the robot and the static environment.
+        # We want to skip links between the robot root and the static environment.
         if isRootLink(link.name, childList):
             linkIndex += 1
             continue
 
-        # This link will not have a 'physics' field -> remove it
-        if link.inertia.mass is None and not link.collision:
-            linkList.remove(link)
-
+        # This link will not have a 'physics' field and is not used to have a toolSlot or a static base -> remove it
+        if link.inertia.mass is None and not link.collision and link.name != toolSlot:
             parentJointIndex = None
             childJointIndex = None
             index = -1
@@ -882,18 +882,28 @@ def removeDummyLinks(linkList, jointList):
                 elif joint.child == link.name:
                     parentJointIndex = index
 
-            if parentJointIndex:
-                if childJointIndex:
+            if parentJointIndex is not None:
+                if childJointIndex is not None:
                     jointList[parentJointIndex].child = jointList[childJointIndex].child
                     jointList[parentJointIndex].position = combineTranslations(jointList[parentJointIndex].position, rotateVector(jointList[childJointIndex].position, jointList[parentJointIndex].rotation))
                     jointList[parentJointIndex].rotation = combineRotations(jointList[childJointIndex].rotation, jointList[parentJointIndex].rotation)
                     jointList[parentJointIndex].name = jointList[parentJointIndex].parent + "-" + jointList[parentJointIndex].child
                     jointList.remove(jointList[childJointIndex])
                 else:
+                    # Special case for dummy non-root links used to fix the base of the robot
+                    if isRootLink(jointList[parentJointIndex].parent, childList):
+                        staticBase = True
+
                     jointList.remove(jointList[parentJointIndex])
+
+            # This link can be removed
+            linkList.remove(link)
+
         else:
             linkIndex += 1
+
     childList.clear()
+    return staticBase
 
 def parseGazeboElement(element, parentLink, linkList):
     """Parse a Gazebo element."""

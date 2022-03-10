@@ -58,8 +58,7 @@ Relative paths present in your URDF file will be treated relatively to the curre
 > <link name="world" />
 ><joint name="world_joint" type="fixed">
 >    <parent link="world" />
->    <child link = "base_link" />
->    <origin xyz="0 0 0" rpy="0 0 0" />
+>    <child link="base_link" />
 ></joint>
 >```
 

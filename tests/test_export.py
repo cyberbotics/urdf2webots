@@ -34,6 +34,12 @@ modelPathsProto = [
         'output': os.path.join(resultDirectory, 'KukaLbrIiwa14R820.proto'),
         'expected': [os.path.join(expectedDirectory, 'KukaLbrIiwa14R820.proto')],
         'arguments': '--box-collision --tool-slot=tool0 --rotation="1 0 0 -1.5708"'
+    },
+    {
+        'input': os.path.join(sourceDirectory, 'robotWithDummyLink.urdf'),
+        'output': os.path.join(resultDirectory, 'robotWithDummyLink.proto'),
+        'expected': [os.path.join(expectedDirectory, 'robotWithDummyLink.proto')],
+        'arguments': ''
     }
 ]
 

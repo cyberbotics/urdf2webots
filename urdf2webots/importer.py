@@ -241,8 +241,7 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
                 linkList.append(urdf2webots.parserURDF.getLink(link, urdfDirectory))
             for joint in jointElementList:
                 jointList.append(urdf2webots.parserURDF.getJoint(joint))
-            if not isProto:
-                urdf2webots.parserURDF.removeDummyLinks(linkList, jointList)
+            urdf2webots.writeRobot.staticBase = urdf2webots.parserURDF.removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot)
 
             for joint in jointList:
                 parentList.append(joint.parent)

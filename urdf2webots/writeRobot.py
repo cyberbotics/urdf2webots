@@ -69,9 +69,6 @@ def declaration(robotFile, robotName, initTranslation, initRotation):
     robotFile.write('  field  SFBool      supervisor      FALSE ' + spaces + '# Is `Robot.supervisor`.\n')
     robotFile.write('  field  SFBool      synchronization TRUE  ' + spaces + '# Is `Robot.synchronization`.\n')
     robotFile.write('  field  SFBool      selfCollision   FALSE ' + spaces + '# Is `Robot.selfCollision`.\n')
-    if staticBase:
-        robotFile.write('  field  SFBool      staticBase      TRUE  ' + spaces + '# Defines if the robot base should ' +
-                    'be pinned to the static environment.\n')
     if toolSlot:
         robotFile.write('  field  MFNode      toolSlot        []    ' + spaces +
                     '# Extend the robot with new nodes at the end of the arm.\n')
@@ -172,22 +169,16 @@ def URDFLink(robotFile, link, level, parentList,
             URDFBoundingObject(robotFile, link, level + 1, boxCollision)
         if link.inertia.mass is not None:
             if isProto:
-                if level == 1 and staticBase:
-                    robotFile.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
-                writeLinkPhysics(robotFile, link, level)
-                if level == 1 and staticBase:
-                    robotFile.write((level + 1) * indent + '%{ end }%\n')
+                if level > 1 or not staticBase:
+                    writeLinkPhysics(robotFile, link, level)
             else:
                 if level != 0 or not staticBase:
                     writeLinkPhysics(robotFile, link, level)
         elif link.collision:
             if isProto:
-                if level == 1 and staticBase:
-                    robotFile.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
-                robotFile.write((level + 1) * indent + 'physics Physics {\n')
-                robotFile.write((level + 1) * indent + '}\n')
-                if level == 1 and staticBase:
-                    robotFile.write((level + 1) * indent + '%{ end }%\n')
+                if level > 1 or not staticBase:
+                    robotFile.write((level + 1) * indent + 'physics Physics {\n')
+                    robotFile.write((level + 1) * indent + '}\n')
             else:
                 if level != 0 or not staticBase:
                     robotFile.write((level + 1) * indent + 'physics Physics {\n')
