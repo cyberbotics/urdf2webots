@@ -36,7 +36,7 @@ modelPathsProto = [
         'arguments': '--box-collision --tool-slot=tool0 --rotation="1 0 0 -1.5708"'
     },
     {
-        'input': os.path.join(sourceDirectory, 'robotWithDummyLink.urdf'),
+        'input': os.path.join(sourceDirectory, 'RobotWithDummyLink.urdf'),
         'output': os.path.join(resultDirectory, 'RobotWithDummyLink.proto'),
         'expected': [os.path.join(expectedDirectory, 'RobotWithDummyLink.proto')],
         'arguments': ''
