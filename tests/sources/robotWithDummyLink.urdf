@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="robotWithDummyLink">
+<robot name="RobotWithDummyLink">
 
   <!-- This robot should have the shape of gate (Π) composed by 3 cylinders -->
 
