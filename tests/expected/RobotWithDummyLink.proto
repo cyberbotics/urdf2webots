@@ -1,0 +1,103 @@
+#VRML_SIM R2022a utf8
+# license: Apache License 2.0
+# license url: http://www.apache.org/licenses/LICENSE-2.0
+# This is a proto file for Webots for the RobotWithDummyLink
+# Extracted from: /home/benjamin/urdf2webots/tests/sources/RobotWithDummyLink.urdf
+
+PROTO RobotWithDummyLink [
+  field  SFVec3f     translation     0 0 0
+  field  SFRotation  rotation        0 0 1 0
+  field  SFString    name            "RobotWithDummyLink"  # Is `Robot.name`.
+  field  SFString    controller      "void"                # Is `Robot.controller`.
+  field  MFString    controllerArgs  []                    # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""                    # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE                 # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE                  # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE                 # Is `Robot.selfCollision`.
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    controller IS controller
+    controllerArgs IS controllerArgs
+    customData IS customData
+    supervisor IS supervisor
+    synchronization IS synchronization
+    selfCollision IS selfCollision
+    children [
+      Shape {
+        appearance PBRAppearance {
+          baseColor 0.500000 0.500000 0.500000
+          transparency 0.000000
+          roughness 1.000000
+          metalness 0
+          emissiveColor 0.000000 0.000000 0.000000
+        }
+        geometry Cylinder {
+          radius 0.1
+          height 0.4
+        }
+      }
+      Solid {
+        translation 0.300000 0.000000 0.300000
+        rotation 0.000000 1.000000 0.000000 1.570800
+        children [
+          Shape {
+            appearance PBRAppearance {
+              baseColor 0.500000 0.500000 0.500000
+              transparency 0.000000
+              roughness 1.000000
+              metalness 0
+              emissiveColor 0.000000 0.000000 0.000000
+            }
+            geometry Cylinder {
+              radius 0.1
+              height 0.4
+            }
+          }
+          Solid {
+            translation 0.299922 0.000000 0.299940
+            rotation 0.000000 1.000000 0.000000 1.570615
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 0.500000 0.500000 0.500000
+                  transparency 0.000000
+                  roughness 1.000000
+                  metalness 0
+                  emissiveColor 0.000000 0.000000 0.000000
+                }
+                geometry Cylinder {
+                  radius 0.1
+                  height 0.4
+                }
+              }
+            ]
+            name "link_2"
+            boundingObject Cylinder {
+              radius 0.1
+              height 0.4
+            }
+            physics Physics {
+            }
+          }
+        ]
+        name "link_1"
+        boundingObject Cylinder {
+          radius 0.1
+          height 0.4
+        }
+        physics Physics {
+        }
+      }
+    ]
+    name IS name
+    boundingObject Cylinder {
+      radius 0.1
+      height 0.4
+    }
+    physics Physics {
+    }
+  }
+}

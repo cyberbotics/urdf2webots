@@ -34,6 +34,12 @@ modelPathsProto = [
         'output': os.path.join(resultDirectory, 'KukaLbrIiwa14R820.proto'),
         'expected': [os.path.join(expectedDirectory, 'KukaLbrIiwa14R820.proto')],
         'arguments': '--box-collision --tool-slot=tool0 --rotation="1 0 0 -1.5708"'
+    },
+    {
+        'input': os.path.join(sourceDirectory, 'RobotWithDummyLink.urdf'),
+        'output': os.path.join(resultDirectory, 'RobotWithDummyLink.proto'),
+        'expected': [os.path.join(expectedDirectory, 'RobotWithDummyLink.proto')],
+        'arguments': ''
     }
 ]
 
@@ -122,7 +128,8 @@ class TestScript(unittest.TestCase):
         """Test that urdf2webots produces an expected Robot node string using URDF file as input."""
         print('Start tests with input "URDF file" and output "Robot node strings"...')
         for paths in modelPathsRobotString:
-            robot_string = convertUrdfFile(input=paths['input'], robotName=paths['robotName'], initTranslation=paths['translation'], initRotation=paths['rotation'])
+            robot_string = convertUrdfFile(input=paths['input'], robotName=paths['robotName'],
+                                           initTranslation=paths['translation'], initRotation=paths['rotation'])
             f = open(paths['output'], 'w')
             f.write(robot_string)
             f.close()
