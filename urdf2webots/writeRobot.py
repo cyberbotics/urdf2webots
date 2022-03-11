@@ -97,8 +97,8 @@ def URDFLink(robotFile, link, level, parentList,
             robotFile.write((level + 1) * indent + 'synchronization IS synchronization\n')
             robotFile.write((level + 1) * indent + 'selfCollision IS selfCollision\n')
         else:
-            robotFile.write((level + 1) * indent + 'translation '+initTranslation+'\n')
-            robotFile.write((level + 1) * indent + 'rotation '+initRotation+'\n')
+            robotFile.write((level + 1) * indent + 'translation ' + initTranslation + '\n')
+            robotFile.write((level + 1) * indent + 'rotation ' + initRotation + '\n')
     else:
         if link.forceSensor:
             robotFile.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if linkToDef else '') + 'TouchSensor {\n')
