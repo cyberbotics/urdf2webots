@@ -656,17 +656,23 @@ def URDFJoint(robotFile, joint, level, parentList, childList, linkList, jointLis
     elif joint.type == 'prismatic':
         robotFile.write(level * indent + ('DEF ' + joint.name + ' ' if jointToDef else '') + 'SliderJoint {\n')
         robotFile.write((level + 1) * indent + 'jointParameters JointParameters {\n')
+        position = None
         if joint.limit.lower > 0.0:
             # if 0 is not in the range, set the position to be the middle of the range
             position = joint.limit.lower
             if joint.limit.upper >= joint.limit.lower:
                 position = (joint.limit.upper - joint.limit.lower) / 2.0 + joint.limit.lower
+        if initPos is not None:
+            if len(initPos) > 0:
+                position = initPos[0]
+                del initPos[0]
+        if position is not None:
             robotFile.write((level + 2) * indent + 'position %lf\n' % position)
             length = math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2])
             if length > 0:
                 endpointPosition[0] += axis[0] / length * position
-                endpointPosition[0] += axis[1] / length * position
-                endpointPosition[0] += axis[2] / length * position
+                endpointPosition[1] += axis[1] / length * position
+                endpointPosition[2] += axis[2] / length * position
         robotFile.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
         robotFile.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
         robotFile.write((level + 2) * indent + 'staticFriction ' + str(joint.dynamics.friction) + '\n')
