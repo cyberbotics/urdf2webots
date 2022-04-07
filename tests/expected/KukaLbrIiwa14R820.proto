@@ -138,7 +138,7 @@ PROTO KukaLbrIiwa14R820 [
                                     ]
                                     endPoint Solid {
                                       children [
-                                        DEF link_5_collada ColladaShape {
+                                        DEF link_5_collada ColladaShsape {
                                           url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_5.dae"
                                         }
                                         HingeJoint {
