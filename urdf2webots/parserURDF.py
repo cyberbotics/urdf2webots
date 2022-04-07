@@ -72,12 +72,13 @@ class Mesh():
         self.ccw = True
 
 
-class ColladaShapes():
-    """Define colladaShapes object."""
+class ColladaShape():
+    """Define colladaShape object."""
 
     def __init__(self):
         """Initializatization."""
         self.url = ''
+        self.ccw = True
 
 
 class Geometry():
@@ -91,7 +92,7 @@ class Geometry():
         self.cylinder = Cylinder()
         self.sphere = Sphere()
         self.mesh = Mesh()
-        self.colladaShapes = ColladaShapes()
+        self.colladaShape = ColladaShape()
         self.name = None
         self.defName = None
 
@@ -567,14 +568,14 @@ def getVisual(link, node, path):
             if extension in extensionListSingleAppearance or extension == '.dae':
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if extension == '.dae':
-                        name += '_collada'
+                    name += '_collada'
                 if not visual.geometry.mesh.ccw:
                     name += '_cw'
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
                     if extension == '.dae':
-                        visual.geometry.colladaShapes.url = '"' + meshfile + '"'
+                        visual.geometry.colladaShape.url = '"' + meshfile + '"'
                     else:
                         visual.geometry.mesh.url = '"' + meshfile + '"'
                     visual.geometry.name = name
@@ -783,9 +784,12 @@ def removeDummyLinks(linkList, jointList):
             if parentJointIndex:
                 if childJointIndex:
                     jointList[parentJointIndex].child = jointList[childJointIndex].child
-                    jointList[parentJointIndex].position = combineTranslations(jointList[parentJointIndex].position, rotateVector(jointList[childJointIndex].position, jointList[childJointIndex].rotation))
-                    jointList[parentJointIndex].rotation = combineRotations(jointList[childJointIndex].rotation, jointList[parentJointIndex].rotation)
-                    jointList[parentJointIndex].name = jointList[parentJointIndex].parent + "-" + jointList[parentJointIndex].child
+                    jointList[parentJointIndex].position = combineTranslations(jointList[parentJointIndex].position, rotateVector(
+                        jointList[childJointIndex].position, jointList[childJointIndex].rotation))
+                    jointList[parentJointIndex].rotation = combineRotations(
+                        jointList[childJointIndex].rotation, jointList[parentJointIndex].rotation)
+                    jointList[parentJointIndex].name = jointList[parentJointIndex].parent + \
+                        "-" + jointList[parentJointIndex].child
                     jointList.remove(jointList[childJointIndex])
                 else:
                     jointList.remove(jointList[parentJointIndex])
@@ -860,7 +864,7 @@ def parseGazeboElement(element, parentLink, linkList):
                         horizontalElement = scanElement.getElementsByTagName('horizontal')[0]
                         if hasElement(horizontalElement, 'samples'):
                             lidar.horizontalResolution = \
-                              int(float(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue))
+                                int(float(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue))
                         if hasElement(horizontalElement, 'min_angle') and hasElement(horizontalElement, 'max_angle'):
                             minAngle = float(horizontalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
                             maxAngle = float(horizontalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
@@ -869,7 +873,7 @@ def parseGazeboElement(element, parentLink, linkList):
                         verticalElement = scanElement.getElementsByTagName('vertical')[0]
                         if hasElement(verticalElement, 'samples'):
                             lidar.numberOfLayers = \
-                              int(verticalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
+                                int(verticalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
                         if hasElement(verticalElement, 'min_angle') and hasElement(verticalElement, 'max_angle'):
                             minAngle = float(verticalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
                             maxAngle = float(verticalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)

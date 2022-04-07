@@ -72,10 +72,10 @@ def declaration(robotFile, robotName, initTranslation, initRotation):
     robotFile.write('  field  SFBool      selfCollision   FALSE ' + spaces + '# Is `Robot.selfCollision`.\n')
     if staticBase:
         robotFile.write('  field  SFBool      staticBase      TRUE  ' + spaces + '# Defines if the robot base should ' +
-                    'be pinned to the static environment.\n')
+                        'be pinned to the static environment.\n')
     if toolSlot:
         robotFile.write('  field  MFNode      toolSlot        []    ' + spaces +
-                    '# Extend the robot with new nodes at the end of the arm.\n')
+                        '# Extend the robot with new nodes at the end of the arm.\n')
     robotFile.write(']\n')
     robotFile.write('{\n')
 
@@ -105,10 +105,12 @@ def URDFLink(robotFile, link, level, parentList,
             robotFile.write((level + 1) * indent + 'rotation '+initRotation+'\n')
     else:
         if link.forceSensor:
-            robotFile.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if linkToDef else '') + 'TouchSensor {\n')
+            robotFile.write((' ' if endpoint else level * indent) + ('DEF ' +
+                            link.name + ' ' if linkToDef else '') + 'TouchSensor {\n')
             robotFile.write((level + 1) * indent + 'type "force-3d"\n')
         else:
-            robotFile.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if linkToDef else '') + 'Solid {\n')
+            robotFile.write((' ' if endpoint else level * indent) + ('DEF ' +
+                            link.name + ' ' if linkToDef else '') + 'Solid {\n')
             if not isProto:
                 # need a unique name for every solid node for the robot string
                 global indexSolid
@@ -117,13 +119,13 @@ def URDFLink(robotFile, link, level, parentList,
 
         if jointPosition != [0.0, 0.0, 0.0]:
             robotFile.write((level + 1) * indent + 'translation %lf %lf %lf\n' % (jointPosition[0],
-                                                                          jointPosition[1],
-                                                                          jointPosition[2]))
+                                                                                  jointPosition[1],
+                                                                                  jointPosition[2]))
         if jointRotation[3] != 0.0:
             robotFile.write((level + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (jointRotation[0],
-                                                                           jointRotation[1],
-                                                                           jointRotation[2],
-                                                                           jointRotation[3]))
+                                                                                   jointRotation[1],
+                                                                                   jointRotation[2],
+                                                                                   jointRotation[3]))
     if not dummy:  # dummy: case when link not defined but referenced (e.g. Atlas robot)
         # 1: export Shapes
         if link.visual:
@@ -210,8 +212,8 @@ def writeLinkPhysics(robotFile, link, level):
     robotFile.write((level + 2) * indent + 'density -1\n')
     robotFile.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
     robotFile.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
-                                                                        link.inertia.position[1],
-                                                                        link.inertia.position[2]))
+                                                                               link.inertia.position[1],
+                                                                               link.inertia.position[2]))
     if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
         i = link.inertia
         inertiaMatrix = [i.ixx, i.ixy, i.ixz, i.ixy, i.iyy, i.iyz, i.ixz, i.iyz, i.izz]
@@ -251,17 +253,17 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
             robotFile.write(initialIndent + 'Transform {\n')
             if boundingObject.position != [0.0, 0.0, 0.0]:
                 robotFile.write((boundingLevel + 1) * indent + 'translation %lf %lf %lf\n' % (boundingObject.position[0],
-                                                                                        boundingObject.position[1],
-                                                                                        boundingObject.position[2]))
+                                                                                              boundingObject.position[1],
+                                                                                              boundingObject.position[2]))
             if boundingObject.rotation[3] != 0.0:
                 robotFile.write((boundingLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (boundingObject.rotation[0],
-                                                                                        boundingObject.rotation[1],
-                                                                                        boundingObject.rotation[2],
-                                                                                        boundingObject.rotation[3]))
+                                                                                               boundingObject.rotation[1],
+                                                                                               boundingObject.rotation[2],
+                                                                                               boundingObject.rotation[3]))
             if boundingObject.scale != [1.0, 1.0, 1.0]:
                 robotFile.write((boundingLevel + 1) * indent + 'scale %lf %lf %lf\n' % (boundingObject.scale[0],
-                                                                                    boundingObject.scale[1],
-                                                                                    boundingObject.scale[2]))
+                                                                                        boundingObject.scale[1],
+                                                                                        boundingObject.scale[2]))
             robotFile.write((boundingLevel + 1) * indent + 'children [\n')
             boundingLevel = boundingLevel + 2
             hasGroup = True
@@ -271,8 +273,8 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
             robotFile.write(initialIndent + 'Box {\n')
             if boundingObject.geometry.box != [2.0, 2.0, 2.0]:
                 robotFile.write((boundingLevel + 1) * indent + ' size %lf %lf %lf\n' % (boundingObject.geometry.box.x,
-                                                                                boundingObject.geometry.box.y,
-                                                                                boundingObject.geometry.box.z))
+                                                                                        boundingObject.geometry.box.y,
+                                                                                        boundingObject.geometry.box.z))
             robotFile.write(boundingLevel * indent + '}\n')
 
         elif boundingObject.geometry.cylinder.radius != 0 and boundingObject.geometry.cylinder.height != 0:
@@ -332,19 +334,20 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
     indent = '  '
     shapeLevel = level
 
-    if visualNode.geometry.colladaShapes.url:
+    if visualNode.geometry.colladaShape.url:
         if visualNode.geometry.defName is not None:
             robotFile.write(shapeLevel * indent + 'USE %s\n' % visualNode.geometry.defName)
         else:
             if visualNode.geometry.name is not None:
                 visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
             if visualNode.geometry.defName is not None:
-                robotFile.write(shapeLevel * indent + 'DEF %s ColladaShapes {\n' % visualNode.geometry.defName)
+                robotFile.write(shapeLevel * indent + 'DEF %s ColladaShape {\n' % visualNode.geometry.defName)
             else:
-                robotFile.write(shapeLevel * indent + 'ColladaShapes {\n')
+                robotFile.write(shapeLevel * indent + 'ColladaShape {\n')
 
-            robotFile.write((shapeLevel + 1) * indent + 'url ' + str(visualNode.geometry.colladaShapes.url) + '\n')
-
+            robotFile.write((shapeLevel + 1) * indent + 'url ' + str(visualNode.geometry.colladaShape.url) + '\n')
+            if not visualNode.geometry.colladaShape.ccw:
+                robotFile.write((shapeLevel + 1) * indent + 'ccw FALSE\n')
     else:
         robotFile.write(shapeLevel * indent + 'Shape {\n')
 
@@ -367,8 +370,8 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
                 roughness *= (1.0 - 0.5 * visualNode.material.shininess)
             if diffuseColor != [1.0, 1.0, 1.0]:
                 robotFile.write((shapeLevel + 2) * indent + 'baseColor %lf %lf %lf\n' % (diffuseColor.red,
-                                                                                diffuseColor.green,
-                                                                                diffuseColor.blue))
+                                                                                         diffuseColor.green,
+                                                                                         diffuseColor.blue))
             if visualNode.material.diffuse.alpha != 1.0:
                 robotFile.write((shapeLevel + 2) * indent + 'transparency %lf\n' % (1.0 - visualNode.material.diffuse.alpha))
             if roughness != 0.0:
@@ -376,8 +379,8 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
             robotFile.write((shapeLevel + 2) * indent + 'metalness 0\n')
             if emissiveColor != [0.0, 0.0, 0.0]:
                 robotFile.write((shapeLevel + 2) * indent + 'emissiveColor %lf %lf %lf\n' % (emissiveColor.red,
-                                                                                    emissiveColor.green,
-                                                                                    emissiveColor.blue))
+                                                                                             emissiveColor.green,
+                                                                                             emissiveColor.blue))
             if visualNode.material.texture != "":
                 robotFile.write((shapeLevel + 2) * indent + 'baseColorMap ImageTexture {\n')
                 robotFile.write((shapeLevel + 3) * indent + 'url "' + visualNode.material.texture + '"\n')
@@ -392,8 +395,8 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
             robotFile.write((shapeLevel + 1) * indent + 'geometry Box {\n')
             if visualNode.geometry.box != [2.0, 2.0, 2.0]:
                 robotFile.write((shapeLevel + 2) * indent + ' size %lf %lf %lf\n' % (visualNode.geometry.box.x,
-                                                                                visualNode.geometry.box.y,
-                                                                                visualNode.geometry.box.z))
+                                                                                     visualNode.geometry.box.y,
+                                                                                     visualNode.geometry.box.z))
             robotFile.write((shapeLevel + 1) * indent + '}\n')
 
         elif visualNode.geometry.cylinder.radius != 0:
@@ -440,17 +443,17 @@ def URDFShape(robotFile, link, level, normal=False):
             robotFile.write(shapeLevel * indent + 'Transform {\n')
             if visualNode.position != [0.0, 0.0, 0.0]:
                 robotFile.write((shapeLevel + 1) * indent + 'translation %lf %lf %lf\n' % (visualNode.position[0],
-                                                                                    visualNode.position[1],
-                                                                                    visualNode.position[2]))
+                                                                                           visualNode.position[1],
+                                                                                           visualNode.position[2]))
             if visualNode.rotation[3] != 0.0:
                 robotFile.write((shapeLevel + 1) * indent + 'rotation %lf %lf %lf %lf\n' % (visualNode.rotation[0],
-                                                                                    visualNode.rotation[1],
-                                                                                    visualNode.rotation[2],
-                                                                                    visualNode.rotation[3]))
+                                                                                            visualNode.rotation[1],
+                                                                                            visualNode.rotation[2],
+                                                                                            visualNode.rotation[3]))
             if visualNode.scale != [1.0, 1.0, 1.0]:
                 robotFile.write((shapeLevel + 1) * indent + 'scale %lf %lf %lf\n' % (visualNode.scale[0],
-                                                                                visualNode.scale[1],
-                                                                                visualNode.scale[2]))
+                                                                                     visualNode.scale[1],
+                                                                                     visualNode.scale[2]))
             robotFile.write((shapeLevel + 1) * indent + 'children [\n')
             shapeLevel += 2
             transform = True
@@ -500,7 +503,8 @@ def URDFJoint(robotFile, joint, level, parentList, childList, linkList, jointLis
         if axis != [1.0, 0.0, 0.0]:
             robotFile.write((level + 2) * indent + 'axis %lf %lf %lf\n' % (axis[0], axis[1], axis[2]))
         if joint.position != [0.0, 0.0, 0.0]:
-            robotFile.write((level + 2) * indent + 'anchor %lf %lf %lf\n' % (joint.position[0], joint.position[1], joint.position[2]))
+            robotFile.write((level + 2) * indent + 'anchor %lf %lf %lf\n' %
+                            (joint.position[0], joint.position[1], joint.position[2]))
         if joint.dynamics.damping != 0.0:
             robotFile.write((level + 2) * indent + 'dampingConstant ' + str(joint.dynamics.damping) + '\n')
         if joint.dynamics.friction != 0.0:
