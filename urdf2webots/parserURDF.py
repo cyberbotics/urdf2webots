@@ -892,8 +892,13 @@ def removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot):
                     jointList.remove(jointList[childJointIndex])
                 else:
                     # Special case for dummy non-root links used to fix the base of the robot
-                    if isRootLink(jointList[parentJointIndex].parent, childList):
-                        staticBase = True
+                    parentLink = jointList[parentJointIndex].parent
+                    if isRootLink(parentLink, childList):
+                        # Ensure the parent link does not have physics, if it does, it should be kept as-is
+                        # since some sensors require the parent to have physics
+                        for l in linkList:
+                            if l.name is parentLink and l.inertia.mass is None:
+                                staticBase = True
 
                     jointList.remove(jointList[parentJointIndex])
 
