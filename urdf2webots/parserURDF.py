@@ -897,7 +897,7 @@ def removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot):
                         # Ensure the parent link does not have physics, if it does, it should be kept as-is
                         # since some sensors require the parent to have physics
                         for l in linkList:
-                            if l.name is parentLink and l.inertia.mass is None:
+                            if l.name == parentLink and l.inertia.mass is None:
                                 staticBase = True
 
                     jointList.remove(jointList[parentJointIndex])
