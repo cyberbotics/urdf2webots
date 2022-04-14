@@ -334,19 +334,19 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
     indent = '  '
     shapeLevel = level
 
-    if visualNode.geometry.colladaShape.url:
+    if visualNode.geometry.cadShape.url:
         if visualNode.geometry.defName is not None:
             robotFile.write(shapeLevel * indent + 'USE %s\n' % visualNode.geometry.defName)
         else:
             if visualNode.geometry.name is not None:
                 visualNode.geometry.defName = computeDefName(visualNode.geometry.name)
             if visualNode.geometry.defName is not None:
-                robotFile.write(shapeLevel * indent + 'DEF %s ColladaShape {\n' % visualNode.geometry.defName)
+                robotFile.write(shapeLevel * indent + 'DEF %s CadShape {\n' % visualNode.geometry.defName)
             else:
-                robotFile.write(shapeLevel * indent + 'ColladaShape {\n')
+                robotFile.write(shapeLevel * indent + 'CadShape {\n')
 
-            robotFile.write((shapeLevel + 1) * indent + 'url ' + str(visualNode.geometry.colladaShape.url) + '\n')
-            if not visualNode.geometry.colladaShape.ccw:
+            robotFile.write((shapeLevel + 1) * indent + 'url ' + str(visualNode.geometry.cadShape.url) + '\n')
+            if not visualNode.geometry.cadShape.ccw:
                 robotFile.write((shapeLevel + 1) * indent + 'ccw FALSE\n')
     else:
         robotFile.write(shapeLevel * indent + 'Shape {\n')

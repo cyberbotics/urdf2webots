@@ -72,8 +72,8 @@ class Mesh():
         self.ccw = True
 
 
-class ColladaShape():
-    """Define colladaShape object."""
+class CadShape():
+    """Define CadShape object."""
 
     def __init__(self):
         """Initializatization."""
@@ -92,7 +92,7 @@ class Geometry():
         self.cylinder = Cylinder()
         self.sphere = Sphere()
         self.mesh = Mesh()
-        self.colladaShape = ColladaShape()
+        self.cadShape = CadShape()
         self.name = None
         self.defName = None
 
@@ -575,7 +575,7 @@ def getVisual(link, node, path):
                     visual.geometry = Geometry.reference[name]
                 else:
                     if extension == '.dae':
-                        visual.geometry.colladaShape.url = '"' + meshfile + '"'
+                        visual.geometry.cadShape.url = '"' + meshfile + '"'
                     else:
                         visual.geometry.mesh.url = '"' + meshfile + '"'
                     visual.geometry.name = name
