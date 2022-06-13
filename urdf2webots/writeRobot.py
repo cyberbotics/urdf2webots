@@ -103,6 +103,7 @@ def URDFLink(robotFile, link, level, parentList,
         if link.forceSensor:
             robotFile.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if linkToDef else '') + 'TouchSensor {\n')
             robotFile.write((level + 1) * indent + 'type "force-3d"\n')
+            robotFile.write((level + 1) * indent + 'lookupTable []\n')
         else:
             robotFile.write((' ' if endpoint else level * indent) + ('DEF ' + link.name + ' ' if linkToDef else '') + 'Solid {\n')
             if not isProto:
