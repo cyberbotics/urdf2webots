@@ -26,7 +26,7 @@ PROTO Human [
     synchronization IS synchronization
     selfCollision IS selfCollision
     children [
-      DEF Pelvis CadShape {
+      DEF Pelvis_visual CadShape {
         url "root://tests/sources/gait2392_simbody/meshes/obj/Pelvis.obj"
       }
       HingeJoint {
@@ -49,7 +49,7 @@ PROTO Human [
         endPoint Solid {
           translation -0.070700 0.083500 -0.066100
           children [
-            DEF Femur_L CadShape {
+            DEF Femur_L_visual CadShape {
               url "root://tests/sources/gait2392_simbody/meshes/obj/Femur L.obj"
             }
             HingeJoint {
@@ -72,7 +72,7 @@ PROTO Human [
               endPoint Solid {
                 translation -0.004500 0.000000 -0.395821
                 children [
-                  DEF Tibia_L CadShape {
+                  DEF Tibia_L_visual CadShape {
                     url "root://tests/sources/gait2392_simbody/meshes/obj/Tibia L.obj"
                   }
                   HingeJoint {
@@ -95,7 +95,7 @@ PROTO Human [
                     endPoint Solid {
                       translation 0.000000 0.000000 -0.430000
                       children [
-                        DEF Talus_L CadShape {
+                        DEF Talus_L_visual CadShape {
                           url "root://tests/sources/gait2392_simbody/meshes/obj/Talus L.obj"
                         }
                         HingeJoint {
@@ -118,7 +118,7 @@ PROTO Human [
                           endPoint Solid {
                             translation -0.048770 0.007920 -0.041950
                             children [
-                              DEF Calcn_L CadShape {
+                              DEF Calcn_L_visual CadShape {
                                 url "root://tests/sources/gait2392_simbody/meshes/obj/Calcn L.obj"
                               }
                               HingeJoint {
@@ -141,7 +141,7 @@ PROTO Human [
                                 endPoint Solid {
                                   translation 0.178800 0.001080 -0.002000
                                   children [
-                                    DEF Toes_L CadShape {
+                                    DEF Toes_L_visual CadShape {
                                       url "root://tests/sources/gait2392_simbody/meshes/obj/Toes L.obj"
                                     }
                                   ]
@@ -243,7 +243,7 @@ PROTO Human [
         endPoint Solid {
           translation -0.070700 -0.083500 -0.066100
           children [
-            DEF Femur_R CadShape {
+            DEF Femur_R_visual CadShape {
               url "root://tests/sources/gait2392_simbody/meshes/obj/Femur R.obj"
             }
             HingeJoint {
@@ -266,7 +266,7 @@ PROTO Human [
               endPoint Solid {
                 translation -0.004500 0.000000 -0.395821
                 children [
-                  DEF Tibia_R CadShape {
+                  DEF Tibia_R_visual CadShape {
                     url "root://tests/sources/gait2392_simbody/meshes/obj/Tibia R.obj"
                   }
                   HingeJoint {
@@ -289,7 +289,7 @@ PROTO Human [
                     endPoint Solid {
                       translation 0.000000 0.000000 -0.430000
                       children [
-                        DEF Talus_R CadShape {
+                        DEF Talus_R_visual CadShape {
                           url "root://tests/sources/gait2392_simbody/meshes/obj/Talus R.obj"
                         }
                         HingeJoint {
@@ -315,7 +315,7 @@ PROTO Human [
                               Transform {
                                 scale 1.000000 -1.000000 1.000000
                                 children [
-                                  USE Calcn_L
+                                  USE Calcn_L_visual
                                 ]
                               }
                               HingeJoint {
@@ -338,7 +338,7 @@ PROTO Human [
                                 endPoint Solid {
                                   translation 0.178800 -0.001080 -0.002000
                                   children [
-                                    DEF Toes_R CadShape {
+                                    DEF Toes_R_visual CadShape {
                                       url "root://tests/sources/gait2392_simbody/meshes/obj/Toes R.obj"
                                     }
                                   ]
@@ -447,7 +447,7 @@ PROTO Human [
         endPoint Solid {
           translation -0.100700 0.000000 0.081500
           children [
-            DEF Torso CadShape {
+            DEF Torso_visual CadShape {
               url "root://tests/sources/gait2392_simbody/meshes/obj/Torso.obj"
             }
             HingeJoint {
@@ -470,7 +470,7 @@ PROTO Human [
               endPoint Solid {
                 translation 0.003155 0.170000 0.371500
                 children [
-                  DEF Humerus_L CadShape {
+                  DEF Humerus_L_visual CadShape {
                     url "root://tests/sources/gait2392_simbody/meshes/obj/Humerus L.obj"
                   }
                   HingeJoint {
@@ -493,7 +493,7 @@ PROTO Human [
                     endPoint Solid {
                       translation 0.013144 -0.009595 -0.286273
                       children [
-                        DEF Ulna_L CadShape {
+                        DEF Ulna_L_visual CadShape {
                           url "root://tests/sources/gait2392_simbody/meshes/obj/Ulna L.obj"
                         }
                         HingeJoint {
@@ -516,7 +516,7 @@ PROTO Human [
                           endPoint Solid {
                             translation -0.006727 0.026083 -0.013007
                             children [
-                              DEF Radius_L CadShape {
+                              DEF Radius_L_visual CadShape {
                                 url "root://tests/sources/gait2392_simbody/meshes/obj/Radius L.obj"
                               }
                               HingeJoint {
@@ -539,7 +539,7 @@ PROTO Human [
                                 endPoint Solid {
                                   translation -0.008797 0.013610 -0.235841
                                   children [
-                                    DEF Hand_L CadShape {
+                                    DEF Hand_L_visual CadShape {
                                       url "root://tests/sources/gait2392_simbody/meshes/obj/Hand L.obj"
                                     }
                                   ]
@@ -626,7 +626,7 @@ PROTO Human [
               endPoint Solid {
                 translation 0.003155 -0.170000 0.371500
                 children [
-                  DEF Humerus_R CadShape {
+                  DEF Humerus_R_visual CadShape {
                     url "root://tests/sources/gait2392_simbody/meshes/obj/Humerus R.obj"
                   }
                   HingeJoint {
@@ -649,7 +649,7 @@ PROTO Human [
                     endPoint Solid {
                       translation 0.013144 0.009595 -0.286273
                       children [
-                        DEF Ulna_R CadShape {
+                        DEF Ulna_R_visual CadShape {
                           url "root://tests/sources/gait2392_simbody/meshes/obj/Ulna R.obj"
                         }
                         HingeJoint {
@@ -672,7 +672,7 @@ PROTO Human [
                           endPoint Solid {
                             translation -0.006727 -0.026083 -0.013007
                             children [
-                              DEF Radius_R CadShape {
+                              DEF Radius_R_visual CadShape {
                                 url "root://tests/sources/gait2392_simbody/meshes/obj/Radius R.obj"
                               }
                               HingeJoint {
@@ -695,7 +695,7 @@ PROTO Human [
                                 endPoint Solid {
                                   translation -0.008797 -0.013610 -0.235841
                                   children [
-                                    DEF Hand_R CadShape {
+                                    DEF Hand_R_visual CadShape {
                                       url "root://tests/sources/gait2392_simbody/meshes/obj/Hand R.obj"
                                     }
                                   ]

@@ -101,8 +101,8 @@ def URDFLink(robotFile, link, level, parentList,
             robotFile.write((level + 1) * indent + 'synchronization IS synchronization\n')
             robotFile.write((level + 1) * indent + 'selfCollision IS selfCollision\n')
         else:
-            robotFile.write((level + 1) * indent + 'translation '+initTranslation+'\n')
-            robotFile.write((level + 1) * indent + 'rotation '+initRotation+'\n')
+            robotFile.write((level + 1) * indent + 'translation ' + initTranslation + '\n')
+            robotFile.write((level + 1) * indent + 'rotation ' + initRotation + '\n')
     else:
         if link.forceSensor:
             robotFile.write((' ' if endpoint else level * indent) + ('DEF ' +
@@ -199,7 +199,7 @@ def URDFLink(robotFile, link, level, parentList,
                     robotFile.write((level + 1) * indent + '}\n')
     if not isProto:
         if robot:
-            robotFile.write((level + 1) * indent + 'name "'+robotName+'"\n')
+            robotFile.write((level + 1) * indent + 'name "' + robotName + '"\n')
             robotFile.write((level + 1) * indent + 'controller "<extern>"\n')
     robotFile.write(level * indent + '}\n')
 
@@ -303,7 +303,7 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
                     robotFile.write(initialIndent + 'Mesh {\n')
 
                 robotFile.write((boundingLevel + 1) * indent + 'url ' + str(boundingObject.geometry.mesh.url) + '\n')
-                if not boundingObject.geometry.mesh.ccw or not boundingObject.geometry.cadShape.ccw:
+                if not boundingObject.geometry.mesh.ccw:
                     robotFile.write((boundingLevel + 1) * indent + 'ccw FALSE\n')
                 robotFile.write(boundingLevel * indent + '}\n')
 

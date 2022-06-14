@@ -18,6 +18,7 @@ from urdf2webots.math_utils import convertRPYtoEulerAxis, rotateVector, combineR
 # to pass from external
 robotName = ''
 
+
 class Inertia():
     """Define inertia object."""
 
@@ -569,6 +570,8 @@ def getVisual(link, node, path):
             extension = os.path.splitext(meshfile)[1].lower()
             if extension in ['.dae', '.obj', '.stl']:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
+                if extension in ['.dae', '.obj']:
+                    name += '_visual'
                 if not visual.geometry.mesh.ccw:
                     name += '_cw'
                 if name in Geometry.reference:
@@ -616,32 +619,28 @@ def getCollision(link, node, path):
         elif hasElement(geometryElement, 'mesh'):
             meshfile = os.path.normpath(os.path.join(path,
                                                      geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')))
+            extension = os.path.splitext(meshfile)[1].lower()
             if geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale'):
                 meshScale = geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale').split()
                 collision.scale[0] = float(meshScale[0])
                 collision.scale[1] = float(meshScale[1])
                 collision.scale[2] = float(meshScale[2])
                 if collision.scale[0] * collision.scale[1] * collision.scale[2] < 0.0:
-                    extension = os.path.splitext(meshfile)[1].lower()
-                    if extension in ['.dae', '.obj']:
-                        collision.geometry.cadShape.ccw = False
-                    else:
+                    if extension in ['.dae', '.obj', '.stl']:
                         collision.geometry.mesh.ccw = False
             # hack for gazebo mesh database
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
                 meshfile = meshfile[idx0 + len('package://'):]
-            extension = os.path.splitext(meshfile)[1].lower()
+
             if extension in ['.dae', '.obj', '.stl']:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
-                if not collision.geometry.mesh.ccw or not collision.geometry.cadShape.ccw:
+                if not collision.geometry.mesh.ccw:
                     name += '_cw'
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
                 else:
-                    if extension in ['.dae', '.obj']:
-                        collision.geometry.cadShape.url = '"' + meshfile + '"'
-                    else:
+                    if extension in ['.dae', '.obj', '.stl']:
                         collision.geometry.mesh.url = '"' + meshfile + '"'
                     collision.geometry.name = name
                     Geometry.reference[name] = collision.geometry
