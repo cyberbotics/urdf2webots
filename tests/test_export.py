@@ -54,9 +54,6 @@ def fileCompare(file1, file2):
             elif line1.startswith('#VRML_SIM') and line2.startswith('#VRML_SIM'):
                 # This line may differ according to Webots version used
                 continue
-            elif 'CI' not in os.environ and '/home/runner/work/' in line2:
-                # When testing locally, the paths may differ.
-                continue
             elif line1 != line2:
                 # Prints the difference between result and expected line
                 print('Diff (line ' + str(i) + ') in ' + file1)
