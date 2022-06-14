@@ -29,7 +29,7 @@ PROTO KukaLbrIiwa14R820 [
     children [
       Solid {
         children [
-          DEF base_link_collada CadShape {
+          DEF base_link CadShape {
             url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae"
           }
           HingeJoint {
@@ -50,7 +50,7 @@ PROTO KukaLbrIiwa14R820 [
             ]
             endPoint Solid {
               children [
-                DEF link_1_collada CadShape {
+                DEF link_1 CadShape {
                   url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_1.dae"
                 }
                 HingeJoint {
@@ -73,7 +73,7 @@ PROTO KukaLbrIiwa14R820 [
                   endPoint Solid {
                     translation -0.000436 0.000000 0.360000
                     children [
-                      DEF link_2_collada CadShape {
+                      DEF link_2 CadShape {
                         url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_2.dae"
                       }
                       HingeJoint {
@@ -94,7 +94,7 @@ PROTO KukaLbrIiwa14R820 [
                         ]
                         endPoint Solid {
                           children [
-                            DEF link_3_collada CadShape {
+                            DEF link_3 CadShape {
                               url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_3.dae"
                             }
                             HingeJoint {
@@ -117,7 +117,7 @@ PROTO KukaLbrIiwa14R820 [
                               endPoint Solid {
                                 translation 0.000436 0.000000 0.420000
                                 children [
-                                  DEF link_4_collada CadShape {
+                                  DEF link_4 CadShape {
                                     url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_4.dae"
                                   }
                                   HingeJoint {
@@ -138,7 +138,7 @@ PROTO KukaLbrIiwa14R820 [
                                     ]
                                     endPoint Solid {
                                       children [
-                                        DEF link_5_collada CadShape {
+                                        DEF link_5 CadShape {
                                           url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_5.dae"
                                         }
                                         HingeJoint {
@@ -161,7 +161,7 @@ PROTO KukaLbrIiwa14R820 [
                                           endPoint Solid {
                                             translation 0.000000 0.000000 0.400000
                                             children [
-                                              DEF link_6_collada CadShape {
+                                              DEF link_6 CadShape {
                                                 url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_6.dae"
                                               }
                                               HingeJoint {
@@ -182,7 +182,7 @@ PROTO KukaLbrIiwa14R820 [
                                                 ]
                                                 endPoint Solid {
                                                   children [
-                                                    DEF link_7_collada CadShape {
+                                                    DEF link_7 CadShape {
                                                       url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_7.dae"
                                                     }
                                                     Solid {
