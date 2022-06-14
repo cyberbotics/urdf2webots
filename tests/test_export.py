@@ -72,6 +72,18 @@ class TestScript(unittest.TestCase):
         """Cleanup results directory."""
         shutil.rmtree(resultDirectory, ignore_errors=True)
 
+        # prepare urls
+        rootPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        for root, dirs, files in os.walk(os.path.join(rootPath, 'tests', 'expected')):
+            for file in files:
+                with open(os.path.join(root, file), 'r') as f:
+                    contents = f.read()
+                    contents = contents.replace('root://', rootPath + '/')
+
+                with open(os.path.join(root, file), 'w') as f:
+                    f.write(contents)
+
     def test_script_produces_the_correct_result(self):
         """Test that urdf2webots produces an expected result."""
         print("Proto files tests...")
@@ -94,6 +106,19 @@ class TestScript(unittest.TestCase):
             for expected in paths['expected']:
                 self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected),
                                 msg='Expected result mismatch when exporting "%s"' % paths['input'])
+
+    def tearDown(self):
+        # undo url changes
+        rootPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        for root, dirs, files in os.walk(os.path.join(rootPath, 'tests', 'expected')):
+            for file in files:
+                with open(os.path.join(root, file), 'r') as f:
+                    contents = f.read()
+                    contents = contents.replace(rootPath + '/', 'root://')
+
+                with open(os.path.join(root, file), 'w') as f:
+                    f.write(contents)
 
 
 if __name__ == '__main__':

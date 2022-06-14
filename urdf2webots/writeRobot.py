@@ -303,7 +303,7 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
                     robotFile.write(initialIndent + 'Mesh {\n')
 
                 robotFile.write((boundingLevel + 1) * indent + 'url ' + str(boundingObject.geometry.mesh.url) + '\n')
-                if not boundingObject.geometry.mesh.ccw:
+                if not boundingObject.geometry.mesh.ccw or not boundingObject.geometry.cadShape.ccw:
                     robotFile.write((boundingLevel + 1) * indent + 'ccw FALSE\n')
                 robotFile.write(boundingLevel * indent + '}\n')
 
@@ -348,6 +348,8 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
             robotFile.write((shapeLevel + 1) * indent + 'url ' + str(visualNode.geometry.cadShape.url) + '\n')
             if not visualNode.geometry.cadShape.ccw:
                 robotFile.write((shapeLevel + 1) * indent + 'ccw FALSE\n')
+
+            robotFile.write(shapeLevel * indent + '}\n')
     else:
         robotFile.write(shapeLevel * indent + 'Shape {\n')
 
@@ -425,11 +427,11 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
                     robotFile.write((shapeLevel + 1) * indent + 'geometry Mesh {\n')
 
                 robotFile.write((shapeLevel + 2) * indent + 'url ' + str(visualNode.geometry.mesh.url) + '\n')
-                if not visualNode.geometry.mesh.ccw:
+                if not visualNode.geometry.mesh.ccw or not visualNode.geometry.cadShape.ccw:
                     robotFile.write((shapeLevel + 2) * indent + 'ccw FALSE\n')
                 robotFile.write((shapeLevel + 1) * indent + '}\n')
 
-    robotFile.write(shapeLevel * indent + '}\n')
+        robotFile.write(shapeLevel * indent + '}\n')
 
 
 def URDFShape(robotFile, link, level, normal=False):

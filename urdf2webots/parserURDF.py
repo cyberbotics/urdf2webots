@@ -17,8 +17,6 @@ from urdf2webots.math_utils import convertRPYtoEulerAxis, rotateVector, combineR
 
 # to pass from external
 robotName = ''
-extensionListSingleAppearance = ['.stl', '.obj']
-
 
 class Inertia():
     """Define inertia object."""
@@ -563,18 +561,20 @@ def getVisual(link, node, path):
                 visual.scale[1] = float(meshScale[1])
                 visual.scale[2] = float(meshScale[2])
                 if visual.scale[0] * visual.scale[1] * visual.scale[2] < 0.0:
-                    visual.geometry.mesh.ccw = False
+                    extension = os.path.splitext(meshfile)[1].lower()
+                    if extension in ['.dae', '.obj']:
+                        visual.geometry.cadShape.ccw = False
+                    else:
+                        visual.geometry.mesh.ccw = False
             extension = os.path.splitext(meshfile)[1].lower()
-            if extension in extensionListSingleAppearance or extension == '.dae':
+            if extension in ['.dae', '.obj', '.stl']:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
-                if extension == '.dae':
-                    name += '_collada'
                 if not visual.geometry.mesh.ccw:
                     name += '_cw'
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
-                    if extension == '.dae':
+                    if extension in ['.dae', '.obj']:
                         visual.geometry.cadShape.url = '"' + meshfile + '"'
                     else:
                         visual.geometry.mesh.url = '"' + meshfile + '"'
@@ -582,7 +582,7 @@ def getVisual(link, node, path):
                     Geometry.reference[name] = visual.geometry
                 link.visual.append(visual)
             else:
-                print('Unsupported mesh format: \"' + extension + '\"')
+                print('Unsupported  format: \"' + extension + '\"')
 
 
 def getCollision(link, node, path):
@@ -622,20 +622,27 @@ def getCollision(link, node, path):
                 collision.scale[1] = float(meshScale[1])
                 collision.scale[2] = float(meshScale[2])
                 if collision.scale[0] * collision.scale[1] * collision.scale[2] < 0.0:
-                    collision.geometry.mesh.ccw = False
+                    extension = os.path.splitext(meshfile)[1].lower()
+                    if extension in ['.dae', '.obj']:
+                        collision.geometry.cadShape.ccw = False
+                    else:
+                        collision.geometry.mesh.ccw = False
             # hack for gazebo mesh database
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
                 meshfile = meshfile[idx0 + len('package://'):]
             extension = os.path.splitext(meshfile)[1].lower()
-            if extension in extensionListSingleAppearance or extension == '.dae':
+            if extension in ['.dae', '.obj', '.stl']:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
-                if not collision.geometry.mesh.ccw:
+                if not collision.geometry.mesh.ccw or not collision.geometry.cadShape.ccw:
                     name += '_cw'
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
                 else:
-                    collision.geometry.mesh.url = '"' + meshfile + '"'
+                    if extension in ['.dae', '.obj']:
+                        collision.geometry.cadShape.url = '"' + meshfile + '"'
+                    else:
+                        collision.geometry.mesh.url = '"' + meshfile + '"'
                     collision.geometry.name = name
                     Geometry.reference[name] = collision.geometry
                 link.collision.append(collision)
