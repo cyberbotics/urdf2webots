@@ -4,8 +4,8 @@ Robot {
   children [
     Solid {
       children [
-        DEF base_link_collada ColladaShapes {
-          url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae"
+        DEF base_link_visual CadShape {
+          url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/base_link.dae"
         }
         HingeJoint {
           jointParameters HingeJointParameters {
@@ -25,8 +25,8 @@ Robot {
           ]
           endPoint Solid {
             children [
-              DEF link_1_collada ColladaShapes {
-                url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_1.dae"
+              DEF link_1_visual CadShape {
+                url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_1.dae"
               }
               HingeJoint {
                 jointParameters HingeJointParameters {
@@ -48,8 +48,8 @@ Robot {
                 endPoint Solid {
                   translation -0.000436 0.000000 0.360000
                   children [
-                    DEF link_2_collada ColladaShapes {
-                      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_2.dae"
+                    DEF link_2_visual CadShape {
+                      url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_2.dae"
                     }
                     HingeJoint {
                       jointParameters HingeJointParameters {
@@ -69,8 +69,8 @@ Robot {
                       ]
                       endPoint Solid {
                         children [
-                          DEF link_3_collada ColladaShapes {
-                            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_3.dae"
+                          DEF link_3_visual CadShape {
+                            url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_3.dae"
                           }
                           HingeJoint {
                             jointParameters HingeJointParameters {
@@ -92,8 +92,8 @@ Robot {
                             endPoint Solid {
                               translation 0.000436 0.000000 0.420000
                               children [
-                                DEF link_4_collada ColladaShapes {
-                                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_4.dae"
+                                DEF link_4_visual CadShape {
+                                  url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_4.dae"
                                 }
                                 HingeJoint {
                                   jointParameters HingeJointParameters {
@@ -113,8 +113,14 @@ Robot {
                                   ]
                                   endPoint Solid {
                                     children [
-                                      DEF link_5_collada ColladaShapes {
-                                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_5.dae"
+                                      Transform {
+                                        scale -1.000000 -1.000000 -1.000000
+                                        children [
+                                          DEF link_5_visual CadShape {
+                                            url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_5.dae"
+                                            ccw FALSE
+                                          }
+                                        ]
                                       }
                                       HingeJoint {
                                         jointParameters HingeJointParameters {
@@ -136,8 +142,8 @@ Robot {
                                         endPoint Solid {
                                           translation 0.000000 0.000000 0.400000
                                           children [
-                                            DEF link_6_collada ColladaShapes {
-                                              url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_6.dae"
+                                            DEF link_6_visual CadShape {
+                                              url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_6.dae"
                                             }
                                             HingeJoint {
                                               jointParameters HingeJointParameters {
@@ -157,13 +163,13 @@ Robot {
                                               ]
                                               endPoint Solid {
                                                 children [
-                                                  DEF link_7_collada ColladaShapes {
-                                                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_7.dae"
+                                                  DEF link_7_visual CadShape {
+                                                    url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_7.dae"
                                                   }
                                                 ]
                                                 name "solid7"
                                                 boundingObject DEF link_7 Mesh {
-                                                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_7.stl"
+                                                  url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_7.stl"
                                                 }
                                                 physics Physics {
                                                 }
@@ -172,7 +178,7 @@ Robot {
                                           ]
                                           name "solid6"
                                           boundingObject DEF link_6 Mesh {
-                                            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_6.stl"
+                                            url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_6.stl"
                                           }
                                           physics Physics {
                                           }
@@ -181,7 +187,7 @@ Robot {
                                     ]
                                     name "solid5"
                                     boundingObject DEF link_5 Mesh {
-                                      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_5.stl"
+                                      url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_5.stl"
                                     }
                                     physics Physics {
                                     }
@@ -190,7 +196,7 @@ Robot {
                               ]
                               name "solid4"
                               boundingObject DEF link_4 Mesh {
-                                url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_4.stl"
+                                url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_4.stl"
                               }
                               physics Physics {
                               }
@@ -199,7 +205,7 @@ Robot {
                         ]
                         name "solid3"
                         boundingObject DEF link_3 Mesh {
-                          url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_3.stl"
+                          url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_3.stl"
                         }
                         physics Physics {
                         }
@@ -208,7 +214,7 @@ Robot {
                   ]
                   name "solid2"
                   boundingObject DEF link_2 Mesh {
-                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_2.stl"
+                    url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_2.stl"
                   }
                   physics Physics {
                   }
@@ -217,7 +223,7 @@ Robot {
             ]
             name "solid1"
             boundingObject DEF link_1 Mesh {
-              url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_1.stl"
+              url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/link_1.stl"
             }
             physics Physics {
             }
@@ -226,7 +232,7 @@ Robot {
       ]
       name "solid0"
       boundingObject DEF base_link Mesh {
-        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/base_link.stl"
+        url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/collision/base_link.stl"
       }
       physics Physics {
       }

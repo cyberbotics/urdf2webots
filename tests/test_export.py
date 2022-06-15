@@ -54,9 +54,6 @@ def fileCompare(file1, file2):
             elif line1.startswith('#VRML_SIM') and line2.startswith('#VRML_SIM'):
                 # This line may differ according to Webots version used
                 continue
-            elif 'CI' not in os.environ and '/home/runner/work/' in line2:
-                # When testing locally, the paths may differ.
-                continue
             elif line1 != line2:
                 # Prints the difference between result and expected line
                 print('Diff (line ' + str(i) + ') in ' + file1)
@@ -71,6 +68,18 @@ class TestScript(unittest.TestCase):
     def setUp(self):
         """Cleanup results directory."""
         shutil.rmtree(resultDirectory, ignore_errors=True)
+
+        # prepare urls
+        rootPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        for root, dirs, files in os.walk(os.path.join(rootPath, 'tests', 'expected')):
+            for file in files:
+                with open(os.path.join(root, file), 'r') as f:
+                    contents = f.read()
+                    contents = contents.replace('root://', rootPath + '/')
+
+                with open(os.path.join(root, file), 'w') as f:
+                    f.write(contents)
 
     def test_script_produces_the_correct_result(self):
         """Test that urdf2webots produces an expected result."""
@@ -94,6 +103,19 @@ class TestScript(unittest.TestCase):
             for expected in paths['expected']:
                 self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected),
                                 msg='Expected result mismatch when exporting "%s"' % paths['input'])
+
+    def tearDown(self):
+        # undo url changes
+        rootPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        for root, dirs, files in os.walk(os.path.join(rootPath, 'tests', 'expected')):
+            for file in files:
+                with open(os.path.join(root, file), 'r') as f:
+                    contents = f.read()
+                    contents = contents.replace(rootPath + '/', 'root://')
+
+                with open(os.path.join(root, file), 'w') as f:
+                    f.write(contents)
 
 
 if __name__ == '__main__':

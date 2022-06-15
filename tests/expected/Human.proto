@@ -2,7 +2,7 @@
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # This is a proto file for Webots for the Human
-# Extracted from: /home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/urdf/human.urdf
+# Extracted from: root://tests/sources/gait2392_simbody/urdf/human.urdf
 
 PROTO Human [
   field  SFVec3f     translation     0 0 0
@@ -26,15 +26,8 @@ PROTO Human [
     synchronization IS synchronization
     selfCollision IS selfCollision
     children [
-      Shape {
-        appearance DEF mat_pelvis_visual PBRAppearance {
-          baseColor 0.500000 0.500000 0.500000
-          roughness 1.000000
-          metalness 0
-        }
-        geometry DEF Pelvis Mesh {
-          url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Pelvis.obj"
-        }
+      DEF Pelvis_visual CadShape {
+        url "root://tests/sources/gait2392_simbody/meshes/obj/Pelvis.obj"
       }
       HingeJoint {
         jointParameters HingeJointParameters {
@@ -56,15 +49,8 @@ PROTO Human [
         endPoint Solid {
           translation -0.070700 0.083500 -0.066100
           children [
-            Shape {
-              appearance DEF mat_femur_l_visual PBRAppearance {
-                baseColor 0.500000 0.500000 0.500000
-                roughness 1.000000
-                metalness 0
-              }
-              geometry DEF Femur_L Mesh {
-                url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Femur L.obj"
-              }
+            DEF Femur_L_visual CadShape {
+              url "root://tests/sources/gait2392_simbody/meshes/obj/Femur L.obj"
             }
             HingeJoint {
               jointParameters HingeJointParameters {
@@ -86,15 +72,8 @@ PROTO Human [
               endPoint Solid {
                 translation -0.004500 0.000000 -0.395821
                 children [
-                  Shape {
-                    appearance DEF mat_tibia_l_visual PBRAppearance {
-                      baseColor 0.500000 0.500000 0.500000
-                      roughness 1.000000
-                      metalness 0
-                    }
-                    geometry DEF Tibia_L Mesh {
-                      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Tibia L.obj"
-                    }
+                  DEF Tibia_L_visual CadShape {
+                    url "root://tests/sources/gait2392_simbody/meshes/obj/Tibia L.obj"
                   }
                   HingeJoint {
                     jointParameters HingeJointParameters {
@@ -116,15 +95,8 @@ PROTO Human [
                     endPoint Solid {
                       translation 0.000000 0.000000 -0.430000
                       children [
-                        Shape {
-                          appearance DEF mat_talus_l_visual PBRAppearance {
-                            baseColor 0.500000 0.500000 0.500000
-                            roughness 1.000000
-                            metalness 0
-                          }
-                          geometry DEF Talus_L Mesh {
-                            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Talus L.obj"
-                          }
+                        DEF Talus_L_visual CadShape {
+                          url "root://tests/sources/gait2392_simbody/meshes/obj/Talus L.obj"
                         }
                         HingeJoint {
                           jointParameters HingeJointParameters {
@@ -146,15 +118,8 @@ PROTO Human [
                           endPoint Solid {
                             translation -0.048770 0.007920 -0.041950
                             children [
-                              Shape {
-                                appearance DEF mat_calcn_l_visual PBRAppearance {
-                                  baseColor 0.500000 0.500000 0.500000
-                                  roughness 1.000000
-                                  metalness 0
-                                }
-                                geometry DEF Calcn_L Mesh {
-                                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Calcn L.obj"
-                                }
+                              DEF Calcn_L_visual CadShape {
+                                url "root://tests/sources/gait2392_simbody/meshes/obj/Calcn L.obj"
                               }
                               HingeJoint {
                                 jointParameters HingeJointParameters {
@@ -176,20 +141,13 @@ PROTO Human [
                                 endPoint Solid {
                                   translation 0.178800 0.001080 -0.002000
                                   children [
-                                    Shape {
-                                      appearance DEF mat_toes_l_visual PBRAppearance {
-                                        baseColor 0.500000 0.500000 0.500000
-                                        roughness 1.000000
-                                        metalness 0
-                                      }
-                                      geometry DEF Toes_L Mesh {
-                                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Toes L.obj"
-                                      }
+                                    DEF Toes_L_visual CadShape {
+                                      url "root://tests/sources/gait2392_simbody/meshes/obj/Toes L.obj"
                                     }
                                   ]
                                   name "toes_l"
                                   boundingObject DEF Toes_L_001 Mesh {
-                                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Toes L.001.obj"
+                                    url "root://tests/sources/gait2392_simbody/meshes/obj/Toes L.001.obj"
                                   }
                                   physics Physics {
                                     density -1
@@ -205,7 +163,7 @@ PROTO Human [
                             ]
                             name "calcn_l"
                             boundingObject DEF Calcn_L_001 Mesh {
-                              url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Calcn L.001.obj"
+                              url "root://tests/sources/gait2392_simbody/meshes/obj/Calcn L.001.obj"
                             }
                             physics Physics {
                               density -1
@@ -221,7 +179,7 @@ PROTO Human [
                       ]
                       name "talus_l"
                       boundingObject DEF Talus_L_001 Mesh {
-                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Talus L.001.obj"
+                        url "root://tests/sources/gait2392_simbody/meshes/obj/Talus L.001.obj"
                       }
                       physics Physics {
                         density -1
@@ -237,7 +195,7 @@ PROTO Human [
                 ]
                 name "tibia_l"
                 boundingObject DEF Tibia_L_001 Mesh {
-                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Tibia L.001.obj"
+                  url "root://tests/sources/gait2392_simbody/meshes/obj/Tibia L.001.obj"
                 }
                 physics Physics {
                   density -1
@@ -253,7 +211,7 @@ PROTO Human [
           ]
           name "femur_l"
           boundingObject DEF Femur_L_001 Mesh {
-            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Femur L.001.obj"
+            url "root://tests/sources/gait2392_simbody/meshes/obj/Femur L.001.obj"
           }
           physics Physics {
             density -1
@@ -285,15 +243,8 @@ PROTO Human [
         endPoint Solid {
           translation -0.070700 -0.083500 -0.066100
           children [
-            Shape {
-              appearance DEF mat_femur_r_visual PBRAppearance {
-                baseColor 0.500000 0.500000 0.500000
-                roughness 1.000000
-                metalness 0
-              }
-              geometry DEF Femur_R Mesh {
-                url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Femur R.obj"
-              }
+            DEF Femur_R_visual CadShape {
+              url "root://tests/sources/gait2392_simbody/meshes/obj/Femur R.obj"
             }
             HingeJoint {
               jointParameters HingeJointParameters {
@@ -315,15 +266,8 @@ PROTO Human [
               endPoint Solid {
                 translation -0.004500 0.000000 -0.395821
                 children [
-                  Shape {
-                    appearance DEF mat_tibia_r_visual PBRAppearance {
-                      baseColor 0.500000 0.500000 0.500000
-                      roughness 1.000000
-                      metalness 0
-                    }
-                    geometry DEF Tibia_R Mesh {
-                      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Tibia R.obj"
-                    }
+                  DEF Tibia_R_visual CadShape {
+                    url "root://tests/sources/gait2392_simbody/meshes/obj/Tibia R.obj"
                   }
                   HingeJoint {
                     jointParameters HingeJointParameters {
@@ -345,15 +289,8 @@ PROTO Human [
                     endPoint Solid {
                       translation 0.000000 0.000000 -0.430000
                       children [
-                        Shape {
-                          appearance DEF mat_talus_r_visual PBRAppearance {
-                            baseColor 0.500000 0.500000 0.500000
-                            roughness 1.000000
-                            metalness 0
-                          }
-                          geometry DEF Talus_R Mesh {
-                            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Talus R.obj"
-                          }
+                        DEF Talus_R_visual CadShape {
+                          url "root://tests/sources/gait2392_simbody/meshes/obj/Talus R.obj"
                         }
                         HingeJoint {
                           jointParameters HingeJointParameters {
@@ -378,17 +315,7 @@ PROTO Human [
                               Transform {
                                 scale 1.000000 -1.000000 1.000000
                                 children [
-                                  Shape {
-                                    appearance DEF mat_calcn_r_visual PBRAppearance {
-                                      baseColor 0.500000 0.500000 0.500000
-                                      roughness 1.000000
-                                      metalness 0
-                                    }
-                                    geometry DEF Calcn_L_cw Mesh {
-                                      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Calcn L.obj"
-                                      ccw FALSE
-                                    }
-                                  }
+                                  USE Calcn_L_visual
                                 ]
                               }
                               HingeJoint {
@@ -411,20 +338,13 @@ PROTO Human [
                                 endPoint Solid {
                                   translation 0.178800 -0.001080 -0.002000
                                   children [
-                                    Shape {
-                                      appearance DEF mat_toes_r_visual PBRAppearance {
-                                        baseColor 0.500000 0.500000 0.500000
-                                        roughness 1.000000
-                                        metalness 0
-                                      }
-                                      geometry DEF Toes_R Mesh {
-                                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Toes R.obj"
-                                      }
+                                    DEF Toes_R_visual CadShape {
+                                      url "root://tests/sources/gait2392_simbody/meshes/obj/Toes R.obj"
                                     }
                                   ]
                                   name "toes_r"
                                   boundingObject DEF Toes_R_001 Mesh {
-                                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Toes R.001.obj"
+                                    url "root://tests/sources/gait2392_simbody/meshes/obj/Toes R.001.obj"
                                   }
                                   physics Physics {
                                     density -1
@@ -443,7 +363,7 @@ PROTO Human [
                               scale 1.000000 -1.000000 1.000000
                               children [
                                 DEF Calcn_L_001_cw Mesh {
-                                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Calcn L.001.obj"
+                                  url "root://tests/sources/gait2392_simbody/meshes/obj/Calcn L.001.obj"
                                   ccw FALSE
                                 }
                               ]
@@ -462,7 +382,7 @@ PROTO Human [
                       ]
                       name "talus_r"
                       boundingObject DEF Talus_R_001 Mesh {
-                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Talus R.001.obj"
+                        url "root://tests/sources/gait2392_simbody/meshes/obj/Talus R.001.obj"
                       }
                       physics Physics {
                         density -1
@@ -478,7 +398,7 @@ PROTO Human [
                 ]
                 name "tibia_r"
                 boundingObject DEF Tibia_R_001 Mesh {
-                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Tibia R.001.obj"
+                  url "root://tests/sources/gait2392_simbody/meshes/obj/Tibia R.001.obj"
                 }
                 physics Physics {
                   density -1
@@ -494,7 +414,7 @@ PROTO Human [
           ]
           name "femur_r"
           boundingObject DEF Femur_R_001 Mesh {
-            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Femur R.001.obj"
+            url "root://tests/sources/gait2392_simbody/meshes/obj/Femur R.001.obj"
           }
           physics Physics {
             density -1
@@ -527,15 +447,8 @@ PROTO Human [
         endPoint Solid {
           translation -0.100700 0.000000 0.081500
           children [
-            Shape {
-              appearance DEF mat_torso_visual PBRAppearance {
-                baseColor 0.500000 0.500000 0.500000
-                roughness 1.000000
-                metalness 0
-              }
-              geometry DEF Torso Mesh {
-                url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Torso.obj"
-              }
+            DEF Torso_visual CadShape {
+              url "root://tests/sources/gait2392_simbody/meshes/obj/Torso.obj"
             }
             HingeJoint {
               jointParameters HingeJointParameters {
@@ -557,15 +470,8 @@ PROTO Human [
               endPoint Solid {
                 translation 0.003155 0.170000 0.371500
                 children [
-                  Shape {
-                    appearance DEF mat_humerus_l_visual PBRAppearance {
-                      baseColor 0.500000 0.500000 0.500000
-                      roughness 1.000000
-                      metalness 0
-                    }
-                    geometry DEF Humerus_L Mesh {
-                      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Humerus L.obj"
-                    }
+                  DEF Humerus_L_visual CadShape {
+                    url "root://tests/sources/gait2392_simbody/meshes/obj/Humerus L.obj"
                   }
                   HingeJoint {
                     jointParameters HingeJointParameters {
@@ -587,15 +493,8 @@ PROTO Human [
                     endPoint Solid {
                       translation 0.013144 -0.009595 -0.286273
                       children [
-                        Shape {
-                          appearance DEF mat_ulna_l_visual PBRAppearance {
-                            baseColor 0.500000 0.500000 0.500000
-                            roughness 1.000000
-                            metalness 0
-                          }
-                          geometry DEF Ulna_L Mesh {
-                            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Ulna L.obj"
-                          }
+                        DEF Ulna_L_visual CadShape {
+                          url "root://tests/sources/gait2392_simbody/meshes/obj/Ulna L.obj"
                         }
                         HingeJoint {
                           jointParameters HingeJointParameters {
@@ -617,15 +516,8 @@ PROTO Human [
                           endPoint Solid {
                             translation -0.006727 0.026083 -0.013007
                             children [
-                              Shape {
-                                appearance DEF mat_radius_l_visual PBRAppearance {
-                                  baseColor 0.500000 0.500000 0.500000
-                                  roughness 1.000000
-                                  metalness 0
-                                }
-                                geometry DEF Radius_L Mesh {
-                                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Radius L.obj"
-                                }
+                              DEF Radius_L_visual CadShape {
+                                url "root://tests/sources/gait2392_simbody/meshes/obj/Radius L.obj"
                               }
                               HingeJoint {
                                 jointParameters HingeJointParameters {
@@ -647,20 +539,13 @@ PROTO Human [
                                 endPoint Solid {
                                   translation -0.008797 0.013610 -0.235841
                                   children [
-                                    Shape {
-                                      appearance DEF mat_hand_l_visual PBRAppearance {
-                                        baseColor 0.500000 0.500000 0.500000
-                                        roughness 1.000000
-                                        metalness 0
-                                      }
-                                      geometry DEF Hand_L Mesh {
-                                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Hand L.obj"
-                                      }
+                                    DEF Hand_L_visual CadShape {
+                                      url "root://tests/sources/gait2392_simbody/meshes/obj/Hand L.obj"
                                     }
                                   ]
                                   name "hand_l"
                                   boundingObject DEF Hand_L_001 Mesh {
-                                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Hand L.001.obj"
+                                    url "root://tests/sources/gait2392_simbody/meshes/obj/Hand L.001.obj"
                                   }
                                   physics Physics {
                                     density -1
@@ -676,7 +561,7 @@ PROTO Human [
                             ]
                             name "radius_l"
                             boundingObject DEF Radius_L_001 Mesh {
-                              url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Radius L.001.obj"
+                              url "root://tests/sources/gait2392_simbody/meshes/obj/Radius L.001.obj"
                             }
                             physics Physics {
                               density -1
@@ -692,7 +577,7 @@ PROTO Human [
                       ]
                       name "ulna_l"
                       boundingObject DEF Ulna_L_001 Mesh {
-                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Ulna L.001.obj"
+                        url "root://tests/sources/gait2392_simbody/meshes/obj/Ulna L.001.obj"
                       }
                       physics Physics {
                         density -1
@@ -708,7 +593,7 @@ PROTO Human [
                 ]
                 name "humerus_l"
                 boundingObject DEF Humerus_L_001 Mesh {
-                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Humerus L.001.obj"
+                  url "root://tests/sources/gait2392_simbody/meshes/obj/Humerus L.001.obj"
                 }
                 physics Physics {
                   density -1
@@ -741,15 +626,8 @@ PROTO Human [
               endPoint Solid {
                 translation 0.003155 -0.170000 0.371500
                 children [
-                  Shape {
-                    appearance DEF mat_humerus_r_visual PBRAppearance {
-                      baseColor 0.500000 0.500000 0.500000
-                      roughness 1.000000
-                      metalness 0
-                    }
-                    geometry DEF Humerus_R Mesh {
-                      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Humerus R.obj"
-                    }
+                  DEF Humerus_R_visual CadShape {
+                    url "root://tests/sources/gait2392_simbody/meshes/obj/Humerus R.obj"
                   }
                   HingeJoint {
                     jointParameters HingeJointParameters {
@@ -771,15 +649,8 @@ PROTO Human [
                     endPoint Solid {
                       translation 0.013144 0.009595 -0.286273
                       children [
-                        Shape {
-                          appearance DEF mat_ulna_r_visual PBRAppearance {
-                            baseColor 0.500000 0.500000 0.500000
-                            roughness 1.000000
-                            metalness 0
-                          }
-                          geometry DEF Ulna_R Mesh {
-                            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Ulna R.obj"
-                          }
+                        DEF Ulna_R_visual CadShape {
+                          url "root://tests/sources/gait2392_simbody/meshes/obj/Ulna R.obj"
                         }
                         HingeJoint {
                           jointParameters HingeJointParameters {
@@ -801,15 +672,8 @@ PROTO Human [
                           endPoint Solid {
                             translation -0.006727 -0.026083 -0.013007
                             children [
-                              Shape {
-                                appearance DEF mat_radius_r_visual PBRAppearance {
-                                  baseColor 0.500000 0.500000 0.500000
-                                  roughness 1.000000
-                                  metalness 0
-                                }
-                                geometry DEF Radius_R Mesh {
-                                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Radius R.obj"
-                                }
+                              DEF Radius_R_visual CadShape {
+                                url "root://tests/sources/gait2392_simbody/meshes/obj/Radius R.obj"
                               }
                               HingeJoint {
                                 jointParameters HingeJointParameters {
@@ -831,20 +695,13 @@ PROTO Human [
                                 endPoint Solid {
                                   translation -0.008797 -0.013610 -0.235841
                                   children [
-                                    Shape {
-                                      appearance DEF mat_hand_r_visual PBRAppearance {
-                                        baseColor 0.500000 0.500000 0.500000
-                                        roughness 1.000000
-                                        metalness 0
-                                      }
-                                      geometry DEF Hand_R Mesh {
-                                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Hand R.obj"
-                                      }
+                                    DEF Hand_R_visual CadShape {
+                                      url "root://tests/sources/gait2392_simbody/meshes/obj/Hand R.obj"
                                     }
                                   ]
                                   name "hand_r"
                                   boundingObject DEF Hand_R_001 Mesh {
-                                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Hand R.001.obj"
+                                    url "root://tests/sources/gait2392_simbody/meshes/obj/Hand R.001.obj"
                                   }
                                   physics Physics {
                                     density -1
@@ -860,7 +717,7 @@ PROTO Human [
                             ]
                             name "radius_r"
                             boundingObject DEF Radius_R_001 Mesh {
-                              url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Radius R.001.obj"
+                              url "root://tests/sources/gait2392_simbody/meshes/obj/Radius R.001.obj"
                             }
                             physics Physics {
                               density -1
@@ -876,7 +733,7 @@ PROTO Human [
                       ]
                       name "ulna_r"
                       boundingObject DEF Ulna_R_001 Mesh {
-                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Ulna R.001.obj"
+                        url "root://tests/sources/gait2392_simbody/meshes/obj/Ulna R.001.obj"
                       }
                       physics Physics {
                         density -1
@@ -892,7 +749,7 @@ PROTO Human [
                 ]
                 name "humerus_r"
                 boundingObject DEF Humerus_R_001 Mesh {
-                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Humerus R.001.obj"
+                  url "root://tests/sources/gait2392_simbody/meshes/obj/Humerus R.001.obj"
                 }
                 physics Physics {
                   density -1
@@ -908,7 +765,7 @@ PROTO Human [
           ]
           name "torso"
           boundingObject DEF Torso_001 Mesh {
-            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Torso.001.obj"
+            url "root://tests/sources/gait2392_simbody/meshes/obj/Torso.001.obj"
           }
           physics Physics {
             density -1
@@ -924,7 +781,7 @@ PROTO Human [
     ]
     name IS name
     boundingObject DEF Pelvis_001 Mesh {
-      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/meshes/obj/Pelvis.001.obj"
+      url "root://tests/sources/gait2392_simbody/meshes/obj/Pelvis.001.obj"
     }
     physics Physics {
       density -1
