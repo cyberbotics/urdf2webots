@@ -585,7 +585,7 @@ def getVisual(link, node, path):
                     Geometry.reference[name] = visual.geometry
                 link.visual.append(visual)
             else:
-                print('Unsupported  format: \"' + extension + '\"')
+                print('Unsupported format: \"' + extension + '\"')
 
 
 def getCollision(link, node, path):
