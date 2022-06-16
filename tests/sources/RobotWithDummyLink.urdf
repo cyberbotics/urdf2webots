@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<robot name="RobotWithDummyLink">
+
+  <!-- This robot should have the shape of gate (Π) composed by 3 cylinders -->
+
+  <!-- "real" links -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.1" length="0.4"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.1" length="0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="link_1">
+    <visual>
+      <geometry>
+        <cylinder radius="0.1" length="0.4"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.1" length="0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="link_2">
+    <visual>
+      <geometry>
+        <cylinder radius="0.1" length="0.4"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.1" length="0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- dummy links -->
+
+  <link name="dummy_link_1"/>
+
+  <link name="dummy_link_2"/>
+  <link name="dummy_link_3"/>
+  <link name="dummy_link_4"/>
+
+  <!-- joints -->
+
+  <joint name="base_link_to_dummy_link_1" type="fixed">
+    <parent link="base_link"/>
+    <child link="dummy_link_1"/>
+    <origin xyz="0.3 0 0.3" rpy="0 0 0"/>
+  </joint>
+  <joint name="dummy_link_1_to_link_1" type="fixed">
+    <parent link="dummy_link_1"/>
+    <child link="link_1"/>
+    <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+  </joint>
+
+  <joint name="link_1_to_dummy_link_2" type="fixed">
+    <parent link="link_1"/>
+    <child link="dummy_link_2"/>
+    <origin xyz="1 0 0" rpy="0 3.1415 0"/>
+  </joint>
+  <joint name="dummy_link_2_to_dummy_link_3" type="fixed">
+    <parent link="dummy_link_2"/>
+    <child link="dummy_link_3"/>
+    <origin xyz="1 0 0" rpy="0 3.1415 0"/>
+  </joint>
+  <joint name="dummy_link_3_to_dummy_link_4" type="fixed">
+    <parent link="dummy_link_3"/>
+    <child link="dummy_link_4"/>
+    <origin xyz="0.15 0 0.15" rpy="0 0.7854 0"/>
+  </joint>
+  <joint name="dummy_link_4_to_link_2" type="fixed">
+    <parent link="dummy_link_4"/>
+    <child link="link_2"/>
+    <origin xyz="0 0 0.2121" rpy="0 0.7854 0"/>
+  </joint>
+
+</robot>

@@ -6,7 +6,7 @@ We love pull requests from everyone.
 
 1. Fork the repository: https://help.github.com/articles/fork-a-repo
 2. Create a branch in your fork: https://help.github.com/articles/creating-and-deleting-branches-within-your-repository
-3. Pull the branch as a pull request targeting `omichel:urdf2webots@master`: https://help.github.com/articles/creating-a-pull-request-from-a-fork
+3. Pull the branch as a pull request targeting `cyberbotics:urdf2webots@master`: https://help.github.com/articles/creating-a-pull-request-from-a-fork
 4. Wait for our awesome review :-)
 
 ## Coding Style
