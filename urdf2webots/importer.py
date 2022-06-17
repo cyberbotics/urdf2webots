@@ -60,7 +60,6 @@ def mkdirSafe(directory):
 
 
 def convertUrdfFile(input=None, output=None, robotName=None, normal=False, boxCollision=False,
-                 disableMeshOptimization=False, enableMultiFile=False,
                  toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
                  initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None):
     """Convert a URDF file into a Webots PROTO file or Robot node string."""
@@ -89,7 +88,6 @@ def convertUrdfFile(input=None, output=None, robotName=None, normal=False, boxCo
         convertUrdfFile.urdfPath = os.path.abspath(input)
 
     return convertUrdfContent(urdfContent, output, robotName, normal, boxCollision,
-                 disableMeshOptimization, enableMultiFile,
                  toolSlot, initTranslation, initRotation,
                  initPos, linkToDef, jointToDef, relativePathPrefix)
 
@@ -98,7 +96,6 @@ convertUrdfFile.urdfPath = None
 
 
 def convertUrdfContent(input, output=None, robotName=None, normal=False, boxCollision=False,
-                 disableMeshOptimization=False, enableMultiFile=False,
                  toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
                  initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None):
     """
@@ -138,8 +135,6 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
         isProto = True
 
     urdf2webots.writeRobot.isProto = isProto
-    urdf2webots.parserURDF.disableMeshOptimization = disableMeshOptimization
-    urdf2webots.writeRobot.enableMultiFile = enableMultiFile
     urdf2webots.writeRobot.initPos = initPos
     if isProto:
         urdf2webots.writeRobot.toolSlot = toolSlot
@@ -204,10 +199,6 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
                     outputFile = output if output else robotName + '.proto'
 
                 mkdirSafe(outputFile.replace('.proto', '') + '_textures')  # make a dir called 'x_textures'
-
-                if enableMultiFile:
-                    mkdirSafe(outputFile.replace('.proto', '') + '_meshes')  # make a dir called 'x_meshes'
-                    urdf2webots.writeRobot.meshFilesPath = outputFile.replace('.proto', '') + '_meshes'
 
                 protoFile = open(outputFile, 'w')
                 urdf2webots.writeRobot.header(protoFile, urdfPath, robotName)
@@ -309,11 +300,6 @@ if __name__ == '__main__':
                          help='If set, the normals are exported if present in the URDF definition.')
     optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
                          help='If set, the bounding objects are approximated using boxes.')
-    optParser.add_option('--disable-mesh-optimization', dest='disableMeshOptimization', action='store_true', default=False,
-                         help='If set, the duplicated vertices are not removed from the meshes (this can speed up a lot the '
-                         'conversion).')
-    optParser.add_option('--multi-file', dest='enableMultiFile', action='store_true', default=False,
-                         help='If set, the mesh files are exported as separated PROTO files.')
     optParser.add_option('--tool-slot', dest='toolSlot', default=None,
                          help='Specify the link that you want to add a tool slot too (exact link name from URDF, for PROTO conversion only).')
     optParser.add_option('--translation', dest='initTranslation', default='0 0 0',
@@ -334,5 +320,5 @@ if __name__ == '__main__':
                          help='If set and --input not specified, relative paths in your URDF file will be treated relatively to it '
                          'rather than relatively to the current directory from which the script is called.')
     options, args = optParser.parse_args()
-    convertUrdfFile(options.input, options.output, options.robotName, options.normal, options.boxCollision, options.disableMeshOptimization,
-                 options.enableMultiFile, options.toolSlot, options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef, options.relativePathPrefix)
+    convertUrdfFile(options.input, options.output, options.robotName, options.normal, options.boxCollision, options.toolSlot,
+        options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef, options.relativePathPrefix)
