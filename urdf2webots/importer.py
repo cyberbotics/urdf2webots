@@ -61,7 +61,7 @@ def mkdirSafe(directory):
 
 def convertUrdfFile(input=None, output=None, robotName=None, normal=False, boxCollision=False,
                  toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
-                 initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, legacyShapes=False):
+                 initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, targetVersion='R2022b'):
     """Convert a URDF file into a Webots PROTO file or Robot node string."""
     urdfContent = None
     if not input:
@@ -89,7 +89,7 @@ def convertUrdfFile(input=None, output=None, robotName=None, normal=False, boxCo
 
     return convertUrdfContent(urdfContent, output, robotName, normal, boxCollision,
                  toolSlot, initTranslation, initRotation,
-                 initPos, linkToDef, jointToDef, relativePathPrefix, legacyShapes)
+                 initPos, linkToDef, jointToDef, relativePathPrefix, targetVersion)
 
 
 convertUrdfFile.urdfPath = None
@@ -97,7 +97,7 @@ convertUrdfFile.urdfPath = None
 
 def convertUrdfContent(input, output=None, robotName=None, normal=False, boxCollision=False,
                  toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
-                 initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, legacyShapes=False):
+                 initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, targetVersion='R2022b'):
     """
     Convert a URDF content string into a Webots PROTO file or Robot node string.
     The current working directory will be used for relative paths in your URDF file.
@@ -148,10 +148,10 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
     # Required resets in case of multiple conversions
     urdf2webots.writeRobot.indexSolid = 0
     urdf2webots.writeRobot.staticBase = False
-    urdf2webots.writeRobot.legacyShapes = legacyShapes
+    urdf2webots.writeRobot.targetVersion = targetVersion
     urdf2webots.parserURDF.Material.namedMaterial.clear()
     urdf2webots.parserURDF.Geometry.reference.clear()
-    urdf2webots.parserURDF.legacyShapes = legacyShapes
+    urdf2webots.parserURDF.targetVersion = targetVersion
 
     # Replace "package://(.*)" occurences
     for match in re.finditer('"package://(.*?)"', input):
@@ -321,9 +321,9 @@ if __name__ == '__main__':
     optParser.add_option('--relative-path-prefix', dest='relativePathPrefix', default=None,
                          help='If set and --input not specified, relative paths in your URDF file will be treated relatively to it '
                          'rather than relatively to the current directory from which the script is called.')
-    optParser.add_option('--legacy-shapes', dest='legacyShapes', action='store_true', default=False,
-                         help='If set, visual nodes will be represented by a combination of Mesh and PBRAppearance nodes.')
+    optParser.add_option('--target', dest='targetVersion', default='R2022b', choices=['R2022b', 'R2022a', 'R2021b', 'R2021a', 'R2020b', 'R2020a'],
+                         help='Sets the Webots version the PROTO will target.')
     options, args = optParser.parse_args()
     convertUrdfFile(options.input, options.output, options.robotName, options.normal, options.boxCollision, options.toolSlot,
         options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef, options.relativePathPrefix,
-        options.legacyShapes)
+        options.targetVersion)

@@ -13,7 +13,7 @@ initPos = None
 linkToDef = False
 jointToDef = False
 indexSolid = 0
-legacyShapes = False
+targetVersion = 'R2022b'
 
 
 class RGB():
@@ -47,7 +47,7 @@ def RGBA2RGB(RGBA_color, RGB_background=RGB()):
 
 def header(robotFile, srcFile=None, protoName=None, tags=[]):
     """Specify VRML file header."""
-    robotFile.write('#VRML_SIM R2022a utf8\n')
+    robotFile.write('#VRML_SIM %s utf8\n' % targetVersion)
     robotFile.write('# license: Apache License 2.0\n')
     robotFile.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     if tags:
@@ -343,7 +343,7 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
     indent = '  '
     shapeLevel = level
 
-    if visualNode.geometry.cadShape.url and not legacyShapes:
+    if visualNode.geometry.cadShape.url and targetVersion == 'R2022b':
         if visualNode.geometry.defName is not None:
             robotFile.write(shapeLevel * indent + 'USE %s\n' % visualNode.geometry.defName)
         else:
