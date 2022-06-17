@@ -13,6 +13,7 @@ initPos = None
 linkToDef = False
 jointToDef = False
 indexSolid = 0
+legacyShapes = False
 
 
 class RGB():
@@ -341,7 +342,7 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
     indent = '  '
     shapeLevel = level
 
-    if visualNode.geometry.cadShape.url:
+    if visualNode.geometry.cadShape.url and not legacyShapes:
         if visualNode.geometry.defName is not None:
             robotFile.write(shapeLevel * indent + 'USE %s\n' % visualNode.geometry.defName)
         else:

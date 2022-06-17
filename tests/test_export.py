@@ -31,6 +31,12 @@ modelPathsProto = [
         'arguments': ''
     },
     {
+        'input': humanFilePath,
+        'output': os.path.join(resultDirectory, 'HumanLegacyShapes.proto'),
+        'expected': [os.path.join(expectedDirectory, 'HumanLegacyShapes.proto')],
+        'arguments': '--legacy-shapes'
+    },
+    {
         'input': os.path.join(sourceDirectory, 'kuka_lbr_iiwa_support/urdf/model.urdf'),
         'output': os.path.join(resultDirectory, 'KukaLbrIiwa14R820.proto'),
         'expected': [os.path.join(expectedDirectory, 'KukaLbrIiwa14R820.proto')],
