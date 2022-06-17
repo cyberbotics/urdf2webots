@@ -4,6 +4,7 @@
 [![PyPI version](https://badge.fury.io/py/urdf2webots.svg)](https://badge.fury.io/py/urdf2webots)
 
 This tool converts URDF files into Webots PROTO files or into Webots Robot node strings.
+Python 3.5 or higher is required.
 
 ## Install
 
@@ -34,17 +35,22 @@ python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--n
 
 The script accepts the following arguments:
   - **-h, --help**: Show the help message and exit.
-  - **--input=INFILE**: Specifies the urdf file to convert.
-  - **--output=OUTFILE**: If set, specifies the path and, if ending in ".proto", name of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).
+  - **--input=INPUT**: Specifies the URDF file to convert.
+  - **--output=OUTPUT**: If set, specifies the path and, if ending in ".proto", name of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).
   - **--robot-name**: Specify the name of the robot and generate a Robot node string instead of a PROTO file (has to be unique).
   - **--normal**: If set, the normals are exported if present in the URDF definition.
   - **--box-collision**: If set, the bounding objects are approximated using boxes.
-  - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from urdf, for PROTO conversion only).
+  - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from URDF, for PROTO conversion only).
   - **--translation="0 0 0"**: Set the translation field of the PROTO file or Webots Robot node string.
   - **--rotation="0 0 1 0"**: Set the rotation field of the PROTO file or Webots Robot node string.
   - **--init-pos=JointPositions**: Set the initial positions of your robot joints. Example: `--init-pos="[1.2, 0.5, -1.5]"` would set the first 3 joints of your robot to the specified values, and leave the rest with their default value.
   - **--link-to-def**: Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
   - **--joint-to-def**: Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
+  - **--relative-path-prefix**: If **--input** is not set, the relative paths in your URDF file sent through stdin will use this prefix. For example: `filename="head.obj"` with `--relative-path-prefix="/home/user/myRobot/"` will become `filename="/home/user/myRobot/head.obj"`.
+
+In case the **--input** option is missing, the script will read the URDF content from `stdin`.
+In that case, you can pipe the content of your URDF file into the script: `cat my_robot.urdf | urdf2proto.py`.
+Relative paths present in your URDF file will be treated relatively to the current directory from which the script is called unless **--relative-path-prefix** is set.
 
 > Previously the **--static-base** argument was supported in order to set the base link to be static (disabled physics). It has been removed as there is a better way to do it by adding the following to your URDF file (assuming **base_link** is the root link of your robot):
 >
@@ -52,8 +58,7 @@ The script accepts the following arguments:
 > <link name="world" />
 ><joint name="world_joint" type="fixed">
 >    <parent link="world" />
->    <child link = "base_link" />
->    <origin xyz="0 0 0" rpy="0 0 0" />
+>    <child link="base_link" />
 ></joint>
 >```
 
@@ -61,12 +66,12 @@ The script accepts the following arguments:
 
 #### Arguments
 
-The command line arguments available from the terminal are also available from the python interface, but some have different names:
+The command line arguments available from the terminal are also available from the Python interface, but some have different names:
 
 | Terminal   |      Python      |
 |----------|-------------|
-| --input |  inFile |
-| --output |  outFile |
+| --input |  input |
+| --output |  output |
 | --robot-name |  robotName |
 | --normal |  normal |
 | --box-collision |  boxCollision |
@@ -76,19 +81,40 @@ The command line arguments available from the terminal are also available from t
 | --init-pos |  initPos |
 | --link-to-def |  linkToDef |
 | --joint-to-def |  jointToDef |
+| --relative-path-prefix |  relativePathPrefix |
+
+In Python, you can convert a URDF file by passing its path as an argument to the `convertUrdfFile()` function or directly by passing its content as an argument to the `convertUrdfContent()` function.
 
 #### Convert into Webots PROTO files
 
 ```
-from urdf2webots.importer import convert2urdf
-convert2urdf('MY_PATH/MY_URDF.urdf')
+from urdf2webots.importer import convertUrdfFile
+convertUrdfFile(input = 'MY_PATH/MY_URDF.urdf')
+```
+
+or
+
+```
+import pathlib
+from urdf2webots.importer import convertUrdfContent
+robot_description = pathlib.Path('MY_PATH/MY_URDF.urdf').read_text()
+convertUrdfContent(input = robot_description)
 ```
 
 #### Convert into Webots Robot node strings
 
 ```
-from urdf2webots.importer import convert2urdf
-convert2urdf('MY_PATH/MY_URDF.urdf', isProto=False)
+from urdf2webots.importer import convertUrdfFile
+convertUrdfFile(input = 'MY_PATH/MY_URDF.urdf', robotName="myRobot")
+```
+
+or
+
+```
+import pathlib
+from urdf2webots.importer import convertUrdfContent
+robot_description = pathlib.Path('MY_PATH/MY_URDF.urdf').read_text()
+convertUrdfContent(input = robot_description, robotName="myRobot")
 ```
 
 ### In-Depth Tutorial
@@ -96,6 +122,7 @@ Check out [this tutorial](./docs/tutorial.md) for a more in-depth, step by step 
 - Generate a URDF file from a ROS repository.
 - Convert your URDF file to a Webots PROTO file.
 - Load your converted model into Webots and make final adjustments.
+- Convert your URDF file to a Webots Robot string and import it.
 
 
 ## Notes

@@ -54,7 +54,10 @@ def header(robotFile, srcFile=None, protoName=None, tags=[]):
     if protoName:
         robotFile.write('# This is a proto file for Webots for the ' + protoName + '\n')
     if srcFile:
-        robotFile.write('# Extracted from: ' + srcFile + '\n\n')
+        robotFile.write('# Extracted from: ' + srcFile + '\n')
+    else:
+        robotFile.write('# Extracted from a URDF content string\n')
+    robotFile.write('\n')
 
 
 def declaration(robotFile, robotName, initTranslation, initRotation):
@@ -108,6 +111,7 @@ def URDFLink(robotFile, link, level, parentList,
             robotFile.write((' ' if endpoint else level * indent) + ('DEF ' +
                             link.name + ' ' if linkToDef else '') + 'TouchSensor {\n')
             robotFile.write((level + 1) * indent + 'type "force-3d"\n')
+            robotFile.write((level + 1) * indent + 'lookupTable []\n')
         else:
             robotFile.write((' ' if endpoint else level * indent) + ('DEF ' +
                             link.name + ' ' if linkToDef else '') + 'Solid {\n')
@@ -139,7 +143,16 @@ def URDFLink(robotFile, link, level, parentList,
                 if not haveChild:
                     haveChild = True
                     robotFile.write((level + 1) * indent + 'children [\n')
-                sensor.export(robotFile, level + 2)
+                if hasattr(sensor, 'isImager') and sensor.isImager:
+                    robotFile.write((level + 2) * indent + 'Transform {\n')
+                    robotFile.write((level + 3) * indent + 'translation 0 0 0\n')
+                    robotFile.write((level + 3) * indent + 'rotation 0.577350 -0.577350 0.577350 2.094395\n')
+                    robotFile.write((level + 3) * indent + 'children [\n')
+                    sensor.export(robotFile, level + 4)
+                    robotFile.write((level + 3) * indent + ']\n')
+                    robotFile.write((level + 2) * indent + '}\n')
+                else:
+                    sensor.export(robotFile, level + 2)
         # 3: export Joints
         for joint in jointList:
             if joint.parent == link.name:
@@ -177,22 +190,16 @@ def URDFLink(robotFile, link, level, parentList,
             URDFBoundingObject(robotFile, link, level + 1, boxCollision)
         if link.inertia.mass is not None:
             if isProto:
-                if level == 1 and staticBase:
-                    robotFile.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
-                writeLinkPhysics(robotFile, link, level)
-                if level == 1 and staticBase:
-                    robotFile.write((level + 1) * indent + '%{ end }%\n')
+                if level > 1 or not staticBase:
+                    writeLinkPhysics(robotFile, link, level)
             else:
                 if level != 0 or not staticBase:
                     writeLinkPhysics(robotFile, link, level)
         elif link.collision:
             if isProto:
-                if level == 1 and staticBase:
-                    robotFile.write((level + 1) * indent + '%{ if fields.staticBase.value == false then }%\n')
-                robotFile.write((level + 1) * indent + 'physics Physics {\n')
-                robotFile.write((level + 1) * indent + '}\n')
-                if level == 1 and staticBase:
-                    robotFile.write((level + 1) * indent + '%{ end }%\n')
+                if level > 1 or not staticBase:
+                    robotFile.write((level + 1) * indent + 'physics Physics {\n')
+                    robotFile.write((level + 1) * indent + '}\n')
             else:
                 if level != 0 or not staticBase:
                     robotFile.write((level + 1) * indent + 'physics Physics {\n')
@@ -387,10 +394,6 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
                 robotFile.write((shapeLevel + 2) * indent + 'baseColorMap ImageTexture {\n')
                 robotFile.write((shapeLevel + 3) * indent + 'url "' + visualNode.material.texture + '"\n')
                 robotFile.write((shapeLevel + 2) * indent + '}\n')
-
-                robotFile.write((shapeLevel + 2) * indent + 'textureTransform TextureTransform {\n')
-                robotFile.write((shapeLevel + 3) * indent + 'scale 1 -1\n')
-                robotFile.write((shapeLevel + 2) * indent + '}\n')
             robotFile.write((shapeLevel + 1) * indent + '}\n')
 
         if visualNode.geometry.box.x != 0:
@@ -517,6 +520,7 @@ def URDFJoint(robotFile, joint, level, parentList, childList, linkList, jointLis
     elif joint.type == 'prismatic':
         robotFile.write(level * indent + ('DEF ' + joint.name + ' ' if jointToDef else '') + 'SliderJoint {\n')
         robotFile.write((level + 1) * indent + 'jointParameters JointParameters {\n')
+        position = None
         if joint.limit.lower > 0.0:
             # if 0 is not in the range, set the position to be the middle of the range
             position = joint.limit.lower
