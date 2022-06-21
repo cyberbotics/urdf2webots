@@ -13,6 +13,7 @@ initPos = None
 linkToDef = False
 jointToDef = False
 indexSolid = 0
+targetVersion = 'R2022b'
 
 
 class RGB():
@@ -46,7 +47,7 @@ def RGBA2RGB(RGBA_color, RGB_background=RGB()):
 
 def header(robotFile, srcFile=None, protoName=None, tags=[]):
     """Specify VRML file header."""
-    robotFile.write('#VRML_SIM R2022a utf8\n')
+    robotFile.write('#VRML_SIM %s utf8\n' % targetVersion)
     robotFile.write('# license: Apache License 2.0\n')
     robotFile.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     if tags:
@@ -218,9 +219,10 @@ def writeLinkPhysics(robotFile, link, level):
     robotFile.write((level + 1) * indent + 'physics Physics {\n')
     robotFile.write((level + 2) * indent + 'density -1\n')
     robotFile.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
-    robotFile.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
-                                                                               link.inertia.position[1],
-                                                                               link.inertia.position[2]))
+    if link.inertia.position[0] != 0.0 and link.inertia.position[1] != 0.0 and link.inertia.position[2] != 0:
+        robotFile.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
+                                                                                   link.inertia.position[1],
+                                                                                   link.inertia.position[2]))
     if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
         i = link.inertia
         inertiaMatrix = [i.ixx, i.ixy, i.ixz, i.ixy, i.iyy, i.iyz, i.ixz, i.iyz, i.izz]
@@ -341,7 +343,7 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
     indent = '  '
     shapeLevel = level
 
-    if visualNode.geometry.cadShape.url:
+    if visualNode.geometry.cadShape.url and targetVersion >= 'R2022b':
         if visualNode.geometry.defName is not None:
             robotFile.write(shapeLevel * indent + 'USE %s\n' % visualNode.geometry.defName)
         else:

@@ -17,7 +17,7 @@ from urdf2webots.math_utils import convertRPYtoEulerAxis, rotateVector, combineR
 
 # to pass from external
 robotName = ''
-
+targetVersion = 'R2022b'
 
 class Inertia():
     """Define inertia object."""
@@ -564,21 +564,21 @@ def getVisual(link, node, path):
                 visual.scale[2] = float(meshScale[2])
                 if visual.scale[0] * visual.scale[1] * visual.scale[2] < 0.0:
                     extension = os.path.splitext(meshfile)[1].lower()
-                    if extension in ['.dae', '.obj']:
+                    if extension in ['.dae', '.obj'] and targetVersion >= 'R2022b':
                         visual.geometry.cadShape.ccw = False
                     else:
                         visual.geometry.mesh.ccw = False
             extension = os.path.splitext(meshfile)[1].lower()
             if extension in ['.dae', '.obj', '.stl']:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
-                if extension in ['.dae', '.obj']:
+                if extension in ['.dae', '.obj'] and targetVersion >= 'R2022b':
                     name += '_visual'
                 if not visual.geometry.mesh.ccw:
                     name += '_cw'
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
-                    if extension in ['.dae', '.obj']:
+                    if extension in ['.dae', '.obj'] and targetVersion >= 'R2022b':
                         visual.geometry.cadShape.url = '"' + meshfile + '"'
                     else:
                         visual.geometry.mesh.url = '"' + meshfile + '"'
