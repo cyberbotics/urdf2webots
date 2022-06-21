@@ -343,7 +343,7 @@ def URDFVisual(robotFile, visualNode, level, normal=False):
     indent = '  '
     shapeLevel = level
 
-    if visualNode.geometry.cadShape.url and targetVersion == 'R2022b':
+    if visualNode.geometry.cadShape.url and targetVersion >= 'R2022b':
         if visualNode.geometry.defName is not None:
             robotFile.write(shapeLevel * indent + 'USE %s\n' % visualNode.geometry.defName)
         else:
