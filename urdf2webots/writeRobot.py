@@ -219,10 +219,9 @@ def writeLinkPhysics(robotFile, link, level):
     robotFile.write((level + 1) * indent + 'physics Physics {\n')
     robotFile.write((level + 2) * indent + 'density -1\n')
     robotFile.write((level + 2) * indent + 'mass %lf\n' % link.inertia.mass)
-    if link.inertia.position[0] != 0.0 and link.inertia.position[1] != 0.0 and link.inertia.position[2] != 0:
-        robotFile.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
-                                                                                   link.inertia.position[1],
-                                                                                   link.inertia.position[2]))
+    robotFile.write((level + 2) * indent + 'centerOfMass [ %lf %lf %lf ]\n' % (link.inertia.position[0],
+                                                                               link.inertia.position[1],
+                                                                               link.inertia.position[2]))
     if link.inertia.ixx > 0.0 and link.inertia.iyy > 0.0 and link.inertia.izz > 0.0:
         i = link.inertia
         inertiaMatrix = [i.ixx, i.ixy, i.ixz, i.ixy, i.iyy, i.iyz, i.ixz, i.iyz, i.izz]
