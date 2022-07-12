@@ -31,6 +31,12 @@ modelPathsProto = [
         'arguments': ''
     },
     {
+        'input': humanFilePath,
+        'output': os.path.join(resultDirectory, 'HumanR2022a.proto'),
+        'expected': [os.path.join(expectedDirectory, 'HumanR2022a.proto')],
+        'arguments': '--target=R2022a'
+    },
+    {
         'input': os.path.join(sourceDirectory, 'kuka_lbr_iiwa_support/urdf/model.urdf'),
         'output': os.path.join(resultDirectory, 'KukaLbrIiwa14R820.proto'),
         'expected': [os.path.join(expectedDirectory, 'KukaLbrIiwa14R820.proto')],
@@ -71,9 +77,6 @@ def fileCompare(file1, file2):
         for i, (line1, line2) in enumerate(zip(f1, f2)):
             if line1.startswith('# Extracted from') and line2.startswith('# Extracted from'):
                 # This line may differ.
-                continue
-            elif line1.startswith('#VRML_SIM') and line2.startswith('#VRML_SIM'):
-                # This line may differ according to Webots version used
                 continue
             elif line1 != line2:
                 # Prints the difference between result and expected line
