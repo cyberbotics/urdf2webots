@@ -42,7 +42,7 @@ def RGBA2RGB(RGBA_color, RGB_background=RGB()):
 
 def header(robotFile, srcFile=None, protoName=None, tags=[]):
     """Specify VRML file header."""
-    robotFile.write('#VRML_SIM R2022a utf8\n')
+    robotFile.write('#VRML_SIM R2022b utf8\n')
     robotFile.write('# license: Apache License 2.0\n')
     robotFile.write('# license url: http://www.apache.org/licenses/LICENSE-2.0\n')
     if tags:
