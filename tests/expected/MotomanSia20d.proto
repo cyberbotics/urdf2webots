@@ -2,7 +2,7 @@
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # This is a proto file for Webots for the MotomanSia20d
-# Extracted from: /home/benja/urdf2webots/tests/sources/motoman/motoman_sia20d_support/urdf/sia20d.urdf
+# Extracted from: root://tests/sources/motoman/motoman_sia20d_support/urdf/sia20d.urdf
 
 PROTO MotomanSia20d [
   field  SFVec3f     translation     0 0 0
@@ -14,6 +14,7 @@ PROTO MotomanSia20d [
   field  SFBool      supervisor      FALSE            # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE             # Is `Robot.synchronization`.
   field  SFBool      selfCollision   FALSE            # Is `Robot.selfCollision`.
+  field  SFBool      staticBase      TRUE             # Defines if the robot base should be pinned to the static environment.
   field  MFNode      toolSlot        []               # Extend the robot with new nodes at the end of the arm.
 ]
 {
@@ -30,13 +31,11 @@ PROTO MotomanSia20d [
       Shape {
         appearance DEF blue PBRAppearance {
           baseColor 0.000000 0.000000 1.000000
-          transparency 0.000000
           roughness 1.000000
           metalness 0
-          emissiveColor 0.000000 0.000000 0.000000
         }
         geometry DEF MOTOMAN_BASE Mesh {
-          url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_BASE.stl"
+          url "root://tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_BASE.stl"
         }
       }
       HingeJoint {
@@ -44,8 +43,6 @@ PROTO MotomanSia20d [
           position 0.100000
           axis 0.000000 0.000000 1.000000
           anchor 0.000000 0.000000 0.410000
-          dampingConstant 0.0
-          staticFriction 0.0
         }
         device [
           RotationalMotor {
@@ -64,19 +61,16 @@ PROTO MotomanSia20d [
           rotation 0.000000 0.000000 1.000000 0.100000
           children [
             Transform {
-              translation 0.000000 0.000000 0.000000
               rotation -0.000000 0.000000 1.000000 3.141600
               children [
                 Shape {
                   appearance DEF silver PBRAppearance {
                     baseColor 0.800000 0.800000 0.800000
-                    transparency 0.000000
                     roughness 1.000000
                     metalness 0
-                    emissiveColor 0.000000 0.000000 0.000000
                   }
                   geometry DEF MOTOMAN_AXIS_S Mesh {
-                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_S.stl"
+                    url "root://tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_S.stl"
                   }
                 }
               ]
@@ -85,9 +79,6 @@ PROTO MotomanSia20d [
               jointParameters HingeJointParameters {
                 position -0.100000
                 axis 0.000000 1.000000 0.000000
-                anchor 0.000000 0.000000 0.000000
-                dampingConstant 0.0
-                staticFriction 0.0
               }
               device [
                 RotationalMotor {
@@ -102,17 +93,15 @@ PROTO MotomanSia20d [
                 }
               ]
               endPoint Solid {
-                translation 0.000000 0.000000 0.000000
                 rotation 0.000000 -1.000000 0.000000 0.100000
                 children [
                   Transform {
-                    translation 0.000000 0.000000 0.000000
                     rotation -1.000000 -0.000007 -0.000000 1.571593
                     children [
                       Shape {
                         appearance USE blue
                         geometry DEF MOTOMAN_AXIS_L Mesh {
-                          url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_L.stl"
+                          url "root://tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_L.stl"
                         }
                       }
                     ]
@@ -122,8 +111,6 @@ PROTO MotomanSia20d [
                       position 0.200000
                       axis 0.000000 0.000000 1.000000
                       anchor 0.000000 0.000000 0.490000
-                      dampingConstant 0.0
-                      staticFriction 0.0
                     }
                     device [
                       RotationalMotor {
@@ -144,15 +131,12 @@ PROTO MotomanSia20d [
                         Shape {
                           appearance USE silver
                           geometry DEF MOTOMAN_AXIS_E Mesh {
-                            url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_E.stl"
+                            url "root://tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_E.stl"
                           }
                         }
                         HingeJoint {
                           jointParameters HingeJointParameters {
                             axis 0.000000 -1.000000 0.000000
-                            anchor 0.000000 0.000000 0.000000
-                            dampingConstant 0.0
-                            staticFriction 0.0
                           }
                           device [
                             RotationalMotor {
@@ -167,17 +151,14 @@ PROTO MotomanSia20d [
                             }
                           ]
                           endPoint Solid {
-                            translation 0.000000 0.000000 0.000000
-                            rotation 0.000000 0.000000 1.000000 0.000000
                             children [
                               Transform {
-                                translation 0.000000 0.000000 0.000000
                                 rotation 1.000000 0.000050 0.000043 4.711593
                                 children [
                                   Shape {
                                     appearance USE blue
                                     geometry DEF MOTOMAN_AXIS_U Mesh {
-                                      url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_U.stl"
+                                      url "root://tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_U.stl"
                                     }
                                   }
                                 ]
@@ -186,8 +167,6 @@ PROTO MotomanSia20d [
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 0.000000 -1.000000
                                   anchor 0.000000 0.000000 0.420000
-                                  dampingConstant 0.0
-                                  staticFriction 0.0
                                 }
                                 device [
                                   RotationalMotor {
@@ -203,20 +182,16 @@ PROTO MotomanSia20d [
                                 ]
                                 endPoint Solid {
                                   translation 0.000000 0.000000 0.420000
-                                  rotation 0.000000 0.000000 1.000000 0.000000
                                   children [
                                     Shape {
                                       appearance USE silver
                                       geometry DEF MOTOMAN_AXIS_R Mesh {
-                                        url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_R.stl"
+                                        url "root://tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_R.stl"
                                       }
                                     }
                                     HingeJoint {
                                       jointParameters HingeJointParameters {
                                         axis 0.000000 -1.000000 0.000000
-                                        anchor 0.000000 0.000000 0.000000
-                                        dampingConstant 0.0
-                                        staticFriction 0.0
                                       }
                                       device [
                                         RotationalMotor {
@@ -231,17 +206,14 @@ PROTO MotomanSia20d [
                                         }
                                       ]
                                       endPoint Solid {
-                                        translation 0.000000 0.000000 0.000000
-                                        rotation 0.000000 0.000000 1.000000 0.000000
                                         children [
                                           Transform {
-                                            translation 0.000000 0.000000 0.000000
                                             rotation -1.000000 0.000000 0.000000 1.570000
                                             children [
                                               Shape {
                                                 appearance USE blue
                                                 geometry DEF MOTOMAN_AXIS_B Mesh {
-                                                  url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_B.stl"
+                                                  url "root://tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_B.stl"
                                                 }
                                               }
                                             ]
@@ -250,8 +222,6 @@ PROTO MotomanSia20d [
                                             jointParameters HingeJointParameters {
                                               axis 0.000000 0.000000 -1.000000
                                               anchor 0.000000 0.000000 0.180000
-                                              dampingConstant 0.0
-                                              staticFriction 0.0
                                             }
                                             device [
                                               RotationalMotor {
@@ -267,16 +237,14 @@ PROTO MotomanSia20d [
                                             ]
                                             endPoint Solid {
                                               translation 0.000000 0.000000 0.180000
-                                              rotation 0.000000 0.000000 1.000000 0.000000
                                               children [
                                                 Shape {
                                                   appearance USE silver
                                                   geometry DEF MOTOMAN_AXIS_T Mesh {
-                                                    url "/home/runner/work/urdf2webots/urdf2webots/tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_T.stl"
+                                                    url "root://tests/sources/motoman/motoman_sia20d_support/meshes/sia20d/visual/MOTOMAN_AXIS_T.stl"
                                                   }
                                                 }
                                                 Solid {
-                                                  translation 0.000000 0.000000 0.000000
                                                   rotation 0.000000 -0.000000 -1.000000 3.141600
                                                   children [
                                                     Group {
@@ -300,7 +268,6 @@ PROTO MotomanSia20d [
                                         ]
                                         name "link_b"
                                         boundingObject Transform {
-                                          translation 0.000000 0.000000 0.000000
                                           rotation -1.000000 0.000000 0.000000 1.570000
                                           children [
                                             USE MOTOMAN_AXIS_B
@@ -320,7 +287,6 @@ PROTO MotomanSia20d [
                             ]
                             name "link_u"
                             boundingObject Transform {
-                              translation 0.000000 0.000000 0.000000
                               rotation 1.000000 0.000050 0.000043 4.711593
                               children [
                                 USE MOTOMAN_AXIS_U
@@ -340,7 +306,6 @@ PROTO MotomanSia20d [
                 ]
                 name "link_l"
                 boundingObject Transform {
-                  translation 0.000000 0.000000 0.000000
                   rotation -1.000000 -0.000007 -0.000000 1.571593
                   children [
                     USE MOTOMAN_AXIS_L
@@ -353,7 +318,6 @@ PROTO MotomanSia20d [
           ]
           name "link_s"
           boundingObject Transform {
-            translation 0.000000 0.000000 0.000000
             rotation -0.000000 0.000000 1.000000 3.141600
             children [
               USE MOTOMAN_AXIS_S

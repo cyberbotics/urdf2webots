@@ -8,26 +8,33 @@ import unittest
 
 from urdf2webots.importer import convertUrdfContent, convertUrdfFile
 
-testDirectory = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
+rootDirectory = os.path.dirname(os.path.dirname(__file__))
+testDirectory = os.path.join(rootDirectory, 'tests')
 sourceDirectory = os.path.join(testDirectory, 'sources')
 resultDirectory = os.path.join(testDirectory, 'results')
 expectedDirectory = os.path.join(testDirectory, 'expected')
 urdf2webotsPath = os.path.abspath(os.path.join(testDirectory, '..', 'urdf2webots/importer.py'))
 
-human_file_path = os.path.join(sourceDirectory, 'gait2392_simbody/urdf/human.urdf')
+humanFilePath = os.path.join(sourceDirectory, 'gait2392_simbody/urdf/human.urdf')
 
 modelPathsProto = [
     {
         'input': os.path.join(sourceDirectory, 'motoman/motoman_sia20d_support/urdf/sia20d.urdf'),
         'output': os.path.join(resultDirectory, 'MotomanSia20d.proto'),
         'expected': [os.path.join(expectedDirectory, 'MotomanSia20d.proto')],
-        'arguments': '--multi-file --tool-slot=tool0 --rotation="1 0 0 0" --init-pos="[0.1, -0.1, 0.2]"'
+        'arguments': '--tool-slot=tool0 --rotation="1 0 0 0" --init-pos="[0.1, -0.1, 0.2]"'
     },
     {
-        'input': human_file_path,
+        'input': humanFilePath,
         'output': os.path.join(resultDirectory, 'Human.proto'),
         'expected': [os.path.join(expectedDirectory, 'Human.proto')],
         'arguments': ''
+    },
+    {
+        'input': humanFilePath,
+        'output': os.path.join(resultDirectory, 'HumanR2022a.proto'),
+        'expected': [os.path.join(expectedDirectory, 'HumanR2022a.proto')],
+        'arguments': '--target=R2022a'
     },
     {
         'input': os.path.join(sourceDirectory, 'kuka_lbr_iiwa_support/urdf/model.urdf'),
@@ -45,10 +52,10 @@ modelPathsProto = [
 
 modelContentProto = [
     {
-        'input': pathlib.Path(human_file_path).read_text(),
+        'input': pathlib.Path(humanFilePath).read_text(),
         'output': os.path.join(resultDirectory, 'Human.proto'),
         'expected': [os.path.join(expectedDirectory, 'Human.proto')],
-        'relativePathPrefix': '/home/runner/work/urdf2webots/urdf2webots/tests/sources/gait2392_simbody/urdf',
+        'relativePathPrefix': os.path.join(rootDirectory, 'tests/sources/gait2392_simbody/urdf')
     }
 ]
 
@@ -71,12 +78,6 @@ def fileCompare(file1, file2):
             if line1.startswith('# Extracted from') and line2.startswith('# Extracted from'):
                 # This line may differ.
                 continue
-            elif line1.startswith('#VRML_SIM') and line2.startswith('#VRML_SIM'):
-                # This line may differ according to Webots version used
-                continue
-            elif 'CI' not in os.environ and '/home/runner/work/' in line2:
-                # When testing locally, the paths may differ.
-                continue
             elif line1 != line2:
                 # Prints the difference between result and expected line
                 print('Diff (line ' + str(i) + ') in ' + file1)
@@ -92,6 +93,15 @@ class TestScript(unittest.TestCase):
         """Cleanup results directory."""
         shutil.rmtree(resultDirectory, ignore_errors=True)
         os.makedirs(resultDirectory)
+        # prepare urls
+        for root, _, files in os.walk(expectedDirectory):
+            for file in files:
+                with open(os.path.join(root, file), 'r') as f:
+                    contents = f.read()
+                    contents = contents.replace('root://', rootDirectory + os.path.sep)
+
+                with open(os.path.join(root, file), 'w') as f:
+                    f.write(contents)
 
     def testInputFileOutputProto(self):
         """Test that urdf2webots produces an expected PROTO file using URDF file as input."""
@@ -136,6 +146,17 @@ class TestScript(unittest.TestCase):
             for expected in paths['expected']:
                 self.assertTrue(fileCompare(expected.replace('expected', 'results'), expected),
                                 msg='Expected result mismatch when exporting "%s"' % paths['input'])
+
+    def tearDown(self):
+        # undo url changes
+        for root, dirs, files in os.walk(expectedDirectory):
+            for file in files:
+                with open(os.path.join(root, file), 'r') as f:
+                    contents = f.read()
+                    contents = contents.replace(rootDirectory + os.path.sep, 'root://')
+
+                with open(os.path.join(root, file), 'w') as f:
+                    f.write(contents)
 
 
 if __name__ == '__main__':

@@ -2,7 +2,6 @@
 import math
 import os
 import sys
-import numpy
 try:
     from PIL import Image
 except ImportError as e:
@@ -12,35 +11,13 @@ except ImportError as e:
         sys.stderr.write("pip install pillow\n")
     raise e
 
-import numbers
-
 from urdf2webots.gazebo_materials import materials
 from urdf2webots.math_utils import convertRPYtoEulerAxis, rotateVector, combineRotations, combineTranslations
 
-try:
-    from collada import Collada, lineset
-    colladaIsAvailable = True
-except ImportError:
-    colladaIsAvailable = False
 
 # to pass from external
 robotName = ''
-extensionListSingleAppearance = ['.stl', '.obj']
-
-
-disableMeshOptimization = False
-
-class Trimesh():
-    """Define triangular mesh object."""
-
-    def __init__(self):
-        """Initializatization."""
-        self.coord = []  # list of coordinate points
-        self.coordIndex = []  # list of index of points
-        self.texCoord = []  # list of coordinate points for texture
-        self.texCoordIndex = []  # list of index for texture
-        self.normal = []  # list of normals
-        self.normalIndex = []  # list of index of normals
+targetVersion = 'R2022b'
 
 class Inertia():
     """Define inertia object."""
@@ -74,7 +51,7 @@ class Cylinder():
     def __init__(self):
         """Initializatization."""
         self.radius = 0.0
-        self.length = 0.0
+        self.height = 0.0
 
 
 class Sphere():
@@ -91,6 +68,16 @@ class Mesh():
     def __init__(self):
         """Initializatization."""
         self.url = ''
+        self.ccw = True
+
+
+class CadShape():
+    """Define CadShape object."""
+
+    def __init__(self):
+        """Initializatization."""
+        self.url = ''
+        self.ccw = True
 
 
 class Geometry():
@@ -103,12 +90,10 @@ class Geometry():
         self.box = Box()
         self.cylinder = Cylinder()
         self.sphere = Sphere()
-        self.trimesh = Trimesh()
         self.mesh = Mesh()
-        self.scale = [1.0, 1.0, 1.0]
+        self.cadShape = CadShape()
         self.name = None
         self.defName = None
-        self.lineset = False
 
 
 class Color():
@@ -163,6 +148,7 @@ class Visual():
         """Initializatization."""
         self.position = [0.0, 0.0, 0.0]
         self.rotation = [0.0, 0.0, 1.0, 0.0]
+        self.scale = [1.0, 1.0, 1.0]
         self.geometry = Geometry()
         self.material = Material()
 
@@ -174,6 +160,7 @@ class Collision():
         """Initializatization."""
         self.position = [0.0, 0.0, 0.0]
         self.rotation = [0.0, 0.0, 1.0, 0.0]
+        self.scale = [1.0, 1.0, 1.0]
         self.geometry = Geometry()
 
 
@@ -382,6 +369,7 @@ class Lidar():
         self.maxRange = None
         self.resolution = None
         self.noise = None
+        self.near = None
 
     def export(self, file, indentationLevel):
         """Export this lidar."""
@@ -397,8 +385,6 @@ class Lidar():
         if self.numberOfLayers:
             file.write(indentationLevel * indent + '  numberOfLayers %d\n' % self.numberOfLayers)
         if self.minRange:
-            if self.minRange < 0.01:
-                file.write(indentationLevel * indent + '  near %lf\n' % self.minRange)
             file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
         if self.maxRange:
             file.write(indentationLevel * indent + '  maxRange %lf\n' % self.maxRange)
@@ -406,6 +392,8 @@ class Lidar():
             file.write(indentationLevel * indent + '  noise %lf\n' % self.noise)
         if self.resolution:
             file.write(indentationLevel * indent + '  resolution %lf\n' % self.resolution)
+        if self.near:
+            file.write(indentationLevel * indent + '  near %lf\n' % self.near)
         file.write(indentationLevel * indent + '}\n')
 
 
@@ -439,106 +427,6 @@ def hasElement(node, element):
         return True
     else:
         return False
-
-
-def getColladaMesh(filename, node, link):
-    """Read collada file."""
-    if not colladaIsAvailable:
-        sys.stderr.write('Collada module not found, please install it with:\n')
-        sys.stderr.write('  python -m pip install pycollada\n')
-        sys.stderr.write('Skipping "%s"\n' % filename)
-        return
-    print('Parsing Mesh: ' + filename)
-    colladaMesh = Collada(filename)
-    index = -1
-    if hasattr(node, 'material') and node.material:
-        for geometry in list(colladaMesh.scene.objects('geometry')):
-            for data in list(geometry.primitives()):
-                visual = Visual()
-                index += 1
-                visual.position = node.position
-                visual.rotation = node.rotation
-                visual.material.diffuse.red = node.material.diffuse.red
-                visual.material.diffuse.green = node.material.diffuse.green
-                visual.material.diffuse.blue = node.material.diffuse.blue
-                visual.material.diffuse.alpha = node.material.diffuse.alpha
-                visual.material.texture = node.material.texture
-                name = '%s_%d' % (os.path.splitext(os.path.basename(filename))[0], index)
-                if type(data.original) is lineset.LineSet:
-                    visual.geometry.lineset = True
-                if name in Geometry.reference:
-                    visual.geometry = Geometry.reference[name]
-                else:
-                    Geometry.reference[name] = visual.geometry
-                    visual.geometry.name = name
-                    visual.geometry.scale = node.geometry.scale
-                    for val in data.vertex:
-                        visual.geometry.trimesh.coord.append(numpy.array(val))
-                    for val in data.vertex_index:
-                        visual.geometry.trimesh.coordIndex.append(val)
-                    if data.texcoordset:  # non-empty
-                        for val in data.texcoordset[0]:
-                            visual.geometry.trimesh.texCoord.append(val)
-                    if data.texcoord_indexset:  # non-empty
-                        for val in data.texcoord_indexset[0]:
-                            visual.geometry.trimesh.texCoordIndex.append(val)
-                    if hasattr(data, '_normal') and data._normal is not None and data._normal.size > 0:
-                        for val in data._normal:
-                            visual.geometry.trimesh.normal.append(numpy.array(val))
-                        if hasattr(data, '_normal_index') and data._normal_index is not None and data._normal_index.size > 0:
-                            for val in data._normal_index:
-                                visual.geometry.trimesh.normalIndex.append(val)
-                if data.material and data.material.effect:
-                    if data.material.effect.emission and isinstance(data.material.effect.emission, tuple):
-                        visual.material.emission = colorVector2Instance(data.material.effect.emission)
-                    if data.material.effect.ambient and isinstance(data.material.effect.ambient, tuple):
-                        visual.material.ambient = colorVector2Instance(data.material.effect.ambient)
-                    if data.material.effect.specular and isinstance(data.material.effect.specular, tuple):
-                        visual.material.specular = colorVector2Instance(data.material.effect.specular)
-                    if data.material.effect.shininess:
-                        visual.material.shininess = data.material.effect.shininess
-                    if data.material.effect.index_of_refraction:
-                        visual.material.index_of_refraction = data.material.effect.index_of_refraction
-                    if data.material.effect.diffuse:
-                        if numpy.size(data.material.effect.diffuse) > 1\
-                                and all([isinstance(x, numbers.Number) for x in data.material.effect.diffuse]):
-                            # diffuse is defined by values
-                            visual.material.diffuse = colorVector2Instance(data.material.effect.diffuse)
-                        else:
-                            # diffuse is defined by *.tif files
-                            visual.material.texture = 'textures/' + \
-                                                      data.material.effect.diffuse.sampler.surface.image.path.split('/')[-1]
-                            txt = os.path.splitext(visual.material.texture)[1]
-                            if txt == '.tiff' or txt == '.tif':
-                                for dirname, dirnames, filenames in os.walk('.'):
-                                    for file in filenames:
-                                        if file == str(visual.material.texture.split('/')[-1]):
-                                            try:
-                                                tifImage = Image.open(os.path.join(dirname, file))
-                                                img = './' + robotName + '_textures'
-                                                tifImage.save(os.path.splitext(os.path.join(img, file))[0] + '.png')
-                                                visual.material.texture = (robotName +
-                                                                           '_textures/' + os.path.splitext(file)[0] + '.png')
-                                                print('translated image ' + visual.material.texture)
-                                            except IOError:
-                                                visual.material.texture = ""
-                                                print('failed to open ' + os.path.join(dirname, file))
-                            else:
-                                visual.material.diffuse = colorVector2Instance([1.0, 1.0, 1.0, 1.0])
-
-                link.visual.append(visual)
-    else:
-        for geometry in list(colladaMesh.scene.objects('geometry')):
-            for data in list(geometry.primitives()):
-                collision = Collision()
-                collision.position = node.position
-                collision.rotation = node.rotation
-                collision.geometry.scale = node.geometry.scale
-                for value in data.vertex:
-                    collision.geometry.trimesh.coord.append(numpy.array(value))
-                for value in data.vertex_index:
-                    collision.geometry.trimesh.coordIndex.append(value)
-                link.collision.append(collision)
 
 
 def getPosition(node):
@@ -656,7 +544,7 @@ def getVisual(link, node, path):
             link.visual.append(visual)
         elif hasElement(geometryElement, 'cylinder'):
             visual.geometry.cylinder.radius = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('radius'))
-            visual.geometry.cylinder.length = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('length'))
+            visual.geometry.cylinder.height = float(geometryElement.getElementsByTagName('cylinder')[0].getAttribute('length'))
             link.visual.append(visual)
         elif hasElement(geometryElement, 'sphere'):
             visual.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
@@ -671,23 +559,34 @@ def getVisual(link, node, path):
                 meshfile = meshfile[idx0 + len('package://'):]
             if geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale'):
                 meshScale = geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale').split()
-                visual.geometry.scale[0] = float(meshScale[0])
-                visual.geometry.scale[1] = float(meshScale[1])
-                visual.geometry.scale[2] = float(meshScale[2])
+                visual.scale[0] = float(meshScale[0])
+                visual.scale[1] = float(meshScale[1])
+                visual.scale[2] = float(meshScale[2])
+                if visual.scale[0] * visual.scale[1] * visual.scale[2] < 0.0:
+                    extension = os.path.splitext(meshfile)[1].lower()
+                    if extension in ['.dae', '.obj'] and targetVersion >= 'R2022b':
+                        visual.geometry.cadShape.ccw = False
+                    else:
+                        visual.geometry.mesh.ccw = False
             extension = os.path.splitext(meshfile)[1].lower()
-            if extension in extensionListSingleAppearance:
+            if extension in ['.dae', '.obj', '.stl']:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
+                if extension in ['.dae', '.obj'] and targetVersion >= 'R2022b':
+                    name += '_visual'
+                if not visual.geometry.mesh.ccw:
+                    name += '_cw'
                 if name in Geometry.reference:
                     visual.geometry = Geometry.reference[name]
                 else:
-                    visual.geometry.mesh.url = '"' + meshfile + '"'
+                    if extension in ['.dae', '.obj'] and targetVersion >= 'R2022b':
+                        visual.geometry.cadShape.url = '"' + meshfile + '"'
+                    else:
+                        visual.geometry.mesh.url = '"' + meshfile + '"'
                     visual.geometry.name = name
                     Geometry.reference[name] = visual.geometry
                 link.visual.append(visual)
-            elif extension == '.dae':
-                getColladaMesh(meshfile, visual, link)
             else:
-                print('Unsupported mesh format: \"' + extension + '\"')
+                print('Unsupported format: \"' + extension + '\"')
 
 
 def getCollision(link, node, path):
@@ -713,7 +612,7 @@ def getCollision(link, node, path):
         elif hasElement(geometryElement, 'cylinder'):
             element = geometryElement.getElementsByTagName('cylinder')[0]
             collision.geometry.cylinder.radius = float(element.getAttribute('radius'))
-            collision.geometry.cylinder.length = float(element.getAttribute('length'))
+            collision.geometry.cylinder.height = float(element.getAttribute('length'))
             link.collision.append(collision)
         elif hasElement(geometryElement, 'sphere'):
             collision.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
@@ -721,27 +620,32 @@ def getCollision(link, node, path):
         elif hasElement(geometryElement, 'mesh'):
             meshfile = os.path.normpath(os.path.join(path,
                                                      geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')))
+            extension = os.path.splitext(meshfile)[1].lower()
             if geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale'):
                 meshScale = geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale').split()
-                collision.geometry.scale[0] = float(meshScale[0])
-                collision.geometry.scale[1] = float(meshScale[1])
-                collision.geometry.scale[2] = float(meshScale[2])
+                collision.scale[0] = float(meshScale[0])
+                collision.scale[1] = float(meshScale[1])
+                collision.scale[2] = float(meshScale[2])
+                if collision.scale[0] * collision.scale[1] * collision.scale[2] < 0.0:
+                    if extension in ['.dae', '.obj', '.stl']:
+                        collision.geometry.mesh.ccw = False
             # hack for gazebo mesh database
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
                 meshfile = meshfile[idx0 + len('package://'):]
-            extension = os.path.splitext(meshfile)[1].lower()
-            if extension in extensionListSingleAppearance:
+
+            if extension in ['.dae', '.obj', '.stl']:
                 name = os.path.splitext(os.path.basename(meshfile))[0]
+                if not collision.geometry.mesh.ccw:
+                    name += '_cw'
                 if name in Geometry.reference:
                     collision.geometry = Geometry.reference[name]
                 else:
-                    collision.geometry.mesh.url = '"' + meshfile + '"'
+                    if extension in ['.dae', '.obj', '.stl']:
+                        collision.geometry.mesh.url = '"' + meshfile + '"'
                     collision.geometry.name = name
                     Geometry.reference[name] = collision.geometry
                 link.collision.append(collision)
-            elif extension == '.dae':
-                getColladaMesh(meshfile, collision, link)
             else:
                 print('Unsupported mesh format for collision: \"' + extension + '\"')
 
@@ -886,9 +790,12 @@ def removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot):
             if parentJointIndex is not None:
                 if childJointIndex is not None:
                     jointList[parentJointIndex].child = jointList[childJointIndex].child
-                    jointList[parentJointIndex].position = combineTranslations(jointList[parentJointIndex].position, rotateVector(jointList[childJointIndex].position, jointList[parentJointIndex].rotation))
-                    jointList[parentJointIndex].rotation = combineRotations(jointList[childJointIndex].rotation, jointList[parentJointIndex].rotation)
-                    jointList[parentJointIndex].name = jointList[parentJointIndex].parent + "-" + jointList[parentJointIndex].child
+                    jointList[parentJointIndex].position = combineTranslations(jointList[parentJointIndex].position, rotateVector(
+                        jointList[childJointIndex].position, jointList[parentJointIndex].rotation))
+                    jointList[parentJointIndex].rotation = combineRotations(
+                        jointList[childJointIndex].rotation, jointList[parentJointIndex].rotation)
+                    jointList[parentJointIndex].name = jointList[parentJointIndex].parent + \
+                        "-" + jointList[parentJointIndex].child
                     jointList.remove(jointList[childJointIndex])
                 else:
                     # Special case for dummy non-root links used to fix the base of the robot
@@ -910,6 +817,7 @@ def removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot):
 
     childList.clear()
     return staticBase
+
 
 def parseGazeboElement(element, parentLink, linkList):
     """Parse a Gazebo element."""
@@ -977,7 +885,7 @@ def parseGazeboElement(element, parentLink, linkList):
                         horizontalElement = scanElement.getElementsByTagName('horizontal')[0]
                         if hasElement(horizontalElement, 'samples'):
                             lidar.horizontalResolution = \
-                              int(float(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue))
+                                int(float(horizontalElement.getElementsByTagName('samples')[0].firstChild.nodeValue))
                         if hasElement(horizontalElement, 'min_angle') and hasElement(horizontalElement, 'max_angle'):
                             minAngle = float(horizontalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
                             maxAngle = float(horizontalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
@@ -986,11 +894,15 @@ def parseGazeboElement(element, parentLink, linkList):
                         verticalElement = scanElement.getElementsByTagName('vertical')[0]
                         if hasElement(verticalElement, 'samples'):
                             lidar.numberOfLayers = \
-                              int(verticalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
+                                int(verticalElement.getElementsByTagName('samples')[0].firstChild.nodeValue)
                         if hasElement(verticalElement, 'min_angle') and hasElement(verticalElement, 'max_angle'):
                             minAngle = float(verticalElement.getElementsByTagName('min_angle')[0].firstChild.nodeValue)
                             maxAngle = float(verticalElement.getElementsByTagName('max_angle')[0].firstChild.nodeValue)
                             lidar.verticalFieldOfView = maxAngle - minAngle
+                if hasElement(rayElement, 'clip'):
+                    clipElement = rayElement.getElementsByTagName('clip')[0]
+                    if hasElement(clipElement, 'near'):
+                        lidar.near = float(clipElement.getElementsByTagName('near')[0].firstChild.nodeValue)
                 if hasElement(rayElement, 'range'):
                     rangeElement = rayElement.getElementsByTagName('range')[0]
                     if hasElement(rangeElement, 'min'):
@@ -1005,4 +917,12 @@ def parseGazeboElement(element, parentLink, linkList):
                         lidar.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
                         if lidar.maxRange:
                             lidar.noise /= lidar.maxRange
+                # minRange and near default values are 0.01 in Webots; ensure constraint near <= minRange
+                if lidar.near and lidar.minRange and lidar.near > lidar.minRange:
+                    lidar.minRange = lidar.near
+                    print('The "minRange" value cannot be strictly inferior to the "near" value for a lidar, "minRange" has been set to the value of "near".')
+                elif not lidar.near and lidar.minRange < 0.01:
+                    lidar.near = lidar.minRange
+                elif not lidar.minRange and lidar.near > 0.01:
+                    lidar.minRange = lidar.near
             Lidar.list.append(lidar)

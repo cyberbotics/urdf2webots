@@ -2,7 +2,7 @@
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # This is a proto file for Webots for the RobotWithDummyLink
-# Extracted from: /home/benjamin/urdf2webots/tests/sources/RobotWithDummyLink.urdf
+# Extracted from: root://tests/sources/RobotWithDummyLink.urdf
 
 PROTO RobotWithDummyLink [
   field  SFVec3f     translation     0 0 0
@@ -29,10 +29,8 @@ PROTO RobotWithDummyLink [
       Shape {
         appearance PBRAppearance {
           baseColor 0.500000 0.500000 0.500000
-          transparency 0.000000
           roughness 1.000000
           metalness 0
-          emissiveColor 0.000000 0.000000 0.000000
         }
         geometry Cylinder {
           radius 0.1
@@ -46,10 +44,8 @@ PROTO RobotWithDummyLink [
           Shape {
             appearance PBRAppearance {
               baseColor 0.500000 0.500000 0.500000
-              transparency 0.000000
               roughness 1.000000
               metalness 0
-              emissiveColor 0.000000 0.000000 0.000000
             }
             geometry Cylinder {
               radius 0.1
@@ -63,10 +59,8 @@ PROTO RobotWithDummyLink [
               Shape {
                 appearance PBRAppearance {
                   baseColor 0.500000 0.500000 0.500000
-                  transparency 0.000000
                   roughness 1.000000
                   metalness 0
-                  emissiveColor 0.000000 0.000000 0.000000
                 }
                 geometry Cylinder {
                   radius 0.1
