@@ -2,7 +2,7 @@
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # This is a proto file for Webots for the HumanR2022a
-# Extracted from: /home/benja/urdf2webots/tests/sources/gait2392_simbody/urdf/human.urdf
+# Extracted from: root://tests/sources/gait2392_simbody/urdf/human.urdf
 
 PROTO HumanR2022a [
   field  SFVec3f     translation     0 0 0
