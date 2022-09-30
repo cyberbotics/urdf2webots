@@ -141,7 +141,7 @@ PROTO KukaLbrIiwa14R820 [
                                         Transform {
                                           scale -1.000000 -1.000000 -1.000000
                                           children [
-                                            DEF link_5_visual CadShape {
+                                            DEF link_5_visual_cw CadShape {
                                               url "root://tests/sources/kuka_lbr_iiwa_support/meshes/lbr_iiwa_14_r820/visual/link_5.dae"
                                               ccw FALSE
                                             }
