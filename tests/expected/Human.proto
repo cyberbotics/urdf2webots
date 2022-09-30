@@ -315,7 +315,10 @@ PROTO Human [
                               Transform {
                                 scale 1.000000 -1.000000 1.000000
                                 children [
-                                  USE Calcn_L_visual
+                                  DEF Calcn_L_visual_cw CadShape {
+                                    url "root://tests/sources/gait2392_simbody/meshes/obj/Calcn L.obj"
+                                    ccw FALSE
+                                  }
                                 ]
                               }
                               HingeJoint {
