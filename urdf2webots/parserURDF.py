@@ -573,6 +573,8 @@ def getVisual(link, node, path):
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if extension in ['.dae', '.obj'] and targetVersion >= 'R2022b':
                     name += '_visual'
+                if not visual.geometry.cadShape.ccw:
+                    name += '_cw'
                 if not visual.geometry.mesh.ccw:
                     name += '_cw'
                 if name in Geometry.reference:
