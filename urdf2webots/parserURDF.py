@@ -939,6 +939,8 @@ def parseGazeboElement(element, parentLink, linkList):
                 noiseElement = sensorElement.getElementsByTagName('noise')[0]
                 if hasElement(noiseElement, 'stddev'):
                     rangefinder.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
+                    if rangefinder.maxRange:
+                            rangefinder.noise /= rangefinder.maxRange
             if hasElement(sensorElement, 'range'):
                 rangeElement = sensorElement.getElementsByTagName('range')[0]
                 if hasElement(rangeElement, 'min'):
