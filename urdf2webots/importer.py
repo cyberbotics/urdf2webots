@@ -234,7 +234,6 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
                 linkList.append(urdf2webots.parserURDF.getLink(link, urdfDirectory))
             for joint in jointElementList:
                 jointList.append(urdf2webots.parserURDF.getJoint(joint))
-            urdf2webots.writeRobot.staticBase = urdf2webots.parserURDF.removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot)
 
             for joint in jointList:
                 parentList.append(joint.parent)
@@ -273,6 +272,8 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
                             urdf2webots.parserURDF.RangeFinder.list +
                             urdf2webots.parserURDF.Lidar.list)
             print('There are %d links, %d joints and %d sensors' % (len(linkList), len(jointList), len(sensorList)))
+
+            urdf2webots.writeRobot.staticBase = urdf2webots.parserURDF.removeDummyLinksAndStaticBaseFlag(linkList, jointList, sensorList, toolSlot)
 
             if isProto:
                 urdf2webots.writeRobot.declaration(protoFile, robotName, initTranslation, initRotation)

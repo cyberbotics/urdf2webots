@@ -802,7 +802,7 @@ def isRootLink(link, childList):
             return False
     return True
 
-def removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot):
+def removeDummyLinksAndStaticBaseFlag(linkList, jointList, sensorList, toolSlot):
     """Remove the dummy links (links without masses) and return true in case a dummy link should
     set the base of the robot as static. """
     staticBase = False
@@ -816,6 +816,16 @@ def removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot):
 
         # We want to skip links between the robot root and the static environment.
         if isRootLink(link.name, childList):
+            linkIndex += 1
+            continue
+
+        # We must keep links that are used as reference frame for sensors
+        sensor_reference_frame = False
+        for sensor in sensorList:
+            if sensor.parentLink == link.name:
+                sensor_reference_frame = True
+                break
+        if sensor_reference_frame:
             linkIndex += 1
             continue
 
