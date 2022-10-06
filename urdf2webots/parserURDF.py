@@ -945,12 +945,6 @@ def parseGazeboElement(element, parentLink, linkList):
                     clipElement = cameraElement.getElementsByTagName('clip')[0]
                     if hasElement(clipElement, 'near'):
                         rangefinder.near = float(clipElement.getElementsByTagName('near')[0].firstChild.nodeValue)
-            if hasElement(sensorElement, 'noise'):
-                noiseElement = sensorElement.getElementsByTagName('noise')[0]
-                if hasElement(noiseElement, 'stddev'):
-                    rangefinder.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
-                    if rangefinder.maxRange:
-                            rangefinder.noise /= rangefinder.maxRange
             if hasElement(sensorElement, 'range'):
                 rangeElement = sensorElement.getElementsByTagName('range')[0]
                 if hasElement(rangeElement, 'min'):
@@ -959,6 +953,12 @@ def parseGazeboElement(element, parentLink, linkList):
                     rangefinder.maxRange = float(rangeElement.getElementsByTagName('max')[0].firstChild.nodeValue)
                 if hasElement(rangeElement, 'resolution'):
                     rangefinder.resolution = float(rangeElement.getElementsByTagName('resolution')[0].firstChild.nodeValue)
+            if hasElement(sensorElement, 'noise'):
+                noiseElement = sensorElement.getElementsByTagName('noise')[0]
+                if hasElement(noiseElement, 'stddev'):
+                    rangefinder.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
+                    if rangefinder.maxRange:
+                            rangefinder.noise /= rangefinder.maxRange
             # minRange and near default values are 0.01 in Webots; ensure constraint near <= minRange
             if rangefinder.near and rangefinder.minRange and rangefinder.near > rangefinder.minRange:
                 rangefinder.minRange = rangefinder.near
