@@ -6,11 +6,11 @@
 import sys
 
 # Check version of Python
-if sys.version_info < (3,5):
-    sys.exit('urdf2webots requires Python 3.5 or higher.')
+if sys.version_info < (3,7):
+    sys.exit('urdf2webots requires Python 3.7 or higher.')
 
 import errno
-import optparse
+import argparse
 import os
 import re
 import tempfile
@@ -293,39 +293,42 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
 
 
 if __name__ == '__main__':
-    optParser = optparse.OptionParser(usage='usage: %prog --input=my_robot.urdf [options]')
-    optParser.add_option('--input', dest='input', default='', help='Specifies the URDF file.')
-    optParser.add_option('--output', dest='output', default='', help='Specifies the path and, if ending in ".proto", name '
-                         'of the resulting PROTO file. The filename minus the .proto extension will be the robot name '
-                         '(for PROTO conversion only).')
-    optParser.add_option('--robot-name', dest='robotName', default=None, help='Specifies the name of the robot '
-                         'and generate a Robot node string instead of a PROTO file (has to be unique).')
-    optParser.add_option('--normal', dest='normal', action='store_true', default=False,
-                         help='If set, the normals are exported if present in the URDF definition.')
-    optParser.add_option('--box-collision', dest='boxCollision', action='store_true', default=False,
-                         help='If set, the bounding objects are approximated using boxes.')
-    optParser.add_option('--tool-slot', dest='toolSlot', default=None,
-                         help='Specify the link that you want to add a tool slot too (exact link name from URDF, for PROTO conversion only).')
-    optParser.add_option('--translation', dest='initTranslation', default='0 0 0',
-                         help='Set the translation field of your PROTO file or Webots VRML robot string.')
-    optParser.add_option('--rotation', dest='initRotation', default='0 0 1 0',
-                         help='Set the rotation field of your PROTO file or Webots Robot node string.')
-    optParser.add_option('--init-pos', dest='initPos', default=None,
-                         help='Set the initial positions of your robot joints. Example: --init-pos="[1.2, 0.5, -1.5]" would '
-                         'set the first 3 joints of your robot to the specified values, and leave the rest with their '
-                         'default value.')
-    optParser.add_option('--link-to-def', dest='linkToDef', action='store_true', default=False,
-                         help='Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName) '
-                         '(for PROTO conversion only).')
-    optParser.add_option('--joint-to-def', dest='jointToDef', action='store_true', default=False,
-                         help='Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) '
-                         '(for PROTO conversion only).')
-    optParser.add_option('--relative-path-prefix', dest='relativePathPrefix', default=None,
-                         help='If set and --input not specified, relative paths in your URDF file will be treated relatively to it '
-                         'rather than relatively to the current directory from which the script is called.')
-    optParser.add_option('--target', dest='targetVersion', default='R2022b', choices=['R2022b', 'R2022a', 'R2021b', 'R2021a', 'R2020b', 'R2020a'],
-                         help='Sets the Webots version the PROTO will target.')
-    options, args = optParser.parse_args()
-    convertUrdfFile(options.input, options.output, options.robotName, options.normal, options.boxCollision, options.toolSlot,
-        options.initTranslation, options.initRotation, options.initPos, options.linkToDef, options.jointToDef, options.relativePathPrefix,
-        options.targetVersion)
+    parser = argparse.ArgumentParser(description='usage: %prog --input=my_robot.urdf [options]')
+    parser.add_argument('--input', dest='input', default='', help='Specifies the URDF file.')
+    parser.add_argument('--output', dest='output', default='', help='Specifies the path and, if ending in ".proto", name '
+                        'of the resulting PROTO file. The filename minus the .proto extension will be the robot name '
+                        '(for PROTO conversion only).')
+    parser.add_argument('--robot-name', dest='robotName', default=None, help='Specifies the name of the robot '
+                        'and generate a Robot node string instead of a PROTO file (has to be unique).')
+    parser.add_argument('--normal', dest='normal', action='store_true', default=False,
+                        help='If set, the normals are exported if present in the URDF definition.')
+    parser.add_argument('--box-collision', dest='boxCollision', action='store_true', default=False,
+                        help='If set, the bounding objects are approximated using boxes.')
+    parser.add_argument('--tool-slot', dest='toolSlot', default=None,
+                        help='Specify the link that you want to add a tool slot too (exact link name from URDF, for PROTO '
+                        'conversion only).')
+    parser.add_argument('--translation', dest='initTranslation', default='0 0 0',
+                        help='Set the translation field of your PROTO file or Webots VRML robot string.')
+    parser.add_argument('--rotation', dest='initRotation', default='0 0 1 0',
+                        help='Set the rotation field of your PROTO file or Webots Robot node string.')
+    parser.add_argument('--init-pos', dest='initPos', default=None,
+                        help='Set the initial positions of your robot joints. Example: --init-pos="[1.2, 0.5, -1.5]" would '
+                        'set the first 3 joints of your robot to the specified values, and leave the rest with their '
+                        'default value.')
+    parser.add_argument('--link-to-def', dest='linkToDef', action='store_true', default=False,
+                        help='Creates a DEF with the link name for each solid to be able to access it using '
+                        'getFromProtoDef(defName) (for PROTO conversion only).')
+    parser.add_argument('--joint-to-def', dest='jointToDef', action='store_true', default=False,
+                        help='Creates a DEF with the joint name for each joint to be able to access it using '
+                        'getFromProtoDef(defName) (for PROTO conversion only).')
+    parser.add_argument('--relative-path-prefix', dest='relativePathPrefix', default=None,
+                        help='If set and --input not specified, relative paths in your URDF file will be treated relatively '
+                        'to it rather than relatively to the current directory from which the script is called.')
+    parser.add_argument('--target', dest='targetVersion', default='R2022b',
+                        choices=['R2023a', 'R2022b', 'R2022a', 'R2021b', 'R2021a', 'R2020b', 'R2020a'],
+                        help='Sets the Webots version the PROTO will target (will adapt which nodes will be used).')
+
+    args = parser.parse_args()
+    convertUrdfFile(args.input, args.output, args.robotName, args.normal, args.boxCollision, args.toolSlot,
+                    args.initTranslation, args.initRotation, args.initPos, args.linkToDef, args.jointToDef,
+                    args.relativePathPrefix, args.targetVersion)
