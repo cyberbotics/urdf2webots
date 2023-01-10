@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot name="AtlasV2.urdf" xmlns:xacro="http://ros.org/wiki/xacro">
+  <link name="base_link">
+  </link>
+  <joint name="LLegUhz" type="revolute">
+    <parent link="base_link"/>
+    <child link="LLegUhz"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="0 0.089 0" rpy="0 0 0"/>
+  </joint>
+  <link name="LLegUhz">
+  </link>
+  <joint name="LLegMhx" type="revolute">
+    <parent link="LLegUhz"/>
+    <child link="solid_4"/>
+    <axis xyz="1 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+  <link name="solid_4">
+  </link>
+  <link name="LUglut">
+    <visual>
+      <origin xyz="0 0 0" rpy="3.141193 1.570793 -3.141193"/>
+      <geometry>
+        <cylinder radius="0.019096" length="0.078396"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="3.141193 1.570793 -3.141193"/>
+      <geometry>
+        <cylinder radius="0.019096" length="0.078396"/>
+      </geometry>
+    </collision>
+    <visual>
+      <geometry>
+        <cylinder radius="0.019841" length="0.080842"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.019841" length="0.080842"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="LLegUhz_LUglut_joint" type="fixed">
+    <parent link="LLegUhz"/>
+    <child link="LUglut"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+</robot>
