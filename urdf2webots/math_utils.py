@@ -145,12 +145,14 @@ def rotateVector(vector, rotation):
     v.append(vector[0] * matrix[6] + vector[1] * matrix[7] + vector[2] * matrix[8])
     return v
 
+
 def combineRotations(rotation1, rotation2):
     """Combine two axis-angle rotations."""
     matrix1 = matrixFromRotation(rotation1)
     matrix2 = matrixFromRotation(rotation2)
     matrixRes = multiplyMatrix(matrix1, matrix2)
     return rotationFromMatrix(matrixRes)
+
 
 def combineTranslations(translation1, translation2):
     """Combine two translations."""

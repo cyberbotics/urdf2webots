@@ -28,8 +28,8 @@ class RGB():
     def __eq__(self, other):
         """To compare a RGB color with a float list."""
         if type(other) == list:
-            return ((self.red, self.green, self.blue) == (other[0], other[1],  other[2]))
-        return ((self.red, self.green, self.blue) == (other.red, other.green,  other.blue))
+            return ((self.red, self.green, self.blue) == (other[0], other[1], other[2]))
+        return ((self.red, self.green, self.blue) == (other.red, other.green, other.blue))
 
 
 # ref: https://marcodiiga.github.io/rgba-to-rgb-conversion
@@ -260,7 +260,8 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
 
     for boundingObject in link.collision:
         initialIndent = boundingLevel * indent if hasGroup else ''
-        if not boxCollision and (boundingObject.position != [0.0, 0.0, 0.0] or boundingObject.rotation[3] != 0.0 or boundingObject.scale != [1.0, 1.0, 1.0]):
+        if not boxCollision and (boundingObject.position != [0.0, 0.0, 0.0] or boundingObject.rotation[3] != 0.0
+                                 or boundingObject.scale != [1.0, 1.0, 1.0]):
             robotFile.write(initialIndent + 'Transform {\n')
             if boundingObject.position != [0.0, 0.0, 0.0]:
                 robotFile.write((boundingLevel + 1) * indent + 'translation %lf %lf %lf\n' % (boundingObject.position[0],
@@ -583,7 +584,7 @@ def URDFJoint(robotFile, joint, level, parentList, childList, linkList, jointLis
             URDFLink(robotFile, childLink, level + 1, parentList, childList,
                      linkList, jointList, sensorList, endpointPosition, endpointRotation,
                      boxCollision, normal, endpoint=True)
-            assert(not found_link)
+            assert not found_link
             found_link = True
     # case that non-existing link cited, set dummy flag
     if not found_link and joint.child:
