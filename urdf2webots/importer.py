@@ -4,11 +4,6 @@
 
 
 import sys
-
-# Check version of Python
-if sys.version_info < (3,7):
-    sys.exit('urdf2webots requires Python 3.7 or higher.')
-
 import errno
 import argparse
 import os
@@ -18,6 +13,10 @@ from xml.dom import minidom
 
 import urdf2webots.parserURDF
 import urdf2webots.writeRobot
+
+# Check version of Python
+if sys.version_info < (3, 7):
+    sys.exit('urdf2webots requires Python 3.7 or higher.')
 
 try:
     import rospkg
@@ -60,8 +59,8 @@ def mkdirSafe(directory):
 
 
 def convertUrdfFile(input=None, output=None, robotName=None, normal=False, boxCollision=False,
-                 toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
-                 initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, targetVersion='R2022b'):
+                    toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
+                    initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, targetVersion='R2022b'):
     """Convert a URDF file into a Webots PROTO file or Robot node string."""
     urdfContent = None
     if not input:
@@ -87,17 +86,16 @@ def convertUrdfFile(input=None, output=None, robotName=None, normal=False, boxCo
         # Set urdfPath for replacing "package://(.*)" occurences later
         convertUrdfFile.urdfPath = os.path.abspath(input)
 
-    return convertUrdfContent(urdfContent, output, robotName, normal, boxCollision,
-                 toolSlot, initTranslation, initRotation,
-                 initPos, linkToDef, jointToDef, relativePathPrefix, targetVersion)
+    return convertUrdfContent(urdfContent, output, robotName, normal, boxCollision, toolSlot, initTranslation, initRotation,
+                              initPos, linkToDef, jointToDef, relativePathPrefix, targetVersion)
 
 
 convertUrdfFile.urdfPath = None
 
 
 def convertUrdfContent(input, output=None, robotName=None, normal=False, boxCollision=False,
-                 toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
-                 initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, targetVersion='R2022b'):
+                       toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
+                       initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, targetVersion='R2022b'):
     """
     Convert a URDF content string into a Webots PROTO file or Robot node string.
     The current working directory will be used for relative paths in your URDF file.
@@ -169,7 +167,7 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
                         sys.stderr.write('Package "%s" not found.\n' % packageName)
                     except NameError:
                         sys.stderr.write('Impossible to find location of "%s" package, installing "rospkg" might help.\n'
-                                        % packageName)
+                                         % packageName)
                 else:
                     try:
                         directory = get_package_share_directory(packageName)
@@ -179,7 +177,7 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
                 sys.stderr.write('ROS not sourced, package "%s" will not be found.\n' % packageName)
         if os.path.split(directory)[1]:
             packagePath = os.path.split(directory)[0]
-            input = input.replace('package://'+packageName, packagePath+'/'+packageName)
+            input = input.replace('package://' + packageName, packagePath + '/' + packageName)
         else:
             sys.stderr.write('Can\'t determine package root path.\n')
 
@@ -220,7 +218,7 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
                     jointElementList.append(child)
                 elif child.localName == 'material':
                     if not child.hasAttribute('name') \
-                        or child.getAttribute('name') not in urdf2webots.parserURDF.Material.namedMaterial:
+                       or child.getAttribute('name') not in urdf2webots.parserURDF.Material.namedMaterial:
                         material = urdf2webots.parserURDF.Material()
                         material.parseFromMaterialNode(child)
 
@@ -267,13 +265,14 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
                     urdf2webots.parserURDF.parseGazeboElement(child, rootLink.name, linkList)
 
             sensorList = (urdf2webots.parserURDF.IMU.list +
-                            urdf2webots.parserURDF.P3D.list +
-                            urdf2webots.parserURDF.Camera.list +
-                            urdf2webots.parserURDF.RangeFinder.list +
-                            urdf2webots.parserURDF.Lidar.list)
+                          urdf2webots.parserURDF.P3D.list +
+                          urdf2webots.parserURDF.Camera.list +
+                          urdf2webots.parserURDF.RangeFinder.list +
+                          urdf2webots.parserURDF.Lidar.list)
             print('There are %d links, %d joints and %d sensors' % (len(linkList), len(jointList), len(sensorList)))
 
-            urdf2webots.writeRobot.staticBase = urdf2webots.parserURDF.removeDummyLinksAndStaticBaseFlag(linkList, jointList, sensorList, toolSlot)
+            urdf2webots.writeRobot.staticBase = urdf2webots.parserURDF.removeDummyLinksAndStaticBaseFlag(linkList, jointList,
+                                                                                                         sensorList, toolSlot)
 
             if isProto:
                 urdf2webots.writeRobot.declaration(protoFile, robotName, initTranslation, initRotation)
@@ -283,9 +282,9 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
                 protoFile.close()
                 return
             else:
-                urdf2webots.writeRobot.URDFLink(tmp_robot_file, rootLink, 0, parentList,
-                            childList, linkList, jointList, sensorList, boxCollision=boxCollision,
-                            normal=normal, robot=True, initTranslation=initTranslation, initRotation=initRotation)
+                urdf2webots.writeRobot.URDFLink(tmp_robot_file, rootLink, 0, parentList, childList, linkList, jointList,
+                                                sensorList, boxCollision=boxCollision, normal=normal, robot=True,
+                                                initTranslation=initTranslation, initRotation=initRotation)
 
                 tmp_robot_file.seek(0)
                 return (tmp_robot_file.read())
