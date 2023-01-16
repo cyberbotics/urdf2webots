@@ -584,7 +584,7 @@ def URDFJoint(robotFile, joint, level, parentList, childList, linkList, jointLis
             URDFLink(robotFile, childLink, level + 1, parentList, childList,
                      linkList, jointList, sensorList, endpointPosition, endpointRotation,
                      boxCollision, normal, endpoint=True)
-            assert(not found_link)
+            assert not found_link
             found_link = True
     # case that non-existing link cited, set dummy flag
     if not found_link and joint.child:
