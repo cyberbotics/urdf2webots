@@ -11,7 +11,7 @@ We love pull requests from everyone.
 
 ## Coding Style
 
-- Python should use the PEP8 standard, with the exception that lines up to 128 characters long are accepted:
+- Python should use the PEP8 standard (minus `E501`):
 
     > Note: using Atom with the `linter-flake8` linter package ensures that we respect our Python coding styles: `apm install linter-flake8`.
 

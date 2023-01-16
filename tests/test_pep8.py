@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright 1996-2023 Cyberbotics Ltd.
 #
@@ -139,7 +139,7 @@ class TestCodeFormat(unittest.TestCase):
     """Unit test of the PEP8 format in the tests."""
 
     def setUp(self):
-        """Get all the world file."""
+        """Get all python files."""
         self.files = []
         for rootPath, dirNames, fileNames in os.walk(ROOT_FOLDER):
             for fileName in fnmatch.filter(fileNames, '*.py'):
