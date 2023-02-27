@@ -47,6 +47,12 @@ modelPathsProto = [
         'output': os.path.join(resultDirectory, 'RobotWithDummyLink.proto'),
         'expected': [os.path.join(expectedDirectory, 'RobotWithDummyLink.proto')],
         'arguments': ''
+    },
+    {
+        'input': os.path.join(sourceDirectory, 'RobotWithLocalMeshes.urdf'),
+        'output': os.path.join(resultDirectory, 'RobotWithLocalMeshes.proto'),
+        'expected': [os.path.join(expectedDirectory, 'RobotWithLocalMeshes.proto')],
+        'arguments': ''
     }
 ]
 
