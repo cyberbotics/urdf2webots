@@ -202,8 +202,10 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
 
                 protoFile = open(outputFile, 'w')
                 urdf2webots.writeRobot.header(protoFile, urdfPath, robotName)
+                outputDirectory = os.path.dirname(os.path.abspath(outputFile))
             else:
                 tmp_robot_file = tempfile.NamedTemporaryFile(mode="w+", prefix='tempRobotURDFStringWebots')
+                outputDirectory = os.getcwd()
 
             urdf2webots.writeRobot.robotName = robotName
             urdf2webots.parserURDF.robotName = robotName  # pass robotName
@@ -229,7 +231,7 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
             rootLink = urdf2webots.parserURDF.Link()
 
             for link in linkElementList:
-                linkList.append(urdf2webots.parserURDF.getLink(link, urdfDirectory))
+                linkList.append(urdf2webots.parserURDF.getLink(link, urdfDirectory, outputDirectory))
             for joint in jointElementList:
                 jointList.append(urdf2webots.parserURDF.getJoint(joint))
 

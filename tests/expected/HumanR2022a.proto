@@ -2,7 +2,7 @@
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # This is a proto file for Webots for the HumanR2022a
-# Extracted from: root://tests/sources/gait2392_simbody/urdf/human.urdf
+# Extracted from: ../sources/gait2392_simbody/urdf/human.urdf
 
 PROTO HumanR2022a [
   field  SFVec3f     translation     0 0 0
@@ -33,7 +33,7 @@ PROTO HumanR2022a [
           metalness 0
         }
         geometry DEF Pelvis Mesh {
-          url "root://tests/sources/gait2392_simbody/meshes/obj/Pelvis.obj"
+          url "../sources/gait2392_simbody/meshes/obj/Pelvis.obj"
         }
       }
       HingeJoint {
@@ -63,7 +63,7 @@ PROTO HumanR2022a [
                 metalness 0
               }
               geometry DEF Femur_L Mesh {
-                url "root://tests/sources/gait2392_simbody/meshes/obj/Femur L.obj"
+                url "../sources/gait2392_simbody/meshes/obj/Femur L.obj"
               }
             }
             HingeJoint {
@@ -93,7 +93,7 @@ PROTO HumanR2022a [
                       metalness 0
                     }
                     geometry DEF Tibia_L Mesh {
-                      url "root://tests/sources/gait2392_simbody/meshes/obj/Tibia L.obj"
+                      url "../sources/gait2392_simbody/meshes/obj/Tibia L.obj"
                     }
                   }
                   HingeJoint {
@@ -123,7 +123,7 @@ PROTO HumanR2022a [
                             metalness 0
                           }
                           geometry DEF Talus_L Mesh {
-                            url "root://tests/sources/gait2392_simbody/meshes/obj/Talus L.obj"
+                            url "../sources/gait2392_simbody/meshes/obj/Talus L.obj"
                           }
                         }
                         HingeJoint {
@@ -153,7 +153,7 @@ PROTO HumanR2022a [
                                   metalness 0
                                 }
                                 geometry DEF Calcn_L Mesh {
-                                  url "root://tests/sources/gait2392_simbody/meshes/obj/Calcn L.obj"
+                                  url "../sources/gait2392_simbody/meshes/obj/Calcn L.obj"
                                 }
                               }
                               HingeJoint {
@@ -183,13 +183,13 @@ PROTO HumanR2022a [
                                         metalness 0
                                       }
                                       geometry DEF Toes_L Mesh {
-                                        url "root://tests/sources/gait2392_simbody/meshes/obj/Toes L.obj"
+                                        url "../sources/gait2392_simbody/meshes/obj/Toes L.obj"
                                       }
                                     }
                                   ]
                                   name "toes_l"
                                   boundingObject DEF Toes_L_001 Mesh {
-                                    url "root://tests/sources/gait2392_simbody/meshes/obj/Toes L.001.obj"
+                                    url "../sources/gait2392_simbody/meshes/obj/Toes L.001.obj"
                                   }
                                   physics Physics {
                                     density -1
@@ -205,7 +205,7 @@ PROTO HumanR2022a [
                             ]
                             name "calcn_l"
                             boundingObject DEF Calcn_L_001 Mesh {
-                              url "root://tests/sources/gait2392_simbody/meshes/obj/Calcn L.001.obj"
+                              url "../sources/gait2392_simbody/meshes/obj/Calcn L.001.obj"
                             }
                             physics Physics {
                               density -1
@@ -221,7 +221,7 @@ PROTO HumanR2022a [
                       ]
                       name "talus_l"
                       boundingObject DEF Talus_L_001 Mesh {
-                        url "root://tests/sources/gait2392_simbody/meshes/obj/Talus L.001.obj"
+                        url "../sources/gait2392_simbody/meshes/obj/Talus L.001.obj"
                       }
                       physics Physics {
                         density -1
@@ -237,7 +237,7 @@ PROTO HumanR2022a [
                 ]
                 name "tibia_l"
                 boundingObject DEF Tibia_L_001 Mesh {
-                  url "root://tests/sources/gait2392_simbody/meshes/obj/Tibia L.001.obj"
+                  url "../sources/gait2392_simbody/meshes/obj/Tibia L.001.obj"
                 }
                 physics Physics {
                   density -1
@@ -253,7 +253,7 @@ PROTO HumanR2022a [
           ]
           name "femur_l"
           boundingObject DEF Femur_L_001 Mesh {
-            url "root://tests/sources/gait2392_simbody/meshes/obj/Femur L.001.obj"
+            url "../sources/gait2392_simbody/meshes/obj/Femur L.001.obj"
           }
           physics Physics {
             density -1
@@ -292,7 +292,7 @@ PROTO HumanR2022a [
                 metalness 0
               }
               geometry DEF Femur_R Mesh {
-                url "root://tests/sources/gait2392_simbody/meshes/obj/Femur R.obj"
+                url "../sources/gait2392_simbody/meshes/obj/Femur R.obj"
               }
             }
             HingeJoint {
@@ -322,7 +322,7 @@ PROTO HumanR2022a [
                       metalness 0
                     }
                     geometry DEF Tibia_R Mesh {
-                      url "root://tests/sources/gait2392_simbody/meshes/obj/Tibia R.obj"
+                      url "../sources/gait2392_simbody/meshes/obj/Tibia R.obj"
                     }
                   }
                   HingeJoint {
@@ -352,7 +352,7 @@ PROTO HumanR2022a [
                             metalness 0
                           }
                           geometry DEF Talus_R Mesh {
-                            url "root://tests/sources/gait2392_simbody/meshes/obj/Talus R.obj"
+                            url "../sources/gait2392_simbody/meshes/obj/Talus R.obj"
                           }
                         }
                         HingeJoint {
@@ -385,7 +385,7 @@ PROTO HumanR2022a [
                                       metalness 0
                                     }
                                     geometry DEF Calcn_L_cw Mesh {
-                                      url "root://tests/sources/gait2392_simbody/meshes/obj/Calcn L.obj"
+                                      url "../sources/gait2392_simbody/meshes/obj/Calcn L.obj"
                                       ccw FALSE
                                     }
                                   }
@@ -418,13 +418,13 @@ PROTO HumanR2022a [
                                         metalness 0
                                       }
                                       geometry DEF Toes_R Mesh {
-                                        url "root://tests/sources/gait2392_simbody/meshes/obj/Toes R.obj"
+                                        url "../sources/gait2392_simbody/meshes/obj/Toes R.obj"
                                       }
                                     }
                                   ]
                                   name "toes_r"
                                   boundingObject DEF Toes_R_001 Mesh {
-                                    url "root://tests/sources/gait2392_simbody/meshes/obj/Toes R.001.obj"
+                                    url "../sources/gait2392_simbody/meshes/obj/Toes R.001.obj"
                                   }
                                   physics Physics {
                                     density -1
@@ -443,7 +443,7 @@ PROTO HumanR2022a [
                               scale 1.000000 -1.000000 1.000000
                               children [
                                 DEF Calcn_L_001_cw Mesh {
-                                  url "root://tests/sources/gait2392_simbody/meshes/obj/Calcn L.001.obj"
+                                  url "../sources/gait2392_simbody/meshes/obj/Calcn L.001.obj"
                                   ccw FALSE
                                 }
                               ]
@@ -462,7 +462,7 @@ PROTO HumanR2022a [
                       ]
                       name "talus_r"
                       boundingObject DEF Talus_R_001 Mesh {
-                        url "root://tests/sources/gait2392_simbody/meshes/obj/Talus R.001.obj"
+                        url "../sources/gait2392_simbody/meshes/obj/Talus R.001.obj"
                       }
                       physics Physics {
                         density -1
@@ -478,7 +478,7 @@ PROTO HumanR2022a [
                 ]
                 name "tibia_r"
                 boundingObject DEF Tibia_R_001 Mesh {
-                  url "root://tests/sources/gait2392_simbody/meshes/obj/Tibia R.001.obj"
+                  url "../sources/gait2392_simbody/meshes/obj/Tibia R.001.obj"
                 }
                 physics Physics {
                   density -1
@@ -494,7 +494,7 @@ PROTO HumanR2022a [
           ]
           name "femur_r"
           boundingObject DEF Femur_R_001 Mesh {
-            url "root://tests/sources/gait2392_simbody/meshes/obj/Femur R.001.obj"
+            url "../sources/gait2392_simbody/meshes/obj/Femur R.001.obj"
           }
           physics Physics {
             density -1
@@ -534,7 +534,7 @@ PROTO HumanR2022a [
                 metalness 0
               }
               geometry DEF Torso Mesh {
-                url "root://tests/sources/gait2392_simbody/meshes/obj/Torso.obj"
+                url "../sources/gait2392_simbody/meshes/obj/Torso.obj"
               }
             }
             HingeJoint {
@@ -564,7 +564,7 @@ PROTO HumanR2022a [
                       metalness 0
                     }
                     geometry DEF Humerus_L Mesh {
-                      url "root://tests/sources/gait2392_simbody/meshes/obj/Humerus L.obj"
+                      url "../sources/gait2392_simbody/meshes/obj/Humerus L.obj"
                     }
                   }
                   HingeJoint {
@@ -594,7 +594,7 @@ PROTO HumanR2022a [
                             metalness 0
                           }
                           geometry DEF Ulna_L Mesh {
-                            url "root://tests/sources/gait2392_simbody/meshes/obj/Ulna L.obj"
+                            url "../sources/gait2392_simbody/meshes/obj/Ulna L.obj"
                           }
                         }
                         HingeJoint {
@@ -624,7 +624,7 @@ PROTO HumanR2022a [
                                   metalness 0
                                 }
                                 geometry DEF Radius_L Mesh {
-                                  url "root://tests/sources/gait2392_simbody/meshes/obj/Radius L.obj"
+                                  url "../sources/gait2392_simbody/meshes/obj/Radius L.obj"
                                 }
                               }
                               HingeJoint {
@@ -654,13 +654,13 @@ PROTO HumanR2022a [
                                         metalness 0
                                       }
                                       geometry DEF Hand_L Mesh {
-                                        url "root://tests/sources/gait2392_simbody/meshes/obj/Hand L.obj"
+                                        url "../sources/gait2392_simbody/meshes/obj/Hand L.obj"
                                       }
                                     }
                                   ]
                                   name "hand_l"
                                   boundingObject DEF Hand_L_001 Mesh {
-                                    url "root://tests/sources/gait2392_simbody/meshes/obj/Hand L.001.obj"
+                                    url "../sources/gait2392_simbody/meshes/obj/Hand L.001.obj"
                                   }
                                   physics Physics {
                                     density -1
@@ -676,7 +676,7 @@ PROTO HumanR2022a [
                             ]
                             name "radius_l"
                             boundingObject DEF Radius_L_001 Mesh {
-                              url "root://tests/sources/gait2392_simbody/meshes/obj/Radius L.001.obj"
+                              url "../sources/gait2392_simbody/meshes/obj/Radius L.001.obj"
                             }
                             physics Physics {
                               density -1
@@ -692,7 +692,7 @@ PROTO HumanR2022a [
                       ]
                       name "ulna_l"
                       boundingObject DEF Ulna_L_001 Mesh {
-                        url "root://tests/sources/gait2392_simbody/meshes/obj/Ulna L.001.obj"
+                        url "../sources/gait2392_simbody/meshes/obj/Ulna L.001.obj"
                       }
                       physics Physics {
                         density -1
@@ -708,7 +708,7 @@ PROTO HumanR2022a [
                 ]
                 name "humerus_l"
                 boundingObject DEF Humerus_L_001 Mesh {
-                  url "root://tests/sources/gait2392_simbody/meshes/obj/Humerus L.001.obj"
+                  url "../sources/gait2392_simbody/meshes/obj/Humerus L.001.obj"
                 }
                 physics Physics {
                   density -1
@@ -748,7 +748,7 @@ PROTO HumanR2022a [
                       metalness 0
                     }
                     geometry DEF Humerus_R Mesh {
-                      url "root://tests/sources/gait2392_simbody/meshes/obj/Humerus R.obj"
+                      url "../sources/gait2392_simbody/meshes/obj/Humerus R.obj"
                     }
                   }
                   HingeJoint {
@@ -778,7 +778,7 @@ PROTO HumanR2022a [
                             metalness 0
                           }
                           geometry DEF Ulna_R Mesh {
-                            url "root://tests/sources/gait2392_simbody/meshes/obj/Ulna R.obj"
+                            url "../sources/gait2392_simbody/meshes/obj/Ulna R.obj"
                           }
                         }
                         HingeJoint {
@@ -808,7 +808,7 @@ PROTO HumanR2022a [
                                   metalness 0
                                 }
                                 geometry DEF Radius_R Mesh {
-                                  url "root://tests/sources/gait2392_simbody/meshes/obj/Radius R.obj"
+                                  url "../sources/gait2392_simbody/meshes/obj/Radius R.obj"
                                 }
                               }
                               HingeJoint {
@@ -838,13 +838,13 @@ PROTO HumanR2022a [
                                         metalness 0
                                       }
                                       geometry DEF Hand_R Mesh {
-                                        url "root://tests/sources/gait2392_simbody/meshes/obj/Hand R.obj"
+                                        url "../sources/gait2392_simbody/meshes/obj/Hand R.obj"
                                       }
                                     }
                                   ]
                                   name "hand_r"
                                   boundingObject DEF Hand_R_001 Mesh {
-                                    url "root://tests/sources/gait2392_simbody/meshes/obj/Hand R.001.obj"
+                                    url "../sources/gait2392_simbody/meshes/obj/Hand R.001.obj"
                                   }
                                   physics Physics {
                                     density -1
@@ -860,7 +860,7 @@ PROTO HumanR2022a [
                             ]
                             name "radius_r"
                             boundingObject DEF Radius_R_001 Mesh {
-                              url "root://tests/sources/gait2392_simbody/meshes/obj/Radius R.001.obj"
+                              url "../sources/gait2392_simbody/meshes/obj/Radius R.001.obj"
                             }
                             physics Physics {
                               density -1
@@ -876,7 +876,7 @@ PROTO HumanR2022a [
                       ]
                       name "ulna_r"
                       boundingObject DEF Ulna_R_001 Mesh {
-                        url "root://tests/sources/gait2392_simbody/meshes/obj/Ulna R.001.obj"
+                        url "../sources/gait2392_simbody/meshes/obj/Ulna R.001.obj"
                       }
                       physics Physics {
                         density -1
@@ -892,7 +892,7 @@ PROTO HumanR2022a [
                 ]
                 name "humerus_r"
                 boundingObject DEF Humerus_R_001 Mesh {
-                  url "root://tests/sources/gait2392_simbody/meshes/obj/Humerus R.001.obj"
+                  url "../sources/gait2392_simbody/meshes/obj/Humerus R.001.obj"
                 }
                 physics Physics {
                   density -1
@@ -908,7 +908,7 @@ PROTO HumanR2022a [
           ]
           name "torso"
           boundingObject DEF Torso_001 Mesh {
-            url "root://tests/sources/gait2392_simbody/meshes/obj/Torso.001.obj"
+            url "../sources/gait2392_simbody/meshes/obj/Torso.001.obj"
           }
           physics Physics {
             density -1
@@ -924,7 +924,7 @@ PROTO HumanR2022a [
     ]
     name IS name
     boundingObject DEF Pelvis_001 Mesh {
-      url "root://tests/sources/gait2392_simbody/meshes/obj/Pelvis.001.obj"
+      url "../sources/gait2392_simbody/meshes/obj/Pelvis.001.obj"
     }
     physics Physics {
       density -1
