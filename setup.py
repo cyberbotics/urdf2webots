@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='urdf2webots',
-    version='1.0.18',
+    version='2.0.3',
     author='Cyberbotics',
     author_email='support@cyberbotics.com',
     description='A converter between URDF and PROTO files.',

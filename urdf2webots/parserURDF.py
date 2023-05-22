@@ -17,13 +17,14 @@ from urdf2webots.math_utils import convertRPYtoEulerAxis, rotateVector, combineR
 
 # to pass from external
 robotName = ''
-targetVersion = 'R2022b'
+targetVersion = 'R2023b'
+
 
 class Inertia():
     """Define inertia object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.position = [0.0, 0.0, 0.0]
         self.rotation = [0.0, 0.0, 1.0, 0.0]
         self.mass = None
@@ -39,7 +40,7 @@ class Box():
     """Define box object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.x = 0.0
         self.y = 0.0
         self.z = 0.0
@@ -49,7 +50,7 @@ class Cylinder():
     """Define cylinder object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.radius = 0.0
         self.height = 0.0
 
@@ -58,7 +59,7 @@ class Sphere():
     """Define sphere object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.radius = 0.0
 
 
@@ -66,7 +67,7 @@ class Mesh():
     """Define mesh object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.url = ''
         self.ccw = True
 
@@ -75,7 +76,7 @@ class CadShape():
     """Define CadShape object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.url = ''
         self.ccw = True
 
@@ -86,7 +87,7 @@ class Geometry():
     reference = {}
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.box = Box()
         self.cylinder = Cylinder()
         self.sphere = Sphere()
@@ -100,7 +101,7 @@ class Color():
     """Define color object."""
 
     def __init__(self, red=0.5, green=0.0, blue=0.0, alpha=1.0):
-        """Initializatization."""
+        """Initialization."""
         self.red = red
         self.green = green
         self.blue = blue
@@ -113,7 +114,7 @@ class Material():
     namedMaterial = {}
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.emission = Color(0.0, 0.0, 0.0, 1.0)
         self.ambient = Color(0.0, 0.0, 0.0, 0.0)
         self.diffuse = Color(0.5, 0.5, 0.5, 1.0)
@@ -145,7 +146,7 @@ class Visual():
     """Define visual object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.position = [0.0, 0.0, 0.0]
         self.rotation = [0.0, 0.0, 1.0, 0.0]
         self.scale = [1.0, 1.0, 1.0]
@@ -157,7 +158,7 @@ class Collision():
     """Define collision object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.position = [0.0, 0.0, 0.0]
         self.rotation = [0.0, 0.0, 1.0, 0.0]
         self.scale = [1.0, 1.0, 1.0]
@@ -168,7 +169,7 @@ class Calibration():
     """Define calibration object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.limit = 0.0
         self.rising = True
 
@@ -177,7 +178,7 @@ class Dynamics():
     """Define dynamics object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.damping = 0.0
         self.friction = 0.0
 
@@ -186,7 +187,7 @@ class Limit():
     """Define joint limit object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.lower = 0.0
         self.upper = 0.0
         self.effort = 10000  # if not specified in the URDF, there is no limit
@@ -197,7 +198,7 @@ class Safety():
     """Define joint safety object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.lower = 0.0
         self.upper = 0.0
         self.kPosition = 0.0
@@ -208,7 +209,7 @@ class Link():
     """Define link object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.name = 'default'
         self.inertia = Inertia()
         self.visual = []
@@ -220,7 +221,7 @@ class Joint():
     """Define joint object."""
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.name = 'default'
         self.type = 'default'
         self.position = [0.0, 0.0, 0.0]
@@ -240,7 +241,7 @@ class IMU():
     list = []
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.name = 'imu'
         self.gaussianNoise = 0
         self.parentLink = None
@@ -253,7 +254,7 @@ class IMU():
         file.write(indentationLevel * indent + 'InertialUnit {\n')
         file.write(indentationLevel * indent + '  name "%s inertial"\n' % self.name)
         if self.gaussianNoise > 0:
-            file.write(indentationLevel * indent + '  noise %lf\n' % (self.gaussianNoise / (math.pi/2)))
+            file.write(indentationLevel * indent + '  noise %lf\n' % (self.gaussianNoise / (math.pi / 2)))
         file.write(indentationLevel * indent + '}\n')
 
         # export Accelerometer
@@ -287,7 +288,7 @@ class P3D():
     list = []
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.name = 'p3d'
         self.gaussianNoise = 0
         self.noiseCorrelation = 0
@@ -311,7 +312,7 @@ class P3D():
         file.write(indentationLevel * indent + 'InertialUnit {\n')
         file.write(indentationLevel * indent + '  name "%s inertial"\n' % self.name)
         if self.gaussianNoise > 0:
-            file.write(indentationLevel * indent + '  noise %lf\n' % (self.gaussianNoise / (math.pi/2)))
+            file.write(indentationLevel * indent + '  noise %lf\n' % (self.gaussianNoise / (math.pi / 2)))
         file.write(indentationLevel * indent + '}\n')
 
         # export Gyro
@@ -329,7 +330,7 @@ class Camera():
     list = []
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.name = 'camera'
         self.fov = None
         self.width = None
@@ -353,13 +354,55 @@ class Camera():
         file.write(indentationLevel * indent + '}\n')
 
 
+class RangeFinder():
+    """Define a range finder sensor."""
+
+    list = []
+
+    def __init__(self):
+        """Initialization."""
+        self.name = 'rangefinder'
+        self.fov = None
+        self.width = None
+        self.height = None
+        self.near = None
+        self.minRange = None
+        self.maxRange = None
+        self.resolution = None
+        self.noise = None
+        self.isImager = True
+
+    def export(self, file, indentationLevel):
+        """Export this range finder."""
+        indent = '  '
+        file.write(indentationLevel * indent + 'RangeFinder {\n')
+        file.write(indentationLevel * indent + '  name "%s"\n' % self.name)
+        if self.fov:
+            file.write(indentationLevel * indent + '  fieldOfView %lf\n' % self.fov)
+        if self.width:
+            file.write(indentationLevel * indent + '  width %d\n' % self.width)
+        if self.height:
+            file.write(indentationLevel * indent + '  height %d\n' % self.height)
+        if self.noise:
+            file.write(indentationLevel * indent + '  noise %lf\n' % self.noise)
+        if self.near:
+            file.write(indentationLevel * indent + '  near %lf\n' % self.near)
+        if self.minRange:
+            file.write(indentationLevel * indent + '  minRange %lf\n' % self.minRange)
+        if self.maxRange:
+            file.write(indentationLevel * indent + '  maxRange %lf\n' % self.maxRange)
+        if self.resolution:
+            file.write(indentationLevel * indent + '  resolution %lf\n' % self.resolution)
+        file.write(indentationLevel * indent + '}\n')
+
+
 class Lidar():
     """Define a lidar sensor."""
 
     list = []
 
     def __init__(self):
-        """Initializatization."""
+        """Initialization."""
         self.name = 'lidar'
         self.fov = None
         self.verticalFieldOfView = None
@@ -472,7 +515,7 @@ def getInertia(node):
     return inertia
 
 
-def getVisual(link, node, path):
+def getVisual(link, node, path, outputDirectory):
     """Parse visual data of a link."""
     for index in range(0, len(node.getElementsByTagName('visual'))):
         visual = Visual()
@@ -552,7 +595,8 @@ def getVisual(link, node, path):
         elif hasElement(geometryElement, 'mesh'):
             meshfile = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
             if not os.path.isabs(meshfile):
-                meshfile = os.path.normpath(os.path.join(path, meshfile))
+                # Use the path relative to the output file
+                meshfile = os.path.normpath(os.path.relpath(os.path.join(path, meshfile), outputDirectory))
             # hack for gazebo mesh database
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
@@ -573,6 +617,8 @@ def getVisual(link, node, path):
                 name = os.path.splitext(os.path.basename(meshfile))[0]
                 if extension in ['.dae', '.obj'] and targetVersion >= 'R2022b':
                     name += '_visual'
+                if not visual.geometry.cadShape.ccw:
+                    name += '_cw'
                 if not visual.geometry.mesh.ccw:
                     name += '_cw'
                 if name in Geometry.reference:
@@ -589,7 +635,7 @@ def getVisual(link, node, path):
                 print('Unsupported format: \"' + extension + '\"')
 
 
-def getCollision(link, node, path):
+def getCollision(link, node, path, outputDirectory):
     """Parse collision of a link."""
     for index in range(0, len(node.getElementsByTagName('collision'))):
         collision = Collision()
@@ -618,8 +664,10 @@ def getCollision(link, node, path):
             collision.geometry.sphere.radius = float(geometryElement.getElementsByTagName('sphere')[0].getAttribute('radius'))
             link.collision.append(collision)
         elif hasElement(geometryElement, 'mesh'):
-            meshfile = os.path.normpath(os.path.join(path,
-                                                     geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')))
+            meshfile = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
+            if not os.path.isabs(meshfile):
+                # Use the path relative to the output file
+                meshfile = os.path.normpath(os.path.relpath(os.path.join(path, meshfile), outputDirectory))
             extension = os.path.splitext(meshfile)[1].lower()
             if geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale'):
                 meshScale = geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale').split()
@@ -711,16 +759,16 @@ def getSafety(node):
     return safety
 
 
-def getLink(node, path):
+def getLink(node, path, outputDirectory):
     """Parse a link."""
     link = Link()
     link.name = node.getAttribute('name')
     if hasElement(node, 'inertial'):
         link.inertia = getInertia(node)
     if hasElement(node, 'visual'):
-        getVisual(link, node, path)
+        getVisual(link, node, path, outputDirectory)
     if hasElement(node, 'collision'):
-        getCollision(link, node, path)
+        getCollision(link, node, path, outputDirectory)
     if not any([hasElement(node, 'inertial'), hasElement(node, 'visual'), hasElement(node, 'collision')]):
         link.inertia.mass = None
     return link
@@ -758,7 +806,8 @@ def isRootLink(link, childList):
             return False
     return True
 
-def removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot):
+
+def removeDummyLinksAndStaticBaseFlag(linkList, jointList, sensorList, toolSlot):
     """Remove the dummy links (links without masses) and return true in case a dummy link should
     set the base of the robot as static. """
     staticBase = False
@@ -772,6 +821,16 @@ def removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot):
 
         # We want to skip links between the robot root and the static environment.
         if isRootLink(link.name, childList):
+            linkIndex += 1
+            continue
+
+        # We must keep links that are used as reference frame for sensors
+        sensor_reference_frame = False
+        for sensor in sensorList:
+            if sensor.parentLink == link.name:
+                sensor_reference_frame = True
+                break
+        if sensor_reference_frame:
             linkIndex += 1
             continue
 
@@ -790,8 +849,10 @@ def removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot):
             if parentJointIndex is not None:
                 if childJointIndex is not None:
                     jointList[parentJointIndex].child = jointList[childJointIndex].child
-                    jointList[parentJointIndex].position = combineTranslations(jointList[parentJointIndex].position, rotateVector(
-                        jointList[childJointIndex].position, jointList[parentJointIndex].rotation))
+                    jointList[parentJointIndex].position = combineTranslations(
+                        jointList[parentJointIndex].position,
+                        rotateVector(jointList[childJointIndex].position, jointList[parentJointIndex].rotation)
+                    )
                     jointList[parentJointIndex].rotation = combineRotations(
                         jointList[childJointIndex].rotation, jointList[parentJointIndex].rotation)
                     jointList[parentJointIndex].name = jointList[parentJointIndex].parent + \
@@ -803,8 +864,8 @@ def removeDummyLinksAndStaticBaseFlag(linkList, jointList, toolSlot):
                     if isRootLink(parentLink, childList):
                         # Ensure the parent link does not have physics, if it does, it should be kept as-is
                         # since some sensors require the parent to have physics
-                        for l in linkList:
-                            if l.name == parentLink and l.inertia.mass is None:
+                        for item in linkList:
+                            if item.name == parentLink and item.inertia.mass is None:
                                 staticBase = True
 
                     jointList.remove(jointList[parentJointIndex])
@@ -873,6 +934,48 @@ def parseGazeboElement(element, parentLink, linkList):
                 if hasElement(noiseElement, 'stddev'):
                     camera.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
             Camera.list.append(camera)
+        elif sensorElement.getAttribute('type') == 'depth':
+            rangefinder = RangeFinder()
+            rangefinder.parentLink = parentLink
+            rangefinder.name = sensorElement.getAttribute('name')
+            if hasElement(sensorElement, 'camera'):
+                cameraElement = sensorElement.getElementsByTagName('camera')[0]
+                if hasElement(cameraElement, 'horizontal_fov'):
+                    rangefinder.fov = float(cameraElement.getElementsByTagName('horizontal_fov')[0].firstChild.nodeValue)
+                if hasElement(cameraElement, 'image'):
+                    imageElement = cameraElement.getElementsByTagName('image')[0]
+                    if hasElement(imageElement, 'width'):
+                        rangefinder.width = int(imageElement.getElementsByTagName('width')[0].firstChild.nodeValue)
+                    if hasElement(imageElement, 'height'):
+                        rangefinder.height = int(imageElement.getElementsByTagName('height')[0].firstChild.nodeValue)
+                if hasElement(cameraElement, 'clip'):
+                    clipElement = cameraElement.getElementsByTagName('clip')[0]
+                    if hasElement(clipElement, 'near'):
+                        rangefinder.near = float(clipElement.getElementsByTagName('near')[0].firstChild.nodeValue)
+            if hasElement(sensorElement, 'range'):
+                rangeElement = sensorElement.getElementsByTagName('range')[0]
+                if hasElement(rangeElement, 'min'):
+                    rangefinder.minRange = float(rangeElement.getElementsByTagName('min')[0].firstChild.nodeValue)
+                if hasElement(rangeElement, 'max'):
+                    rangefinder.maxRange = float(rangeElement.getElementsByTagName('max')[0].firstChild.nodeValue)
+                if hasElement(rangeElement, 'resolution'):
+                    rangefinder.resolution = float(rangeElement.getElementsByTagName('resolution')[0].firstChild.nodeValue)
+            if hasElement(sensorElement, 'noise'):
+                noiseElement = sensorElement.getElementsByTagName('noise')[0]
+                if hasElement(noiseElement, 'stddev'):
+                    rangefinder.noise = float(noiseElement.getElementsByTagName('stddev')[0].firstChild.nodeValue)
+                    if rangefinder.maxRange:
+                        rangefinder.noise /= rangefinder.maxRange
+            # minRange and near default values are 0.01 in Webots; ensure constraint near <= minRange
+            if rangefinder.near and rangefinder.minRange and rangefinder.near > rangefinder.minRange:
+                rangefinder.minRange = rangefinder.near
+                print('The "minRange" value cannot be strictly inferior to the "near" value for a rangefinder, "minRange" has '
+                      'been set to the value of "near".')
+            elif not rangefinder.near and rangefinder.minRange < 0.01:
+                rangefinder.near = rangefinder.minRange
+            elif not rangefinder.minRange and rangefinder.near > 0.01:
+                rangefinder.minRange = rangefinder.near
+            RangeFinder.list.append(rangefinder)
         elif sensorElement.getAttribute('type') == 'ray' or sensorElement.getAttribute('type') == 'gpu_ray':
             lidar = Lidar()
             lidar.parentLink = parentLink
@@ -920,7 +1023,8 @@ def parseGazeboElement(element, parentLink, linkList):
                 # minRange and near default values are 0.01 in Webots; ensure constraint near <= minRange
                 if lidar.near and lidar.minRange and lidar.near > lidar.minRange:
                     lidar.minRange = lidar.near
-                    print('The "minRange" value cannot be strictly inferior to the "near" value for a lidar, "minRange" has been set to the value of "near".')
+                    print('The "minRange" value cannot be strictly inferior to the "near" value for a lidar, "minRange" has '
+                          'been set to the value of "near".')
                 elif not lidar.near and lidar.minRange < 0.01:
                     lidar.near = lidar.minRange
                 elif not lidar.minRange and lidar.near > 0.01:

@@ -8,7 +8,7 @@ jobs:
   tests:
     strategy:
       matrix:
-        python: [3.5, 3.6, 3.7, 3.8]
+        python: ['3.7', '3.8', '3.9', '3.10']
     runs-on: ubuntu-latest
     env:
       CI: 1

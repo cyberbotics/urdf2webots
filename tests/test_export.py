@@ -8,7 +8,7 @@ import unittest
 
 from urdf2webots.importer import convertUrdfContent, convertUrdfFile
 
-rootDirectory = os.path.dirname(os.path.dirname(__file__)) + os.path.sep
+rootDirectory = os.path.dirname(os.path.dirname(__file__))
 testDirectory = os.path.join(rootDirectory, 'tests')
 sourceDirectory = os.path.join(testDirectory, 'sources')
 resultDirectory = os.path.join(testDirectory, 'results')
@@ -46,6 +46,12 @@ modelPathsProto = [
         'input': os.path.join(sourceDirectory, 'RobotWithDummyLink.urdf'),
         'output': os.path.join(resultDirectory, 'RobotWithDummyLink.proto'),
         'expected': [os.path.join(expectedDirectory, 'RobotWithDummyLink.proto')],
+        'arguments': ''
+    },
+    {
+        'input': os.path.join(sourceDirectory, 'RobotWithLocalMeshes.urdf'),
+        'output': os.path.join(resultDirectory, 'RobotWithLocalMeshes.proto'),
+        'expected': [os.path.join(expectedDirectory, 'RobotWithLocalMeshes.proto')],
         'arguments': ''
     }
 ]
@@ -93,13 +99,12 @@ class TestScript(unittest.TestCase):
         """Cleanup results directory."""
         shutil.rmtree(resultDirectory, ignore_errors=True)
         os.makedirs(resultDirectory)
-
         # prepare urls
         for root, _, files in os.walk(expectedDirectory):
             for file in files:
                 with open(os.path.join(root, file), 'r') as f:
                     contents = f.read()
-                    contents = contents.replace('root://', rootDirectory)
+                    contents = contents.replace('root://', rootDirectory + os.path.sep)
 
                 with open(os.path.join(root, file), 'w') as f:
                     f.write(contents)
@@ -154,7 +159,7 @@ class TestScript(unittest.TestCase):
             for file in files:
                 with open(os.path.join(root, file), 'r') as f:
                     contents = f.read()
-                    contents = contents.replace(rootDirectory, 'root://')
+                    contents = contents.replace(rootDirectory + os.path.sep, 'root://')
 
                 with open(os.path.join(root, file), 'w') as f:
                     f.write(contents)
