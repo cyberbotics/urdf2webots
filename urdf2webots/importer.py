@@ -60,7 +60,7 @@ def mkdirSafe(directory):
 
 def convertUrdfFile(input=None, output=None, robotName=None, normal=False, boxCollision=False,
                     toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
-                    initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, targetVersion='R2022b'):
+                    initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, targetVersion='R2023a'):
     """Convert a URDF file into a Webots PROTO file or Robot node string."""
     urdfContent = None
     if not input:
@@ -95,7 +95,7 @@ convertUrdfFile.urdfPath = None
 
 def convertUrdfContent(input, output=None, robotName=None, normal=False, boxCollision=False,
                        toolSlot=None, initTranslation='0 0 0', initRotation='0 0 1 0',
-                       initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, targetVersion='R2022b'):
+                       initPos=None, linkToDef=False, jointToDef=False, relativePathPrefix=None, targetVersion='R2023a'):
     """
     Convert a URDF content string into a Webots PROTO file or Robot node string.
     The current working directory will be used for relative paths in your URDF file.
@@ -325,7 +325,7 @@ if __name__ == '__main__':
     parser.add_argument('--relative-path-prefix', dest='relativePathPrefix', default=None,
                         help='If set and --input not specified, relative paths in your URDF file will be treated relatively '
                         'to it rather than relatively to the current directory from which the script is called.')
-    parser.add_argument('--target', dest='targetVersion', default='R2022b',
+    parser.add_argument('--target', dest='targetVersion', default='R2023a',
                         choices=['R2023a', 'R2022b', 'R2022a', 'R2021b', 'R2021a', 'R2020b', 'R2020a'],
                         help='Sets the Webots version the PROTO will target (will adapt which nodes will be used).')
 
