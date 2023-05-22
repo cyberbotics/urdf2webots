@@ -17,7 +17,7 @@ from urdf2webots.math_utils import convertRPYtoEulerAxis, rotateVector, combineR
 
 # to pass from external
 robotName = ''
-targetVersion = 'R2023a'
+targetVersion = 'R2023b'
 
 
 class Inertia():
