@@ -13,7 +13,7 @@ initPos = None
 linkToDef = False
 jointToDef = False
 indexSolid = 0
-targetVersion = 'R2022b'
+targetVersion = 'R2023b'
 
 
 class RGB():
