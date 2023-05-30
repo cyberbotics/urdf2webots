@@ -1,19 +1,19 @@
 #VRML_SIM R2023b utf8
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
-# This is a proto file for Webots for the Human
+# This is a proto file for Webots for the HumanR2023b
 # Extracted from: ../sources/gait2392_simbody/urdf/human.urdf
 
-PROTO Human [
+PROTO HumanR2023b [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 0 1 0
-  field  SFString    name            "Human"  # Is `Robot.name`.
-  field  SFString    controller      "void"   # Is `Robot.controller`.
-  field  MFString    controllerArgs  []       # Is `Robot.controllerArgs`.
-  field  SFString    customData      ""       # Is `Robot.customData`.
-  field  SFBool      supervisor      FALSE    # Is `Robot.supervisor`.
-  field  SFBool      synchronization TRUE     # Is `Robot.synchronization`.
-  field  SFBool      selfCollision   FALSE    # Is `Robot.selfCollision`.
+  field  SFString    name            "HumanR2023b"  # Is `Robot.name`.
+  field  SFString    controller      "void"         # Is `Robot.controller`.
+  field  MFString    controllerArgs  []             # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""             # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE          # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE           # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE          # Is `Robot.selfCollision`.
 ]
 {
   Robot {
@@ -362,14 +362,8 @@ PROTO Human [
                               }
                             ]
                             name "calcn_r"
-                            boundingObject Transform {
-                              scale 1.000000 -1.000000 1.000000
-                              children [
-                                DEF Calcn_L_001_cw Mesh {
-                                  url "../sources/gait2392_simbody/meshes/obj/Calcn L.001.obj"
-                                  ccw FALSE
-                                }
-                              ]
+                            boundingObject DEF Calcn_R_001 Mesh {
+                              url "../sources/gait2392_simbody/meshes/obj/Calcn R.001.obj"
                             }
                             physics Physics {
                               density -1
