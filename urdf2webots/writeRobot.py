@@ -145,7 +145,10 @@ def URDFLink(robotFile, link, level, parentList,
                     haveChild = True
                     robotFile.write((level + 1) * indent + 'children [\n')
                 if hasattr(sensor, 'isImager') and sensor.isImager:
-                    robotFile.write((level + 2) * indent + 'Transform {\n')
+                    if (targetVersion >= 'R2023b'):
+                        robotFile.write((level + 2) * indent + 'Pose {\n')
+                    else:
+                        robotFile.write((level + 2) * indent + 'Transform {\n')
                     robotFile.write((level + 3) * indent + 'translation 0 0 0\n')
                     robotFile.write((level + 3) * indent + 'rotation 0.577350 -0.577350 0.577350 2.094395\n')
                     robotFile.write((level + 3) * indent + 'children [\n')
@@ -261,8 +264,11 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
     for boundingObject in link.collision:
         initialIndent = boundingLevel * indent if hasGroup else ''
         if not boxCollision and (boundingObject.position != [0.0, 0.0, 0.0] or boundingObject.rotation[3] != 0.0
-                                 or boundingObject.scale != [1.0, 1.0, 1.0]):
-            robotFile.write(initialIndent + 'Transform {\n')
+                                 or (targetVersion < 'R2023b' and boundingObject.scale != [1.0, 1.0, 1.0])):
+            if (targetVersion >= 'R2023b'):
+                robotFile.write(initialIndent + 'Pose {\n')
+            else:
+                robotFile.write(initialIndent + 'Transform {\n')
             if boundingObject.position != [0.0, 0.0, 0.0]:
                 robotFile.write((boundingLevel + 1) * indent + 'translation %lf %lf %lf\n' % (boundingObject.position[0],
                                                                                               boundingObject.position[1],
@@ -272,7 +278,7 @@ def URDFBoundingObject(robotFile, link, level, boxCollision):
                                                                                                boundingObject.rotation[1],
                                                                                                boundingObject.rotation[2],
                                                                                                boundingObject.rotation[3]))
-            if boundingObject.scale != [1.0, 1.0, 1.0]:
+            if boundingObject.scale != [1.0, 1.0, 1.0] and targetVersion < 'R2023b':
                 robotFile.write((boundingLevel + 1) * indent + 'scale %lf %lf %lf\n' % (boundingObject.scale[0],
                                                                                         boundingObject.scale[1],
                                                                                         boundingObject.scale[2]))
@@ -450,7 +456,10 @@ def URDFShape(robotFile, link, level, normal=False):
 
     for visualNode in link.visual:
         if visualNode.position != [0.0, 0.0, 0.0] or visualNode.rotation[3] != 0.0 or visualNode.scale != [1.0, 1.0, 1.0]:
-            robotFile.write(shapeLevel * indent + 'Transform {\n')
+            if (visualNode.scale != [1.0, 1.0, 1.0]):
+                robotFile.write(shapeLevel * indent + 'Transform {\n')
+            else:
+                robotFile.write(shapeLevel * indent + 'Pose {\n')
             if visualNode.position != [0.0, 0.0, 0.0]:
                 robotFile.write((shapeLevel + 1) * indent + 'translation %lf %lf %lf\n' % (visualNode.position[0],
                                                                                            visualNode.position[1],

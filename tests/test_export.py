@@ -32,6 +32,12 @@ modelPathsProto = [
     },
     {
         'input': humanFilePath,
+        'output': os.path.join(resultDirectory, 'HumanR2023a.proto'),
+        'expected': [os.path.join(expectedDirectory, 'HumanR2023a.proto')],
+        'arguments': '--target=R2023a'
+    },
+    {
+        'input': humanFilePath,
         'output': os.path.join(resultDirectory, 'HumanR2022a.proto'),
         'expected': [os.path.join(expectedDirectory, 'HumanR2022a.proto')],
         'arguments': '--target=R2022a'

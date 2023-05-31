@@ -439,14 +439,8 @@ PROTO HumanR2022a [
                               }
                             ]
                             name "calcn_r"
-                            boundingObject Transform {
-                              scale 1.000000 -1.000000 1.000000
-                              children [
-                                DEF Calcn_L_001_cw Mesh {
-                                  url "../sources/gait2392_simbody/meshes/obj/Calcn L.001.obj"
-                                  ccw FALSE
-                                }
-                              ]
+                            boundingObject DEF Calcn_R_001 Mesh {
+                              url "../sources/gait2392_simbody/meshes/obj/Calcn R.001.obj"
                             }
                             physics Physics {
                               density -1
