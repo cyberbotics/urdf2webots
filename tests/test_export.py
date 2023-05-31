@@ -26,8 +26,8 @@ modelPathsProto = [
     },
     {
         'input': humanFilePath,
-        'output': os.path.join(resultDirectory, 'HumanR2023b.proto'),
-        'expected': [os.path.join(expectedDirectory, 'HumanR2023b.proto')],
+        'output': os.path.join(resultDirectory, 'Human.proto'),
+        'expected': [os.path.join(expectedDirectory, 'Human.proto')],
         'arguments': ''
     },
     {
@@ -65,8 +65,8 @@ modelPathsProto = [
 modelContentProto = [
     {
         'input': pathlib.Path(humanFilePath).read_text(),
-        'output': os.path.join(resultDirectory, 'HumanR2023b.proto'),
-        'expected': [os.path.join(expectedDirectory, 'HumanR2023b.proto')],
+        'output': os.path.join(resultDirectory, 'Human.proto'),
+        'expected': [os.path.join(expectedDirectory, 'Human.proto')],
         'relativePathPrefix': os.path.join(rootDirectory, 'tests/sources/gait2392_simbody/urdf')
     }
 ]
