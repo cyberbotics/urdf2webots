@@ -17,7 +17,7 @@ from urdf2webots.math_utils import convertRPYtoEulerAxis, rotateVector, combineR
 
 # to pass from external
 robotName = ''
-targetVersion = 'R2023a'
+targetVersion = 'R2023b'
 
 
 class Inertia():
@@ -674,6 +674,10 @@ def getCollision(link, node, path, outputDirectory):
                 collision.scale[0] = float(meshScale[0])
                 collision.scale[1] = float(meshScale[1])
                 collision.scale[2] = float(meshScale[2])
+                if (targetVersion >= 'R2023b' and collision.scale[0] != 1.0 and collision.scale[1] != 1.0
+                        and collision.scale[2] != 1.0):
+                    print('\033[1;33mWarning: BoundingObjects (collisions tags) cannot be scaled in version R2023b!'
+                          ' Please create a separate model.\033[0m')
                 if collision.scale[0] * collision.scale[1] * collision.scale[2] < 0.0:
                     if extension in ['.dae', '.obj', '.stl']:
                         collision.geometry.mesh.ccw = False

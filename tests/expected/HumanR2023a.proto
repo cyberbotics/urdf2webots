@@ -1,19 +1,19 @@
-#VRML_SIM R2023b utf8
+#VRML_SIM R2023a utf8
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
-# This is a proto file for Webots for the Human
+# This is a proto file for Webots for the HumanR2023a
 # Extracted from: ../sources/gait2392_simbody/urdf/human.urdf
 
-PROTO Human [
+PROTO HumanR2023a [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 0 1 0
-  field  SFString    name            "Human"  # Is `Robot.name`.
-  field  SFString    controller      "void"   # Is `Robot.controller`.
-  field  MFString    controllerArgs  []       # Is `Robot.controllerArgs`.
-  field  SFString    customData      ""       # Is `Robot.customData`.
-  field  SFBool      supervisor      FALSE    # Is `Robot.supervisor`.
-  field  SFBool      synchronization TRUE     # Is `Robot.synchronization`.
-  field  SFBool      selfCollision   FALSE    # Is `Robot.selfCollision`.
+  field  SFString    name            "HumanR2023a"  # Is `Robot.name`.
+  field  SFString    controller      "void"         # Is `Robot.controller`.
+  field  MFString    controllerArgs  []             # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""             # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE          # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE           # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE          # Is `Robot.selfCollision`.
 ]
 {
   Robot {

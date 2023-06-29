@@ -39,7 +39,7 @@
       <collision name="calcn_r_collision">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/Calcn L.001.obj" scale="1.0 -1.0 1.0"/>
+          <mesh filename="../meshes/obj/Calcn R.001.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>
