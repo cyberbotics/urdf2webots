@@ -27,7 +27,7 @@ class RGB():
 
     def __eq__(self, other):
         """To compare a RGB color with a float list."""
-        if type(other) == list:
+        if isinstance(other, list):
             return ((self.red, self.green, self.blue) == (other[0], other[1], other[2]))
         return ((self.red, self.green, self.blue) == (other.red, other.green, other.blue))
 
