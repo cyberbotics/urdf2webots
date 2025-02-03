@@ -177,7 +177,7 @@ def convertUrdfContent(input, output=None, robotName=None, normal=False, boxColl
                 sys.stderr.write('ROS not sourced, package "%s" will not be found.\n' % packageName)
         if os.path.split(directory)[1]:
             packagePath = os.path.split(directory)[0]
-            packagePath = packagePath.replace("\\","/")
+            packagePath = packagePath.replace("\\", "/")
             input = input.replace('package://' + packageName, packagePath + '/' + packageName)
         else:
             sys.stderr.write('Can\'t determine package root path.\n')
