@@ -594,13 +594,16 @@ def getVisual(link, node, path, outputDirectory):
             link.visual.append(visual)
         elif hasElement(geometryElement, 'mesh'):
             meshfile = geometryElement.getElementsByTagName('mesh')[0].getAttribute('filename')
-            if not os.path.isabs(meshfile):
-                # Use the path relative to the output file
-                meshfile = os.path.normpath(os.path.relpath(os.path.join(path, meshfile), outputDirectory))
             # hack for gazebo mesh database
             if meshfile.count('package'):
                 idx0 = meshfile.find('package://')
                 meshfile = meshfile[idx0 + len('package://'):]
+            elif meshfile.count('file'):
+                idx0 = meshfile.find('file://')
+                meshfile = meshfile[idx0 + len('file://'):]
+            if not os.path.isabs(meshfile):
+                # Use the path relative to the output file
+                meshfile = os.path.normpath(os.path.relpath(os.path.join(path, meshfile), outputDirectory))
             if geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale'):
                 meshScale = geometryElement.getElementsByTagName('mesh')[0].getAttribute('scale').split()
                 visual.scale[0] = float(meshScale[0])
